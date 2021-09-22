@@ -1,7 +1,7 @@
 body
 {
   background-color:rgb(33, 33, 33) !important;
-  color: antiquewhite !important;
+  color: whitesmoke !important;
 }
 
 .bg-first
@@ -11,13 +11,28 @@ body
 
 .bg-second
 {
-  background-color: rgb(46, 46, 46);
+  background-color: rgb(46, 46, 46) !important;
 }
 
 .shadowed
 {
   -webkit-box-shadow: 3px 6px 15px -8px #000000; 
   box-shadow: 3px 6px 15px -8px #000000;
+}
+
+.f-right
+{
+  float: right !important;
+}
+
+.mr-3
+{
+  margin-right: 20px;
+}
+
+.pr-2
+{
+  padding-right: 6px !important;
 }
 
 .heading
@@ -32,13 +47,61 @@ body
   color: white;
 }
 
+.short-input
+{
+  width: 40px !important;
+  display: inline;
+}
+
+/* Layouts */
+
 .mycard
 {
   padding: 12px;
+}
+
+.myheader
+{
+  padding: 6px;
+
+  background-color: rgb(33, 33, 33);
+
+  cursor: pointer;
+}
+
+.myframe
+{
+  border: 3px solid rgb(33, 33, 33);
+  padding: 6px;
 }
 
 /* Inputs */
 .inputs
 {
   background-color: rgb(46, 46, 46);
+}
+
+input
+{
+  background-color: rgb(33, 33, 33) !important;
+  box-shadow: inset 0px 1px 8px rgba(0, 0, 0, 0.3);
+  border: none !important;
+  outline: 0;
+  color: gray !important;
+}
+input:focus
+{
+  outline: none !important;
+}
+
+.gen-input-visualise
+{
+  text-align: center;
+  color: cadetblue !important;
+  margin-top: 12px;
+}
+
+.gen-input-visualise:empty::after
+{
+  content: "\00a0";
 }
