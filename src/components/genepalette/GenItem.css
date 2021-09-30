@@ -1,0 +1,21 @@
+.genItem
+{
+    color: white;
+    padding: 6px;
+}
+
+.genItem-popover form label
+{
+    font-size: 16px;
+    margin-right: 12px;
+}
+
+.genItem-popover form div
+{
+    display: flex;
+}
+
+.genItem-popover .dismiss-btn:hover
+{
+    cursor: pointer;
+}

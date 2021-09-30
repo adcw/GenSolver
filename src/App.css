@@ -20,6 +20,11 @@ body
   box-shadow: 3px 6px 15px -8px #000000;
 }
 
+.txt-bright
+{
+  color: whitesmoke !important;
+}
+
 .f-right
 {
   float: right !important;
@@ -28,6 +33,11 @@ body
 .mr-3
 {
   margin-right: 20px;
+}
+
+.mr-2
+{
+  margin-right: 8px;
 }
 
 .pr-2
@@ -72,14 +82,15 @@ body
 .myframe
 {
   border: 3px solid rgb(33, 33, 33);
-  padding: 6px;
+  /* padding: 6px; */
+}
+
+.m-0 
+{
+  margin: 0px !important;
 }
 
 /* Inputs */
-.inputs
-{
-  background-color: rgb(46, 46, 46);
-}
 
 input
 {
@@ -94,14 +105,50 @@ input:focus
   outline: none !important;
 }
 
-.gen-input-visualise
+.txt-blue
 {
-  text-align: center;
   color: cadetblue !important;
-  margin-top: 12px;
 }
 
-.gen-input-visualise:empty::after
+.fillempty:empty::after
 {
   content: "\00a0";
+}
+
+/* Buttons */
+.my-btn-dark
+{
+  background-color: rgb(33, 33, 33) !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.check-input
+{
+  height: 20px !important;
+  width: 20px !important;
+  margin-left: 6px;
+  margin-right: 6px;
+}
+
+.btn-edit:hover
+{
+  color: aqua !important;
+}
+
+.btn-delete:hover
+{
+  color: red !important;
+}
+
+.feedback
+{
+  color: rgb(145, 233, 233) !important;
+}
+
+.btn-xs
+{
+  padding: .20rem .4rem !important;
+  font-size: .7rem !important;
+  border-radius: .2rem !important;
 }
