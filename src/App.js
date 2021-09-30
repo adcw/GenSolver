@@ -6,14 +6,38 @@ import Card from './components/general/Card';
 import { Tab, Tabs, Button } from 'react-bootstrap';
 import GenItem from './components/genepalette/GenItem';
 import { useState, useReducer, useRef} from 'react';
+import AddNewGeneBtn from './components/general/AddNewGeneBtn';
 
 export const ACTION = {
   TOGGLE_ACTIVE: "TOGGLE_ACTIVE",
   DELETE_GENE: "DELETE_GENE",
-  SAVE_SETTINGS: "SAVE_SETTINGS"
+  SAVE_SETTINGS: "SAVE_SETTINGS",
+  ADD_DEFAULT_GENE: "ADD_DEFAULT_GENE"
+};
+
+export const GENE_LIST = {
+  NORMAL: "NORMAL",
+  GENDER: "GENDER",
+  GENDER_LINKED: "GENDER_LINKED"
+}
+
+var currentGeneId = 2;
+export function newGeneId() {
+  return currentGeneId++;
+}
+
+function newGene() {
+  return {
+    "id": newGeneId(),
+    "name": "nowy gen",
+    "allels": [],
+    "isActive": false
+  }
 }
 
 function reducer(state, action) {
+
+  console.log(state);
 
   switch (action.type) {
     case ACTION.TOGGLE_ACTIVE:
@@ -31,6 +55,16 @@ function reducer(state, action) {
       return {
         default_genes: [
           ...state.default_genes.filter((gene) => gene.id !== action.payload.id)
+        ]
+      }
+
+    case ACTION.ADD_DEFAULT_GENE:
+
+      return {
+        ...state,
+        default_genes: [
+          ...state.default_genes,
+          newGene()
         ]
       }
 
@@ -93,11 +127,11 @@ function App() {
               <Tabs variant="pills" defaultActiveKey="normal" id="uncontrolled-tab-example" className="mb-3">
                 
                 <Tab eventKey="normal" title="Zwykłe">
-                  <Button className="my-btn-dark w-100 btn-sm">Dodaj nowy gen</Button>
+                  <AddNewGeneBtn targetGeneList={ GENE_LIST.NORMAL } dispatch={dispatch } />
 
                   <div className="pt-2">
-                    { state.default_genes.length === 0 ?
-                      <p>Brak genów</p>
+                    { state.default_genes === undefined || state.default_genes.length === 0 ?
+                      <p className="feedback">Brak genów</p>
                       :
                       state.default_genes.map((v, k) => {
                         return <GenItem gene={ v } key={ k } keyId={ k + 1 } dispatch={ dispatch }/>
@@ -108,12 +142,11 @@ function App() {
                 </Tab>
                 
                 <Tab eventKey="gender" title="Geny płci">
-                  <Button className="my-btn-dark w-100 btn-sm">Dodaj nowy gen</Button>
-                  
+                  <AddNewGeneBtn targetGeneList={ GENE_LIST.GENDER } dispatch={ dispatch }/>
                 </Tab>
                 
                 <Tab eventKey="gender-linked" title="Geny sprzężone z płcią">
-                  <Button className="my-btn-dark w-100 btn-sm">Dodaj nowy gen</Button>
+                  <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER_LINKED } dispatch={ dispatch }/>
                 </Tab>
 
               </Tabs>
@@ -122,7 +155,6 @@ function App() {
           </div>
 
           <div className="col-md-6">
-            <button onClick={() => dispatch({ payload: { id: 1 } })}>Test</button>
           </div>
         </div>
 

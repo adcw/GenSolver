@@ -144,6 +144,7 @@ input:focus
 .feedback
 {
   color: rgb(145, 233, 233) !important;
+  text-align: center;
 }
 
 .btn-xs
@@ -151,4 +152,9 @@ input:focus
   padding: .20rem .4rem !important;
   font-size: .7rem !important;
   border-radius: .2rem !important;
+}
+
+.txt-right 
+{
+  text-align: right;
 }

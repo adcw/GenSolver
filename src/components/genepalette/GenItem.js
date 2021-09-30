@@ -5,11 +5,12 @@ import { Table, Popover, OverlayTrigger, Form, FormLabel } from 'react-bootstrap
 import GenSymbol from './GenSymbol';
 import './GenItem.css';
 import '../../App.css';
-import { ACTION } from '../../App.js'
+import { ACTION, newGeneId } from '../../App.js'
 
 const GenItem = ({ gene, keyId, dispatch}) => {
 
 	const [isOverlayShown, setOverlayShown] = useState(false);
+	const [newName, setnewName] = useState(gene.name);
 	const nameInput = useRef(null);
 
 	const togggleActive = () => dispatch({ type: ACTION.TOGGLE_ACTIVE, payload: { id: gene.id } })
@@ -21,13 +22,20 @@ const GenItem = ({ gene, keyId, dispatch}) => {
 		setOverlayShown(false);
 	}
 
+	const isChanged = () => {
+		return newName !== gene.name
+	}
+
 	const popover = (
 		<Popover id="popover-basic" className="shadowed genItem-popover">
 			<Popover.Header as="h3" className="bg-second">
 				Edytuj gen
 				<FontAwesomeIcon icon="times" className="f-right dismiss-btn mt-1" onClick={() => setOverlayShown(false)}></FontAwesomeIcon>
 
-				<button className="btn btn-xs my-btn-dark txt-bright f-right mr-2" onClick={ saveSettings }>
+				<button 
+					className="btn btn-xs my-btn-dark txt-bright f-right mr-2" 
+					onClick={ saveSettings }
+					disabled={ !isChanged() }>
 					Zapisz
 				</button>
 
@@ -38,7 +46,14 @@ const GenItem = ({ gene, keyId, dispatch}) => {
 				<Form>
 					<Form.Group>
 						<FormLabel className="txt-h6" htmlFor="gen-name-input">Nazwa:</FormLabel>
-						<Form.Control ref={ nameInput } type="text" id="gen-name-input" defaultValue={ gene.name }></Form.Control>
+						<Form.Control 
+							ref={ nameInput } 
+							type="text" 
+							id="gen-name-input" 
+							defaultValue={ gene.name }
+							onChange={ e => setnewName(e.target.value) }>
+
+							</Form.Control>
 					</Form.Group>
 					<hr />
 
@@ -65,18 +80,16 @@ const GenItem = ({ gene, keyId, dispatch}) => {
 					</td>
 
 					<td>
-						<p className="m-0 txt-blue txt-center fill-empty">
-							{
-								gene.allels.lenght === 0 ? <p className="feedback">brak alleli</p> :
-								gene.allels.map((allel, index) => {
-									return allel + ", ";
-								})
-							}
-						</p>
-					</td>
 
-					<td>
-						<div className="f-right">
+						<div className="f-right d-flex">
+
+							<p className="m-0 txt-blue txt-right fill-empty">
+								{
+									gene.allels.map((allel, index) => {
+										return allel + ", ";
+									})
+								}
+							</p>
 
 							<OverlayTrigger rootClose trigger="click" placement="bottom" overlay={popover} show={isOverlayShown}>
 								<button className="btn btn-sm btn-edit">
