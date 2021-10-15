@@ -1,9 +1,9 @@
 import './genSymbol.css';
 
-const GenSymbol = ({ content }) => {
+const GenSymbol = ({ content, isAddButton, onClick }) => {
     return (
-        <div className="genSymbol">
-            <p>{ content }</p>
+        <div className={`genSymbol ${isAddButton ? 'addBtn' : ''}`} onClick={ onClick }>
+            <p>{ isAddButton ? "+" : content }</p>
         </div>
     )
 }

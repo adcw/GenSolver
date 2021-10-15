@@ -1,0 +1,58 @@
+.allelEditor
+{
+    min-width: 30px;
+    min-height: 150px;
+
+    margin: 40px;
+    margin-top: 20px;
+
+    background-color: rgb(55, 55, 55);
+    border-radius: 9px;
+
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    color: rgb(33, 33, 33);
+    font-size: 20px;
+}
+
+.allelEditor input.sup
+{
+    position: fixed;
+    top: 190px;
+    left: 160px;
+
+    max-width: 35px;
+    font-size: 20px;
+    text-align: center;
+
+    background-color: rgb(55, 55, 55) !important;
+    color: rgb(33, 33, 33) !important;
+}
+
+.allelEditor input.sub
+{
+    position: fixed;
+    top: 260px;
+    left: 160px;
+
+    max-width: 35px;
+    font-size: 20px;
+    text-align: center;
+
+    background-color: rgb(55, 55, 55) !important;
+    color: rgb(33, 33, 33) !important;
+}
+
+.allelEditor input.txt
+{
+    position: relative;
+    left: -16px;
+
+    max-width: 70px;
+    font-size: 40px;
+    text-align: center;
+
+    background-color: rgb(55, 55, 55) !important;
+    color: rgb(33, 33, 33) !important;
+}

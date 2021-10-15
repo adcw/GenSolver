@@ -3,9 +3,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './utils/FontAwesomeIcons.js';
 import RowDivider from './utils/RowDivider';
 import Card from './components/general/Card';
-import { Tab, Tabs, Button } from 'react-bootstrap';
+import { Tab, Tabs } from 'react-bootstrap';
 import GenItem from './components/genepalette/GenItem';
-import { useState, useReducer, useRef} from 'react';
+import { useReducer } from 'react';
 import AddNewGeneBtn from './components/general/AddNewGeneBtn';
 
 export const ACTION = {
@@ -31,7 +31,8 @@ function newGene() {
     "id": newGeneId(),
     "name": "nowy gen",
     "allels": [],
-    "isActive": false
+    "isActive": true,
+    "triggerEdit": true
   }
 }
 

@@ -1,5 +1,5 @@
 import { Button } from "react-bootstrap"
-import { GENE_LIST, ACTION } from "../../App"
+import { ACTION } from "../../App"
 
 const AddNewGeneBtn = ({targetGeneList, dispatch}) => {
 
