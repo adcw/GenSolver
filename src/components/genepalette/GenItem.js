@@ -1,12 +1,13 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useRef, useEffect, useState } from 'react';
-import { Table, Popover, OverlayTrigger, Form, FormLabel } from 'react-bootstrap';
+import { Popover, OverlayTrigger, Form, FormLabel } from 'react-bootstrap';
 import GenSymbol from './GenSymbol';
 import './GenItem.css';
 import '../../App.css';
 import { ACTION } from '../../App.js';
 import Confirm from '../general/Confirm';
 import AllelEditor from './AllelEditor';
+import SubSup from './SubSup';
 
 const GenItem = ({ gene, keyId, dispatch }) => {
 
@@ -16,18 +17,41 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 	const nameInput = useRef(null);
 	const editBtn = useRef(null);
 	const deleteBtn = useRef(null);
+	const allelCount = useRef(Object.keys(gene.allels).length);
 
+	/*
+	DISPATCH FUNCTIONS
+	*/
 	const togggleActive = () => dispatch({ type: ACTION.TOGGLE_ACTIVE, payload: { id: gene.id } })
+	const deleteGene = () => dispatch({ type: ACTION.DELETE_GENE, payload: { id: gene.id } });
+	const saveModifiedName = () => dispatch({ type: ACTION.SAVE_NAME, payload: { id: gene.id, name: newName } });
 
-	const deleteGene = () => dispatch({ type: ACTION.DELETE_GENE, payload: { id: gene.id }});
+	const saveModifiedAllel = (modifiedAllelIndex, newAllel) => {
+		dispatch({ type: ACTION.MODIFY_ALLEL, payload: { geneId: gene.id, modifiedAllelIndex, newAllel } });
+	}
+
+	const addNewAllel = () => {
+		if (allelCount.current < 7) {
+			dispatch({ type: ACTION.ADD_ALLEL, payload: { id: gene.id } });
+			allelCount.current++;
+		}
+	}
+
+	const removeAllel = () => {
+		console.log("Allel to be removed h: " + 0);
+		dispatch({ type: ACTION.REMOVE_ALLEL, payload: { geneId: gene.id, modifiedAllelIndex: 0 } });
+	}
 
 	const saveSettings = () => {
-		dispatch({ type: ACTION.SAVE_SETTINGS, payload: { id: gene.id, name: nameInput.current.value }});
+		saveModifiedName();
 		document.body.click();
 	}
 
-	const isChanged = () => {
-		return newName !== gene.name
+	const isChanged = () => newName !== gene.name;
+
+	const testDelete = () => {
+		console.log("geneid = " + gene.id);
+		dispatch({ type: ACTION.REMOVE_ALLEL, payload: { geneId: gene.id, allel: 0 } })			
 	}
 
 	useEffect(() => {
@@ -36,13 +60,13 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 			editBtn.current.click();
 			setFirstTime(false);
 		}
-			
+
 		return () => {
 			// cleanup
 		}
 	}, [gene.triggerEdit, firstTime])
 
-	const [chosenAllel, setChosenAllel] = useState(null);
+	const [chosenAllelIndex, setChosenAllelIndex] = useState(null);
 
 	const popover = (
 		<Popover id="popover-basic" className="shadowed genItem-popover">
@@ -50,10 +74,10 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 				Edytuj gen
 				<FontAwesomeIcon icon="times" className="f-right dismiss-btn mt-1" onClick={() => document.body.click()}></FontAwesomeIcon>
 
-				<button 
-					className="btn btn-xs my-btn-dark txt-bright f-right mr-2" 
-					onClick={ saveSettings }
-					disabled={ !isChanged() }>
+				<button
+					className="btn btn-xs my-btn-dark txt-bright f-right mr-2"
+					onClick={saveSettings}
+					disabled={!isChanged()}>
 					Zapisz
 				</button>
 
@@ -64,28 +88,52 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 				<Form>
 					<Form.Group>
 						<FormLabel className="txt-h6" htmlFor="gen-name-input">Nazwa:</FormLabel>
-						<Form.Control 
-							ref={ nameInput } 
-							type="text" 
-							id="gen-name-input" 
-							defaultValue={ gene.name }
-							onChange={ e => setnewName(e.target.value) }>
-
-							</Form.Control>
+						<Form.Control
+							ref={nameInput}
+							type="text"
+							id="gen-name-input"
+							defaultValue={gene.name}
+							onKeyDown={(e) => (e.key === 'Enter' && (e.preventDefault() || saveSettings()))}
+							onChange={e => setnewName(e.target.value)}>
+						</Form.Control>
 					</Form.Group>
-					<hr/>
+					<hr />
 
-					<div>
+					<div className="gen-symbols">
 						{
-							gene.allels.map((allel, key) => {
-								return <GenSymbol content={ allel } key={ key } 
-								onClick={ () => setChosenAllel(allel) }/>
+							gene.allels.map((allel, index) => {
+								return <GenSymbol className={index === chosenAllelIndex ? "active" : ""} content={allel} key={index}
+									onClick={() => {
+										setChosenAllelIndex(index)
+									}} />
 							})
 						}
-						<GenSymbol isAddButton/>
+						{
+							allelCount.current < 7 &&
+							<GenSymbol
+								isAddButton
+								onClick={addNewAllel}
+							/>
+						}
+
 					</div>
-					
-					<AllelEditor chosenAllel={ chosenAllel } setChosenAllel={ setChosenAllel }/>
+
+					<AllelEditor
+						chosenAllel={gene.allels[chosenAllelIndex]}
+						chosenAllelIndex={chosenAllelIndex}
+						removeAllel={removeAllel}
+						geneId={keyId}
+						saveModifiedAllel={saveModifiedAllel}
+						
+					/>
+
+					<button
+						onClick={
+							testDelete
+						}
+					>
+						Usuń pierwszy allel
+					</button>
 
 				</Form>
 
@@ -94,64 +142,68 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 	);
 
 	return (
-		<Table className="genItem">
-			<tbody>
-				<tr className="my-gen-item mt-1">
-					<td>
-						<p className="m-0">{ keyId }</p>
-					</td>
+		<>
+			<tr className="my-gen-item mt-1">
+				<td>
+					<p className="m-0">{keyId}</p>
+				</td>
 
-					<td colSpan={2}>
-						<p className="m-0">{ gene.name }</p>
-					</td>
+				<td colSpan={2}>
+					<p className="m-0">{gene.name}</p>
+				</td>
 
-					<td>
+				<td>
 
-						<div className="f-right d-flex">
+					<div className="f-right d-flex">
 
-							<p className="m-0 txt-blue txt-right fill-empty">
-								{
-									gene.allels[0] === undefined && <p>-</p>
-								}
-								{
-									gene.allels.map((allel, index) => {
-										return allel + ", ";
-									})
-								}
-							</p>
+						{/* Allele */}
+						<p className="m-0 txt-blue txt-right fill-empty">
+							{
+								gene.allels[0] === undefined && '-'
+							}
+							{
+								gene.allels.map((allel, index) => {
+									return <span key={index}>
+										<SubSup allel={allel} />
+										<span>, </span>
+									</span>
+								})
+							}
+						</p>
 
-							<OverlayTrigger rootClose trigger="click" placement="bottom" overlay={popover} >
-								<button className="btn btn-sm btn-edit" ref={ editBtn }>
-									<FontAwesomeIcon icon="pencil-alt" ></FontAwesomeIcon>
-								</button>
-							</OverlayTrigger>
+						{/* Edycja */}
+						<OverlayTrigger rootClose trigger="click" placement="bottom" overlay={popover} >
+							<button className="btn btn-sm btn-edit" ref={editBtn}>
+								<FontAwesomeIcon icon="pencil-alt" ></FontAwesomeIcon>
+							</button>
+						</OverlayTrigger>
 
-							<input 
-								type="checkbox" 
-								className="form-check-input check-input" 
-								checked={ gene.isActive }
-								onChange={ togggleActive }
-							/>
+						{/* Wyłączanie i włączanie genu */}
+						<input
+							type="checkbox"
+							className="form-check-input check-input"
+							checked={gene.isActive}
+							onChange={togggleActive}
+						/>
 
-							<Confirm
-								content={ <center className="mb-3">Czy na pewno chcesz usunąć bezpowrotnie wybrany gen?</center> }
-								onConfirm={ deleteGene }
-							>
-								<button 
-									ref={ deleteBtn }
-									id="btn-delete"
-									className="btn btn-sm btn-delete"
-									// onClick={ deleteGene }
-									><FontAwesomeIcon icon="times" />
-								</button>
-							</Confirm>
+						{/* Usuwanie genu */}
+						<Confirm
+							content={<center className="mb-3">Czy na pewno chcesz usunąć bezpowrotnie wybrany gen?</center>}
+							onConfirm={deleteGene}
+						>
+							<button
+								ref={deleteBtn}
+								id="btn-delete"
+								className="btn btn-sm btn-delete"
+							// onClick={ deleteGene }
+							><FontAwesomeIcon icon="times" />
+							</button>
+						</Confirm>
 
-						</div>
-					</td>
-				</tr>
-
-			</tbody>
-		</Table>
+					</div>
+				</td>
+			</tr>
+		</>
 
 	)
 }
