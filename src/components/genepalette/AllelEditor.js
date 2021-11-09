@@ -1,35 +1,95 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./allelEditor.css";
 
-const AllelEditor = ({ chosenAllel, setChosenAllel }) => {
+const AllelEditor = ({ chosenAllel, saveModifiedAllel, 
+  removeAllel, chosenAllelIndex, geneId }) => {
 
-    useEffect(() => {
-        console.log(chosenAllel);
-    }, [chosenAllel])
+  const subInput = useRef(null);
+  const supInput = useRef(null);
+  const mainInput = useRef(null);
 
-    return (
+  const [modifiedAllel, setModifiedAllel] = useState();
+
+  useEffect(() => {
+    console.log("Chosen allel is " + JSON.stringify(chosenAllel) + " chosenAllelIndex: " + chosenAllelIndex
+       + " geneId: " + geneId);
+    setModifiedAllel(chosenAllel);
+  }, [chosenAllel]);
+
+  useEffect(() => {
+    console.log("Modified allel is " + JSON.stringify(modifiedAllel));
+  }, [modifiedAllel])
+
+  const modifiyAllel = () => {
+    setModifiedAllel(
+      {
+        "sup": supInput.current.value,
+        "main": mainInput.current.value,
+        "sub": subInput.current.value
+      }
+    );
+  }
+
+  const saveAllel = () => {
+    console.log("save");
+    console.log(JSON.stringify(modifiedAllel) === JSON.stringify(chosenAllel));
+    saveModifiedAllel(chosenAllelIndex, modifiedAllel);
+  }
+
+  return (
+    <>
+      <div className="allelEditor">
+        {
+          modifiedAllel !== undefined && modifiedAllel !== null ?
+          <div className="ae-panel">
+            <input ref={supInput} className="sup" maxLength="1"
+              value={ modifiedAllel.sup }
+              onChange={ modifiyAllel }
+            ></input>
+
+            <input ref={mainInput} className="txt" type="text" maxLength="3"
+              value={ modifiedAllel.main }
+              onChange={ modifiyAllel }
+            ></input>
+
+            <input ref={subInput} className="sub" maxLength="1"
+              value={ modifiedAllel.sub }
+              onChange={ modifiyAllel }
+            ></input>
+          </div>
+          : <p>Wybierz allel lub stwórz nowy</p>
+        }
+      </div>
+
+      <div className="ae-buttons">
+      {
+        (modifiedAllel !== undefined && modifiedAllel !== null) &&
         <>
-            <div className="allelEditor">
-            {
-                chosenAllel !== undefined && chosenAllel !== null ?
-                <>
-                    <input className="sup" maxLength="1"></input>
-                    <input className="txt" type="text" maxLength="3" 
-                        value={ chosenAllel }
-                        onChange={ (e) => setChosenAllel(e.target.value) }
-                    ></input>
-                    <input className="sub" maxLength="1"></input>
-                </>
-                : <p>Wybierz allel lub stwórz nowy</p>
-            }
-            </div>
+          <button 
+            className="btn bg-second btn-xs txt-bright"
+            onClick={ (e) => e.preventDefault() || saveAllel }
+            >
+            OK
+          </button>
+
+          <button 
+            className="btn btn-danger btn-xs"
+            onClick={ (e) => e.preventDefault() || removeAllel() }
+          >
+            Usuń
+          </button>
         </>
-    )
+      }
+      
+      </div>
+      
+    </>
+  )
 }
 
-AllelEditor.defaultProps = 
+AllelEditor.defaultProps =
 {
-    setChosenAllel: (val) => console.log(`changed to ${val}`)
+  setChosenAllel: (val) => console.log(`changed to ${val}`)
 }
 
 export default AllelEditor

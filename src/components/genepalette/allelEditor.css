@@ -5,9 +5,10 @@
 
     margin: 40px;
     margin-top: 20px;
+    margin-bottom: 0px;
 
     background-color: rgb(55, 55, 55);
-    border-radius: 9px;
+    border-radius: 9px 9px 0 0;
 
     text-align: center;
     align-items: center;
@@ -15,6 +16,7 @@
     color: rgb(33, 33, 33);
     font-size: 20px;
 }
+
 
 .allelEditor input.sup
 {
@@ -55,4 +57,27 @@
 
     background-color: rgb(55, 55, 55) !important;
     color: rgb(33, 33, 33) !important;
+}
+
+.ae-buttons
+{
+    min-width: 30px;
+    margin-left: 40px;
+    margin-right: 40px;
+    /* margin-top: 10px; */
+
+    background-color: rgb(55, 55, 55);
+    border-radius: 0 0 9px 9px;
+    border: 0px;;
+
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    color: rgb(33, 33, 33);
+    font-size: 20px;
+}
+
+.ae-buttons button
+{
+    float: left;
 }

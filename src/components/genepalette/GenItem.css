@@ -1,6 +1,7 @@
 .genItem
 {
-    color: white;
+    color: rgb(200, 200, 200);
+    border-color: rgb(33, 33, 33) !important;
     padding: 6px;
 }
 
@@ -18,4 +19,9 @@
 .genItem-popover .dismiss-btn:hover
 {
     cursor: pointer;
+}
+
+.gen-symbols
+{
+    
 }

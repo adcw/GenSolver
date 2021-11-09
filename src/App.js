@@ -3,16 +3,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './utils/FontAwesomeIcons.js';
 import RowDivider from './utils/RowDivider';
 import Card from './components/general/Card';
-import { Tab, Tabs } from 'react-bootstrap';
+import { Tab, Tabs, Table } from 'react-bootstrap';
 import GenItem from './components/genepalette/GenItem';
-import { useReducer } from 'react';
+import { useReducer, useEffect } from 'react';
 import AddNewGeneBtn from './components/general/AddNewGeneBtn';
 
 export const ACTION = {
   TOGGLE_ACTIVE: "TOGGLE_ACTIVE",
   DELETE_GENE: "DELETE_GENE",
-  SAVE_SETTINGS: "SAVE_SETTINGS",
-  ADD_DEFAULT_GENE: "ADD_DEFAULT_GENE"
+  SAVE_NAME: "SAVE_SETTINGS",
+  ADD_DEFAULT_GENE: "ADD_DEFAULT_GENE",
+
+  MODIFY_ALLEL: "MODIFY_ALLEL",
+  ADD_ALLEL: "ADD_ALLEL",
+  REMOVE_ALLEL: "ADD_ALLEL"
 };
 
 export const GENE_LIST = {
@@ -21,9 +25,19 @@ export const GENE_LIST = {
   GENDER_LINKED: "GENDER_LINKED"
 }
 
-var currentGeneId = 2;
 export function newGeneId() {
-  return currentGeneId++;
+  // if (sessionStorage.getItem('id') == null) {
+  //   var indx = 0;
+  //   JSON.parse(sessionStorage.getItem('state')).forEach(element => {
+  //     if (element.id > indx) indx = element.id;
+  //   });
+  //   sessionStorage.setItem('id', indx);
+  // }
+  // else{
+  //   const indx = sessionStorage.getItem('id');
+  //   sessionStorage.setItem('id', indx + 1);
+  //   return indx;
+  // }
 }
 
 function newGene() {
@@ -32,18 +46,25 @@ function newGene() {
     "name": "nowy gen",
     "allels": [],
     "isActive": true,
-    "triggerEdit": true
+    "triggerEdit": false
+  }
+}
+
+function newAllel() {
+  return {
+    "sup": "B",
+    "main": "A",
+    "sub": "C"
   }
 }
 
 function reducer(state, action) {
 
-  console.log(state);
-
   switch (action.type) {
     case ACTION.TOGGLE_ACTIVE:
 
       return {
+        ...state,
         default_genes: [
           ...state.default_genes.map((gene) => {
             return (gene.id === action.payload.id) ? {...gene, isActive: !gene.isActive} : gene
@@ -54,6 +75,7 @@ function reducer(state, action) {
     case ACTION.DELETE_GENE:
 
       return {
+        ...state,
         default_genes: [
           ...state.default_genes.filter((gene) => gene.id !== action.payload.id)
         ]
@@ -69,7 +91,7 @@ function reducer(state, action) {
         ]
       }
 
-    case ACTION.SAVE_SETTINGS:
+    case ACTION.SAVE_NAME:
 
       return {
         default_genes: [
@@ -79,8 +101,53 @@ function reducer(state, action) {
         ]
       }
 
+    case ACTION.MODIFY_ALLEL:
+
+      console.log(action.payload);
+      return {
+        ...state,
+        default_genes: [
+          ...state.default_genes.map((gene) => {
+            return gene.id === action.payload.geneId ? 
+            {
+              ...gene,
+              allels: [
+                gene.allels.map((allel, indx) => {
+                  return indx === action.payload.modifiedAllelIndex ? 
+                    action.payload.newAllel : allel
+                })
+              ]
+            }
+            : gene
+          })
+        ]
+      }
+
+    case ACTION.ADD_ALLEL:
+      console.log("Payload: " + action.payload);
+      return {
+        ...state,
+        default_genes: [
+          ...state.default_genes.map((gene) => {
+            return gene.id === action.payload.id ? 
+            {
+              ...gene,
+              allels: [
+                ...gene.allels,
+                newAllel()
+              ]
+            }
+            : gene
+          })
+        ]
+      }
+
+    case ACTION.REMOVE_ALLEL:
+      console.log("Payload: " + JSON.stringify());
+      break;
+
     default:
-      return null;
+      return state;
   }
 
 }
@@ -91,14 +158,46 @@ const initialState = {
     {
       "id": 0,
       "name": "Gen koloru czerwonego",
-      "allels": ['A', 'a'],
+      "allels": 
+      [
+        {
+          "main": "A",
+          "sup": "",
+          "sub": ""
+        }, 
+        
+        {
+        "main": "a",
+        "sup": "",
+        "sub": ""
+        }
+      ],
       "isActive": true
     },
 
     {
       "id": 1,
-      "name": "Gen koloru niebieskiego",
-      "allels": ['B', 'b'],
+      "name": "Grupy krwi",
+      "allels": 
+      [
+        {
+          "main": "I",
+          "sup": "A",
+          "sub": ""
+        },
+
+        {
+          "main": "I",
+          "sup": "B",
+          "sub": "C"
+        },
+
+        {
+          "main": "i",
+          "sup": "",
+          "sub": ""
+        }
+      ],
       "isActive": true
     }
   ]
@@ -106,7 +205,16 @@ const initialState = {
 
 function App() {
 
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [state, dispatch] = useReducer(reducer, initialState, () => {
+    const data = localStorage.getItem('state');
+    console.log();
+    return data ? JSON.parse(data) : state;
+  });
+
+  useEffect(() => {
+    // console.log(JSON.stringify(state));
+    localStorage.setItem('state', JSON.stringify(state));
+  }, [state]);
 
   return (
 
@@ -131,13 +239,19 @@ function App() {
                   <AddNewGeneBtn targetGeneList={ GENE_LIST.NORMAL } dispatch={dispatch } />
 
                   <div className="pt-2">
-                    { state.default_genes === undefined || state.default_genes.length === 0 ?
-                      <p className="feedback">Brak genów</p>
-                      :
-                      state.default_genes.map((v, k) => {
-                        return <GenItem gene={ v } key={ k } keyId={ k + 1 } dispatch={ dispatch }/>
-                      })
-                    }
+                    <Table className="genItem">
+		              	  <tbody>
+                      { 
+                        state.default_genes === undefined || state.default_genes.length === 0 ?
+                        <p className="feedback">Brak genów</p>
+                        :
+                        state.default_genes.map((v, k) => {
+                          return <GenItem gene={ v } key={ k } keyId={ k + 1 } dispatch={ dispatch }/>
+                        })
+                      }
+                      </tbody>
+                    </Table>
+
                   </div>
 
                 </Tab>
