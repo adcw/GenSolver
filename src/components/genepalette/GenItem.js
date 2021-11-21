@@ -27,7 +27,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 	const saveModifiedName = () => dispatch({ type: ACTION.SAVE_NAME, payload: { id: gene.id, name: newName } });
 
 	const saveModifiedAllel = (modifiedAllelIndex, newAllel) => {
-		dispatch({ type: ACTION.MODIFY_ALLEL, payload: { geneId: gene.id, modifiedAllelIndex, newAllel } });
+		dispatch({ type: ACTION.MODIFY_ALLEL, payload: { id: gene.id, modifiedAllelIndex, newAllel } });
 	}
 
 	const addNewAllel = () => {
@@ -37,9 +37,9 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 		}
 	}
 
-	const removeAllel = () => {
-		console.log("Allel to be removed h: " + 0);
-		dispatch({ type: ACTION.REMOVE_ALLEL, payload: { geneId: gene.id, modifiedAllelIndex: 0 } });
+	const removeAllel = (allelIndex) => {
+		console.log("Allel to be removed h: " + allelIndex);
+		dispatch({ type: ACTION.REMOVE_ALLEL, payload: { id: gene.id, modifiedAllelIndex: 0 } });
 	}
 
 	const saveSettings = () => {
@@ -124,16 +124,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 						removeAllel={removeAllel}
 						geneId={keyId}
 						saveModifiedAllel={saveModifiedAllel}
-						
 					/>
-
-					<button
-						onClick={
-							testDelete
-						}
-					>
-						Usuń pierwszy allel
-					</button>
 
 				</Form>
 
@@ -154,7 +145,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
 				<td>
 
-					<div className="f-right d-flex">
+					<div className="f-right d-flex p-relative">
 
 						{/* Allele */}
 						<p className="m-0 txt-blue txt-right fill-empty">

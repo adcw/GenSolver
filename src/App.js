@@ -3,10 +3,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './utils/FontAwesomeIcons.js';
 import RowDivider from './utils/RowDivider';
 import Card from './components/general/Card';
-import { Tab, Tabs, Table } from 'react-bootstrap';
+import { Tab, Tabs, Table, Button } from 'react-bootstrap';
 import GenItem from './components/genepalette/GenItem';
 import { useReducer, useEffect } from 'react';
+import { BrowserRouter } from 'react-router-dom';
 import AddNewGeneBtn from './components/general/AddNewGeneBtn';
+import { TempllateIItem } from './components/genotypetemplate/TempllateIItem';
 
 export const ACTION = {
   TOGGLE_ACTIVE: "TOGGLE_ACTIVE",
@@ -16,7 +18,9 @@ export const ACTION = {
 
   MODIFY_ALLEL: "MODIFY_ALLEL",
   ADD_ALLEL: "ADD_ALLEL",
-  REMOVE_ALLEL: "ADD_ALLEL"
+  REMOVE_ALLEL: "REMOVE_ALLEL",
+
+  SET_DEFAULT: "SET_DEFAULT"
 };
 
 export const GENE_LIST = {
@@ -25,24 +29,17 @@ export const GENE_LIST = {
   GENDER_LINKED: "GENDER_LINKED"
 }
 
-export function newGeneId() {
-  // if (sessionStorage.getItem('id') == null) {
-  //   var indx = 0;
-  //   JSON.parse(sessionStorage.getItem('state')).forEach(element => {
-  //     if (element.id > indx) indx = element.id;
-  //   });
-  //   sessionStorage.setItem('id', indx);
-  // }
-  // else{
-  //   const indx = sessionStorage.getItem('id');
-  //   sessionStorage.setItem('id', indx + 1);
-  //   return indx;
-  // }
+export function newGeneId(state) {
+  var id = 0;
+  state.default_genes.forEach(element => {
+    if (element.id > id) id = element.id;
+  });
+  return id + 1;
 }
 
-function newGene() {
+function newGene(state) {
   return {
-    "id": newGeneId(),
+    "id": newGeneId(state),
     "name": "nowy gen",
     "allels": [],
     "isActive": true,
@@ -52,9 +49,9 @@ function newGene() {
 
 function newAllel() {
   return {
-    "sup": "B",
+    "sup": "",
     "main": "A",
-    "sub": "C"
+    "sub": ""
   }
 }
 
@@ -67,7 +64,7 @@ function reducer(state, action) {
         ...state,
         default_genes: [
           ...state.default_genes.map((gene) => {
-            return (gene.id === action.payload.id) ? {...gene, isActive: !gene.isActive} : gene
+            return (gene.id === action.payload.id) ? { ...gene, isActive: !gene.isActive } : gene
           })
         ]
       }
@@ -87,16 +84,18 @@ function reducer(state, action) {
         ...state,
         default_genes: [
           ...state.default_genes,
-          newGene()
+          newGene(state)
         ]
       }
 
     case ACTION.SAVE_NAME:
 
+      console.log(JSON.stringify(action.payload));
       return {
+        ...state,
         default_genes: [
           ...state.default_genes.map((gene) => {
-            return (gene.id === action.payload.id) ? {...gene, name: action.payload.name} : gene
+            return (gene.id === action.payload.id) ? { ...gene, name: action.payload.name } : gene
           })
         ]
       }
@@ -108,43 +107,56 @@ function reducer(state, action) {
         ...state,
         default_genes: [
           ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.geneId ? 
-            {
-              ...gene,
-              allels: [
-                gene.allels.map((allel, indx) => {
-                  return indx === action.payload.modifiedAllelIndex ? 
-                    action.payload.newAllel : allel
-                })
-              ]
-            }
-            : gene
+            return gene.id === action.payload.id ?
+              {
+                ...gene,
+                allels: [
+                  ...gene.allels.map((e, i) => i === action.payload.modifiedAllelIndex ? action.payload.newAllel : e)
+                ]
+              }
+              : gene
           })
         ]
       }
 
     case ACTION.ADD_ALLEL:
-      console.log("Payload: " + action.payload);
       return {
         ...state,
         default_genes: [
           ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id ? 
-            {
-              ...gene,
-              allels: [
-                ...gene.allels,
-                newAllel()
-              ]
-            }
-            : gene
+            return gene.id === action.payload.id ?
+              {
+                ...gene,
+                allels: [
+                  ...gene.allels,
+                  newAllel()
+                ]
+              }
+              : gene
           })
         ]
       }
 
     case ACTION.REMOVE_ALLEL:
-      console.log("Payload: " + JSON.stringify());
-      break;
+      console.log(JSON.stringify(action.payload));
+      return {
+        ...state,
+        default_genes: [
+          ...state.default_genes.map((gene) => {
+            return gene.id === action.payload.id ?
+              {
+                ...gene,
+                allels: [
+                  ...gene.allels.filter((e, i) => i !== action.payload.modifiedAllelIndex)
+                ]
+              }
+              : gene
+          })
+        ]
+      }
+
+    case ACTION.SET_DEFAULT:
+      return initialState;
 
     default:
       return state;
@@ -153,54 +165,74 @@ function reducer(state, action) {
 }
 
 const initialState = {
-  "default_genes": 
-  [
-    {
-      "id": 0,
-      "name": "Gen koloru czerwonego",
-      "allels": 
-      [
-        {
-          "main": "A",
-          "sup": "",
-          "sub": ""
-        }, 
-        
-        {
-        "main": "a",
-        "sup": "",
-        "sub": ""
-        }
-      ],
-      "isActive": true
-    },
+  "default_genes":
+    [
+      {
+        "id": 0,
+        "name": "Gen koloru czerwonego",
+        "allels":
+          [
+            {
+              "main": "A",
+              "sup": "",
+              "sub": ""
+            },
 
-    {
-      "id": 1,
-      "name": "Grupy krwi",
-      "allels": 
-      [
-        {
-          "main": "I",
-          "sup": "A",
-          "sub": ""
-        },
+            {
+              "main": "a",
+              "sup": "",
+              "sub": ""
+            }
+          ],
+        "isActive": true
+      },
 
-        {
-          "main": "I",
-          "sup": "B",
-          "sub": "C"
-        },
+      {
+        "id": 1,
+        "name": "Grupy krwi",
+        "allels":
+          [
+            {
+              "main": "I",
+              "sup": "A",
+              "sub": ""
+            },
 
-        {
-          "main": "i",
-          "sup": "",
-          "sub": ""
-        }
-      ],
-      "isActive": true
-    }
-  ]
+            {
+              "main": "I",
+              "sup": "B",
+              "sub": "C"
+            },
+
+            {
+              "main": "i",
+              "sup": "",
+              "sub": ""
+            }
+          ],
+        "isActive": true
+      }
+    ],
+
+  "templates":
+    [
+      {
+        "id": "0",
+        "name": "Template 1",
+        "gene_ids": [
+          "0", "1"
+        ]
+      },
+
+      {
+        "id": "2",
+        "name": "Template 2",
+        "gene_ids": [
+          "0"
+        ]
+      },
+
+    ]
 }
 
 function App() {
@@ -218,63 +250,113 @@ function App() {
 
   return (
 
-    <div className="container-fluid">
+    <Router>
+      <Switch>
+        <Route path="/" exact component={
+          <div className="container">
 
-        <div className="row">
-          <div className="col bg-second shadowed">
-            <h1 className="heading">GenSolver</h1>
-          </div>
-        </div>
+            <div className="row">
+              <div className="col bg-second shadowed d-inline">
+                <h1 className="heading">GenSolver</h1>
+                <button
+                  className="btn btn-warning"
+                  onClick={() =>
+                    dispatch({ type: ACTION.SET_DEFAULT })
+                  }
+                >Przywróć domyślne dane</button>
+              </div>
+            </div>
 
-        <RowDivider/> 
+            <RowDivider />
 
-        <div className="row">
-          <div className="col-md-6">
-            <Card className="text-success">
-              <h6>Paleta genów</h6>
+            <div className="row">
+              <div className="col-md-6">
+                <Card>
+                  <h4 className="mb-3">Paleta genów</h4>
 
-              <Tabs variant="pills" defaultActiveKey="normal" id="uncontrolled-tab-example" className="mb-3">
-                
-                <Tab eventKey="normal" title="Zwykłe">
-                  <AddNewGeneBtn targetGeneList={ GENE_LIST.NORMAL } dispatch={dispatch } />
+                  <Tabs variant="pills" defaultActiveKey="normal" id="uncontrolled-tab-example" className="mb-3">
 
-                  <div className="pt-2">
+                    <Tab eventKey="normal" title="Zwykłe">
+                      <AddNewGeneBtn targetGeneList={GENE_LIST.NORMAL} dispatch={dispatch} />
+
+                      <div className="pt-2 overflown">
+                        <Table className="genItem">
+                          <tbody>
+                            {
+                              state.default_genes === undefined || state.default_genes.length === 0 ?
+                                <tr><p className="feedback">Brak genów</p></tr>
+                                :
+                                state.default_genes.map((v, k) => {
+                                  return <GenItem gene={v} key={k} keyId={k + 1} dispatch={dispatch} />
+                                })
+                            }
+                          </tbody>
+                        </Table>
+
+                      </div>
+
+                    </Tab>
+
+                    <Tab eventKey="gender" title="Geny płci">
+                      <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER} dispatch={dispatch} />
+                    </Tab>
+
+                    <Tab eventKey="gender-linked" title="Geny sprzężone z płcią">
+                      <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER_LINKED} dispatch={dispatch} />
+                    </Tab>
+
+                  </Tabs>
+
+                </Card>
+              </div>
+
+              <div className="col-md-6">
+                <Card>
+                  <h4 className="mb-3">Kreator szablonów genotypów</h4>
+                  <Button className="my-btn-dark w-100 btn-sm" style={{ marginTop: "52px" }}>Dodaj nowy szablon</Button>
+                  {
+                    // state.default_genes.map((v, k) => {
+                    //   return <p>{JSON.stringify(v, null, 2)}</p>
+                    // })
+                  }
+
+                  <div className="overflown" style={{ marginTop: "12px" }}>
                     <Table className="genItem">
-		              	  <tbody>
-                      { 
-                        state.default_genes === undefined || state.default_genes.length === 0 ?
-                        <p className="feedback">Brak genów</p>
-                        :
-                        state.default_genes.map((v, k) => {
-                          return <GenItem gene={ v } key={ k } keyId={ k + 1 } dispatch={ dispatch }/>
-                        })
-                      }
+                      <tbody>
+                        {
+                          // state.templates ?
+                          // state.templates.map((v, k) => {
+                          //   return <p key={k}>{JSON.stringify(v, null, 2)}</p>
+                          // })
+                          // :
+                          // <p>No templates.</p>
+
+                          state.default_genes === undefined || state.default_genes.length === 0 ?
+                            <tr><p className="feedback">Brak genów</p></tr>
+                            :
+                            state.templates.map((v, k) => {
+                              return <TempllateIItem key={k} template={v} dispatch={dispatch} keyId={k} state={state}></TempllateIItem>
+                            })
+
+                        }
                       </tbody>
                     </Table>
 
                   </div>
+                </Card>
+              </div>
+            </div>
 
-                </Tab>
-                
-                <Tab eventKey="gender" title="Geny płci">
-                  <AddNewGeneBtn targetGeneList={ GENE_LIST.GENDER } dispatch={ dispatch }/>
-                </Tab>
-                
-                <Tab eventKey="gender-linked" title="Geny sprzężone z płcią">
-                  <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER_LINKED } dispatch={ dispatch }/>
-                </Tab>
-
-              </Tabs>
-
-            </Card>
           </div>
+          }>
+        </Route>
+        <Route path="/test" component={<h3>Test</h3>}></Route>
+      </Switch>
+    </Router>
 
-          <div className="col-md-6">
-          </div>
-        </div>
-
-    </div>
   );
 }
+
+
 
 export default App;

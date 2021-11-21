@@ -1,0 +1,52 @@
+.gene-card
+{
+    display: flex;
+    min-width: 30px;
+    min-height: 30px;
+    margin: 2px;
+
+    background-color: rgb(41, 111, 232);
+    border-radius: 9px;
+
+    text-align: center;
+    color: rgb(33, 33, 33);
+    font-size: 20px;        
+}
+
+.gene-card p
+{
+    min-width: 100%;
+    text-align: center !important;
+
+    margin: 0px !important;
+    padding: 0px !important;
+}
+
+.template-header
+{
+    background-color: rgb(33, 33, 33);
+}
+
+.template-content
+{
+    background-color: rgb(55, 55, 55) !important;
+}
+
+.template-content div div
+{
+    padding: 12px;
+}
+
+.border-4
+{
+    border: 4px;
+    border-color: rgb(33, 33, 33);
+    border-left: 4px;
+    /* border */
+}
+
+.genelist
+{
+    line-height: 2pt;
+    font-size: small;
+}

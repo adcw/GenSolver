@@ -1,3 +1,7 @@
+:root {
+  color-scheme: dark;
+}
+
 body
 {
   background-color:rgb(33, 33, 33) !important;
@@ -68,6 +72,7 @@ body
 .mycard
 {
   padding: 12px;
+  margin-bottom: 12px;
 }
 
 .myheader
@@ -90,7 +95,15 @@ body
   margin: 0px !important;
 }
 
+
 /* Inputs */
+
+.overflown
+{
+  height: 400px !important;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
 
 input
 {
@@ -136,6 +149,13 @@ input:focus
   color: aqua !important;
 }
 
+.btn-edit-bright
+{
+  color: whitesmoke !important;
+}
+
+
+
 .btn-delete:hover
 {
   color: red !important;
@@ -157,4 +177,12 @@ input:focus
 .txt-right 
 {
   text-align: right;
+}
+.p-relative {
+  position: relative;
+}
+
+.d-inline
+{
+  display: inline !important;
 }
