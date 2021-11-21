@@ -1,12 +1,14 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './utils/FontAwesomeIcons.js';
+
+import { BrowserRouter as Router, Switch, Route, useHistory } from 'react-router-dom';
+
 import RowDivider from './utils/RowDivider';
 import Card from './components/general/Card';
 import { Tab, Tabs, Table, Button } from 'react-bootstrap';
 import GenItem from './components/genepalette/GenItem';
 import { useReducer, useEffect } from 'react';
-import { BrowserRouter } from 'react-router-dom';
 import AddNewGeneBtn from './components/general/AddNewGeneBtn';
 import { TempllateIItem } from './components/genotypetemplate/TempllateIItem';
 
@@ -235,7 +237,22 @@ const initialState = {
     ]
 }
 
+function AppWrapper()
+{
+  return (
+    <Router>
+      <App></App>
+    </Router>
+  )
+}
+
 function App() {
+
+  const history = useHistory();
+
+  const gotoBoard = () => {
+    history.push("/board");
+  }
 
   const [state, dispatch] = useReducer(reducer, initialState, () => {
     const data = localStorage.getItem('state');
@@ -250,113 +267,123 @@ function App() {
 
   return (
 
-    <Router>
-      <Switch>
-        <Route path="/" exact component={
-          <div className="container">
+    <Switch>
+      <Route path="/" exact>
 
-            <div className="row">
-              <div className="col bg-second shadowed d-inline">
-                <h1 className="heading">GenSolver</h1>
-                <button
-                  className="btn btn-warning"
-                  onClick={() =>
-                    dispatch({ type: ACTION.SET_DEFAULT })
-                  }
-                >Przywróć domyślne dane</button>
-              </div>
+        <div className="container">
+
+          <div className="row">
+            <div className="col bg-second shadowed d-inline">
+              <h1 className="heading">GenSolver</h1>
+
+              <button
+                className="btn btn-warning"
+                onClick={() =>
+                  dispatch({ type: ACTION.SET_DEFAULT })
+                }
+              >Przywróć domyślne dane</button>
+
+              <button
+                className="btn btn-success f-right"
+                onClick={gotoBoard}
+              >
+                Stwórz krzyżówkę
+              </button> 
+
             </div>
-
-            <RowDivider />
-
-            <div className="row">
-              <div className="col-md-6">
-                <Card>
-                  <h4 className="mb-3">Paleta genów</h4>
-
-                  <Tabs variant="pills" defaultActiveKey="normal" id="uncontrolled-tab-example" className="mb-3">
-
-                    <Tab eventKey="normal" title="Zwykłe">
-                      <AddNewGeneBtn targetGeneList={GENE_LIST.NORMAL} dispatch={dispatch} />
-
-                      <div className="pt-2 overflown">
-                        <Table className="genItem">
-                          <tbody>
-                            {
-                              state.default_genes === undefined || state.default_genes.length === 0 ?
-                                <tr><p className="feedback">Brak genów</p></tr>
-                                :
-                                state.default_genes.map((v, k) => {
-                                  return <GenItem gene={v} key={k} keyId={k + 1} dispatch={dispatch} />
-                                })
-                            }
-                          </tbody>
-                        </Table>
-
-                      </div>
-
-                    </Tab>
-
-                    <Tab eventKey="gender" title="Geny płci">
-                      <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER} dispatch={dispatch} />
-                    </Tab>
-
-                    <Tab eventKey="gender-linked" title="Geny sprzężone z płcią">
-                      <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER_LINKED} dispatch={dispatch} />
-                    </Tab>
-
-                  </Tabs>
-
-                </Card>
-              </div>
-
-              <div className="col-md-6">
-                <Card>
-                  <h4 className="mb-3">Kreator szablonów genotypów</h4>
-                  <Button className="my-btn-dark w-100 btn-sm" style={{ marginTop: "52px" }}>Dodaj nowy szablon</Button>
-                  {
-                    // state.default_genes.map((v, k) => {
-                    //   return <p>{JSON.stringify(v, null, 2)}</p>
-                    // })
-                  }
-
-                  <div className="overflown" style={{ marginTop: "12px" }}>
-                    <Table className="genItem">
-                      <tbody>
-                        {
-                          // state.templates ?
-                          // state.templates.map((v, k) => {
-                          //   return <p key={k}>{JSON.stringify(v, null, 2)}</p>
-                          // })
-                          // :
-                          // <p>No templates.</p>
-
-                          state.default_genes === undefined || state.default_genes.length === 0 ?
-                            <tr><p className="feedback">Brak genów</p></tr>
-                            :
-                            state.templates.map((v, k) => {
-                              return <TempllateIItem key={k} template={v} dispatch={dispatch} keyId={k} state={state}></TempllateIItem>
-                            })
-
-                        }
-                      </tbody>
-                    </Table>
-
-                  </div>
-                </Card>
-              </div>
-            </div>
-
           </div>
-          }>
-        </Route>
-        <Route path="/test" component={<h3>Test</h3>}></Route>
-      </Switch>
-    </Router>
 
+          <RowDivider />
+
+          <div className="row">
+            <div className="col-md-6">
+              <Card>
+                <h4 className="mb-3">Paleta genów</h4>
+
+                <Tabs variant="pills" defaultActiveKey="normal" id="uncontrolled-tab-example" className="mb-3">
+
+                  <Tab eventKey="normal" title="Zwykłe">
+                    <AddNewGeneBtn targetGeneList={GENE_LIST.NORMAL} dispatch={dispatch} />
+
+                    <div className="pt-2 overflown">
+                      <Table className="genItem">
+                        <tbody>
+                          {
+                            state.default_genes === undefined || state.default_genes.length === 0 ?
+                              <tr><p className="feedback">Brak genów</p></tr>
+                              :
+                              state.default_genes.map((v, k) => {
+                                return <GenItem gene={v} key={k} keyId={k + 1} dispatch={dispatch} />
+                              })
+                          }
+                        </tbody>
+                      </Table>
+
+                    </div>
+
+                  </Tab>
+
+                  <Tab eventKey="gender" title="Geny płci">
+                    <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER} dispatch={dispatch} />
+                  </Tab>
+
+                  <Tab eventKey="gender-linked" title="Geny sprzężone z płcią">
+                    <AddNewGeneBtn targetGeneList={GENE_LIST.GENDER_LINKED} dispatch={dispatch} />
+                  </Tab>
+
+                </Tabs>
+
+              </Card>
+            </div>
+
+            <div className="col-md-6">
+              <Card>
+                <h4 className="mb-3">Kreator szablonów genotypów</h4>
+                <Button className="my-btn-dark w-100 btn-sm" style={{ marginTop: "52px" }}>Dodaj nowy szablon</Button>
+                {
+                  // state.default_genes.map((v, k) => {
+                  //   return <p>{JSON.stringify(v, null, 2)}</p>
+                  // })
+                }
+
+                <div className="overflown" style={{ marginTop: "12px" }}>
+                  <Table className="genItem">
+                    <tbody>
+                      {
+                        // state.templates ?
+                        // state.templates.map((v, k) => {
+                        //   return <p key={k}>{JSON.stringify(v, null, 2)}</p>
+                        // })
+                        // :
+                        // <p>No templates.</p>
+
+                        state.default_genes === undefined || state.default_genes.length === 0 ?
+                          <tr><p className="feedback">Brak genów</p></tr>
+                          :
+                          state.templates.map((v, k) => {
+                            return <TempllateIItem key={k} template={v} dispatch={dispatch} keyId={k} state={state}></TempllateIItem>
+                          })
+
+                      }
+                    </tbody>
+                  </Table>
+
+                </div>
+              </Card>
+            </div>
+          </div>
+
+        </div>
+
+      </Route>
+
+      <Route path="/board">
+        <p>Board</p>
+      </Route>
+    </Switch>
   );
 }
 
 
 
-export default App;
+export default AppWrapper;
