@@ -4,10 +4,13 @@ import { Popover, OverlayTrigger, Form, FormLabel } from 'react-bootstrap';
 import GenSymbol from './GenSymbol';
 import './GenItem.css';
 import '../../App.css';
+import '../../utils/events/EventEmitter.js'
 import { ACTION } from '../../App.js';
 import Confirm from '../general/Confirm';
 import AllelEditor from './AllelEditor';
 import SubSup from './SubSup';
+import { E } from '../../utils/events/EventEmitter';
+// import EventEmitter from '../../utils/events/EventEmitter.js';
 
 const GenItem = ({ gene, keyId, dispatch }) => {
 
@@ -16,15 +19,19 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
 	const nameInput = useRef(null);
 	const editBtn = useRef(null);
-	const deleteBtn = useRef(null);
 	const allelCount = useRef(Object.keys(gene.allels).length);
 
 	/*
 	DISPATCH FUNCTIONS
 	*/
 	const togggleActive = () => dispatch({ type: ACTION.TOGGLE_ACTIVE, payload: { id: gene.id } })
-	const deleteGene = () => dispatch({ type: ACTION.DELETE_GENE, payload: { id: gene.id } });
-	const saveModifiedName = () => dispatch({ type: ACTION.SAVE_NAME, payload: { id: gene.id, name: newName } });
+
+	const deleteGene = () => {
+		dispatch({ type: ACTION.REMOVE_GENE, payload: { id: gene.id } });
+		// EventEmitter.emit(E.onGeneDeleted, { id: gene.id });
+	}
+
+	const saveModifiedName = () => dispatch({ type: ACTION.SAVE_GENE_NAME, payload: { id: gene.id, name: newName } });
 
 	const saveModifiedAllel = (modifiedAllelIndex, newAllel) => {
 		dispatch({ type: ACTION.MODIFY_ALLEL, payload: { id: gene.id, modifiedAllelIndex, newAllel } });
@@ -51,7 +58,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
 	const testDelete = () => {
 		console.log("geneid = " + gene.id);
-		dispatch({ type: ACTION.REMOVE_ALLEL, payload: { geneId: gene.id, allel: 0 } })			
+		dispatch({ type: ACTION.REMOVE_ALLEL, payload: { geneId: gene.id, allel: 0 } })
 	}
 
 	useEffect(() => {
@@ -183,10 +190,9 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 							onConfirm={deleteGene}
 						>
 							<button
-								ref={deleteBtn}
+
 								id="btn-delete"
 								className="btn btn-sm btn-delete"
-							// onClick={ deleteGene }
 							><FontAwesomeIcon icon="times" />
 							</button>
 						</Confirm>

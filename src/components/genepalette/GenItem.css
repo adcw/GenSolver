@@ -21,7 +21,12 @@
     cursor: pointer;
 }
 
+.genItem-popover
+{
+    border: none !important;
+}
+
 .gen-symbols
 {
-    
+
 }

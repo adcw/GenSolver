@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import "./allelEditor.css";
 
-const AllelEditor = ({ chosenAllel, saveModifiedAllel, 
+const AllelEditor = ({ chosenAllel, saveModifiedAllel,
   removeAllel, chosenAllelIndex, geneId }) => {
 
   const subInput = useRef(null);
@@ -65,14 +65,16 @@ const AllelEditor = ({ chosenAllel, saveModifiedAllel,
       {
         (modifiedAllel !== undefined && modifiedAllel !== null) &&
         <>
-          <button 
+          <button
+            type="button"
             className="btn bg-second btn-xs txt-bright"
-            onClick={ (e) => e.preventDefault() || saveAllel() }
+            onClick={ (e) => saveAllel() }
             >
             OK
           </button>
 
-          <button 
+          <button
+            type="button"
             className="btn btn-danger btn-xs"
             onClick={ (e) => removeAllel(chosenAllelIndex) }
           >
@@ -80,9 +82,9 @@ const AllelEditor = ({ chosenAllel, saveModifiedAllel,
           </button>
         </>
       }
-      
+
       </div>
-      
+
     </>
   )
 }

@@ -10,7 +10,7 @@
 
     text-align: center;
     color: rgb(33, 33, 33);
-    font-size: 20px;        
+    font-size: 20px;
 }
 
 .gene-card p
@@ -25,16 +25,23 @@
 .template-header
 {
     background-color: rgb(33, 33, 33);
+    font-size: 16px !important;
+}
+
+.template-header td{
+    border-bottom-width: 0px !important;
 }
 
 .template-content
 {
     background-color: rgb(55, 55, 55) !important;
+    -webkit-box-shadow: inset 0px 5px 15px -9px #000000 !important;
+    box-shadow: inset 0px 5px 15px -9px #000000 !important;
 }
 
 .template-content div div
 {
-    padding: 12px;
+    padding: 7px;
 }
 
 .border-4
@@ -47,6 +54,37 @@
 
 .genelist
 {
-    line-height: 2pt;
+    width: 100%;
     font-size: small;
+    margin-bottom: 6px;
+
+    -webkit-box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.38);
+    box-shadow: 0px 0px 6px -1px rgba(0,0,0,0.38);
+}
+
+.tmp-gene-list-item
+{
+    width: 100%;
+    height: fit-content;
+    padding-top: 2px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.tmp-gene-list-item:last-child
+{
+    border: 1px solid rgba(118, 118, 118, 0.22);
+    word-wrap: break-word;
+}
+
+.tmp-gene-list-item:not(:last-child)
+{
+    border-right: 1px solid rgba(118, 118, 118, 0.22);
+    border-left: 1px solid rgba(118, 118, 118, 0.22);
+    border-top: 1px solid rgba(118, 118, 118, 0.22);
+}
+
+.tmp-gene-list-item:nth-child(odd)
+{
+    background-color: rgba(118, 118, 118, 0.11);
 }

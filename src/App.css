@@ -20,7 +20,7 @@ body
 
 .shadowed
 {
-  -webkit-box-shadow: 3px 6px 15px -8px #000000; 
+  -webkit-box-shadow: 3px 6px 15px -8px #000000;
   box-shadow: 3px 6px 15px -8px #000000;
 }
 
@@ -84,13 +84,18 @@ body
   cursor: pointer;
 }
 
+.pointer
+{
+  cursor: pointer;
+}
+
 .myframe
 {
   border: 3px solid rgb(33, 33, 33);
   /* padding: 6px; */
 }
 
-.m-0 
+.m-0
 {
   margin: 0px !important;
 }
@@ -136,6 +141,22 @@ input:focus
   outline: none !important;
 }
 
+.my-btn-dark:hover
+{
+  background-color: rgb(53, 53, 53) !important;
+}
+
+.my-btn-warning
+{
+  background-color: rgb(130, 153, 25) !important;
+  color: rgb(33, 33, 33) !important;
+}
+
+.my-btn-warning:hover
+{
+  background-color: rgb(105, 119, 43) !important;
+}
+
 .check-input
 {
   height: 20px !important;
@@ -144,17 +165,15 @@ input:focus
   margin-right: 6px;
 }
 
-.btn-edit:hover
+.btn-edit:hover, .btn-edit-bright:hover
 {
   color: aqua !important;
 }
 
 .btn-edit-bright
 {
-  color: whitesmoke !important;
+  color: rgb(104, 104, 104) !important;
 }
-
-
 
 .btn-delete:hover
 {
@@ -174,7 +193,7 @@ input:focus
   border-radius: .2rem !important;
 }
 
-.txt-right 
+.txt-right
 {
   text-align: right;
 }
@@ -182,7 +201,17 @@ input:focus
   position: relative;
 }
 
+.border-none
+{
+  border: none !important;
+}
+
 .d-inline
 {
   display: inline !important;
+}
+
+.text-sm
+{
+  font-size: 12px;
 }
