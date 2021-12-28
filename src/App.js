@@ -6,13 +6,15 @@ import { BrowserRouter as Router, Switch, Route, useHistory } from 'react-router
 
 import RowDivider from './utils/RowDivider';
 import Card from './components/general/Card';
-import { Tab, Tabs, Table, Button } from 'react-bootstrap';
+import { Tab, Tabs, Table, Button, Navbar, Nav, Container} from 'react-bootstrap';
 import GenItem from './components/genepalette/GenItem';
-import { useReducer, useEffect, useContext, useState } from 'react';
+import { useReducer, useEffect, useContext, useState, } from 'react';
 import AddNewGeneBtn from './components/general/AddNewGeneBtn';
 import { TempllateIItem } from './components/genotypetemplate/TempllateIItem';
 import AppContextProvider, { AppContext } from './AppContextProvider';
-// import EventEmitter, { E } from './utils/events/EventEmitter';
+import EventEmitter, { E } from './utils/events/EventEmitter';
+import BoardPage from './components/board/BoardPage';
+import MyNavbar from './components/general/MyNavbar';
 
 export const ACTION = {
   TOGGLE_ACTIVE: "TOGGLE_ACTIVE",
@@ -23,12 +25,14 @@ export const ACTION = {
   MODIFY_ALLEL: "MODIFY_ALLEL",
   ADD_ALLEL: "ADD_ALLEL",
   REMOVE_ALLEL: "REMOVE_ALLEL",
+  SET_GENE_ALLELS: "SET_GENE_ALLELS",
 
   REMOVE_TEMPLATE: "REMOVE_TEMPLATE",
   ADD_TEMPLATE: "ADD_TEMPLATE",
   REMOVE_GENE_FROM_TEMPLATE: "REMOVE_GENE_FROM_TEMPLATE",
   ADD_GENE_TO_TEMPLATE: "ADD_GENE_TO_TEMPLATE",
   SAVE_TEMPLATE_NAME: "SAVE_TEMPLATE_NAME",
+  SET_TEMPLATE_GENES: "SET_TEMPLATE_GENES",
 
   SET_DEFAULT: "SET_DEFAULT"
 };
@@ -73,17 +77,20 @@ function App() {
     <Switch>
       <Route path="/" exact>
 
-        <div className="container">
+        <MyNavbar></MyNavbar>
+
+        <div className="container-fluid">
 
           <div className="row">
-            <div className="col bg-second shadowed d-inline">
-              <h1 className="heading">GenSolver</h1>
+            <div className="col d-inline text-center">
+              <h2 className="text-center">GenSolver</h2>
 
               <button
                 className="btn btn-warning"
-                onClick={() =>
-                  dispatch({ type: ACTION.SET_DEFAULT })
-                }
+                onClick={() => {
+                  dispatch({ type: ACTION.SET_DEFAULT });
+                  EventEmitter.emit(E.onRestoreDefault);
+                }}
               >Przywróć domyślne dane</button>
 
               <button
@@ -156,19 +163,12 @@ function App() {
                   <Table className="genItem" style={{ borderBottomWidth: "0px !important" }}>
                     <tbody>
                       {
-                        // state.templates ?
-                        // state.templates.map((v, k) => {
-                        //   return <p key={k}>{JSON.stringify(v, null, 2)}</p>
-                        // })
-                        // :
-                        // <p>No templates.</p>
-
                         state.default_genes === undefined ?
                           <tr><td><p className="feedback">Brak genów</p></td></tr>
                           :
                           state.templates.map((v, k) => {
                             if (v == null) return;
-                            return <TempllateIItem key={k} template={v} dispatch={dispatch} keyId={k} state={state}></TempllateIItem>
+                            return <TempllateIItem key={k} template={v} keyId={k}></TempllateIItem>
                           })
 
                       }
@@ -184,7 +184,9 @@ function App() {
       </Route>
 
       <Route path="/board">
-        <p>Board</p>
+        <MyNavbar></MyNavbar>
+
+        <BoardPage></BoardPage>
       </Route>
     </Switch>
   );

@@ -1,4 +1,4 @@
-import GenSymbol from "../genepalette/GenSymbol"
+import AllelSymbol from "../genepalette/AllelSymbol"
 import SubSup from "../genepalette/SubSup"
 import "../genotypetemplate/templateItem.css"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -13,37 +13,64 @@ import { ButtonDelete } from "../general/ButtonDelete";
 export const TempllateIItem = ({ template, keyId }) => {
 
   const [collapseOpen, setCollapseOpen] = useState(false);
-
   const { initialState, state, dispatch } = useContext(AppContext);
 
-  const deleteTemplate = () => {
+  // Submit functions
+  const D_deleteTemplate = () => {
     dispatch({ type: ACTION.REMOVE_TEMPLATE, payload: { templateId: template.id } });
   }
 
-  const deleteGene = (geneId) => dispatch({ type: ACTION.REMOVE_GENE_FROM_TEMPLATE, payload: { templateId: template.id, geneId: geneId } });
-  const addGene = (geneId) => dispatch({ type: ACTION.ADD_GENE_TO_TEMPLATE, payload: { templateId: template.id, geneId: geneId } });
+  const D_changeName = (_name) => { dispatch({ type: ACTION.SAVE_TEMPLATE_NAME, payload: { templateId: template.id, name: _name } }); }
+  const D_deleteGene = (_geneId) => dispatch({ type: ACTION.REMOVE_GENE_FROM_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
+  const D_addGene = (_geneId) => dispatch({ type: ACTION.ADD_GENE_TO_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
+  const D_setGenes = (_genes) => dispatch({ type: ACTION.SET_TEMPLATE_GENES, payload: { templateId: template.id, gene_ids: _genes } });
+  // --
 
+  // Values to be submitted
   const nameInputRef = useRef(null);
-  const [nameBtnActive, setNameBtnActive] = useState(false);
-  const nameInputSubmit = (name) => {
-    dispatch({ type: ACTION.SAVE_TEMPLATE_NAME, payload: { templateId: template.id, name: nameInputRef.current.value } });
+  const [tempGeneArray, setTempGeneArray] = useState([
+    ...template.gene_ids
+  ]);
+
+  const deleteGene = (_geneId) => setTempGeneArray([...tempGeneArray].filter((val) => val !== _geneId));
+  const addGene = (_geneId) => setTempGeneArray(tempGeneArray.includes(_geneId) ? [...tempGeneArray] : [...tempGeneArray, _geneId]);
+
+  //
+  // const
+
+  const [saveButtonActive, setSaveButtonActive] = useState(false);
+
+  const discardChanges = () => {
+    if (nameChanged()) nameInputRef.current.value = template.name;
+    if (geneChanged()) setTempGeneArray([...template.gene_ids]);
+    anyChange();
   }
 
-  const event = new Event('input', { bubbles: true });
-  useEffect(() => {
-    nameInputRef.current.dispatchEvent(event);
-  })
+  const saveChanges = () => {
+    if (nameChanged()) D_changeName(nameInputRef.current.value);
+    if (geneChanged()) D_setGenes(tempGeneArray);
+  }
+
+  const nameChanged = () => nameInputRef.current.value !== template.name;
+  const geneChanged = () => JSON.stringify(tempGeneArray) !== JSON.stringify(template.gene_ids);
+  const anyChange = () => setSaveButtonActive(nameChanged() || geneChanged());
+
+  useEffect(() => { anyChange(); });
 
   const popover = (
-    <Popover id="popover-basic" className="bg-second">
-      <Popover.Header as="h3" className="bg-dark">Popover right</Popover.Header>
+    <Popover id="popover-basic" className="bg-second" style={{ minWidth: "300px" }}>
+      <Popover.Header as="h3" className="bg-dark">Wybierz geny</Popover.Header>
       <Popover.Body>
         {
-          state.default_genes.map((_g, _k) => {
-            return <span key={_k} className="tmp-gene-list-item d-flex text-white px-2 pb-1 pointer"
-              onClick={() => addGene(_g.id)}
-            >{_g.name}</span>
-          })
+          state.default_genes.filter((g) => g.isActive).length !== 0 ?
+            state.default_genes.map((_g, _k) => {
+              if (_g.isActive) {
+                return <span key={_k} className="tmp-gene-list-item d-flex text-white px-2 pb-1 pointer hoverable"
+                onClick={() => addGene(_g.id)}
+              >{_g.name}</span>
+              }
+            })
+            : <p className="feedback">Brak genów. Dodaj geny lub włącz ich widoczność</p>
         }
       </Popover.Body>
     </Popover>
@@ -64,8 +91,8 @@ export const TempllateIItem = ({ template, keyId }) => {
           <div>
             <div className="m-0 txt-right fill-empty d-flex">
               {
-                template.gene_ids.length !== 0 ?
-                  template.gene_ids.map((v, k) => {
+                tempGeneArray.length !== 0 ?
+                  tempGeneArray.map((v, k) => {
 
                     const gene = state.default_genes.find(g => g.id === v);
 
@@ -75,7 +102,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                     else {
                       return (
                         <div key={k} className="d-inline feedback">
-                          <SubSup allel={gene.allels[0]}></SubSup>{k < template.gene_ids.length - 1 && <>,&nbsp;</>}
+                          <SubSup allel={gene.allels[0]}></SubSup>{k < tempGeneArray.length - 1 && <>,&nbsp;</>}
                         </div>
                       )
                     }
@@ -100,7 +127,7 @@ export const TempllateIItem = ({ template, keyId }) => {
 
           <Confirm
             content={<center className="mb-3">Czy na pewno chcesz usunąć bezpowrotnie te szablon?</center>}
-            onConfirm={() => deleteTemplate()}
+            onConfirm={() => D_deleteTemplate()}
           >
             <button className="btn btn-xs btn-delete">
               <FontAwesomeIcon className="text-secondary" icon="times" />
@@ -118,28 +145,27 @@ export const TempllateIItem = ({ template, keyId }) => {
               <GTContent title="Nazwa:">
                 <input ref={nameInputRef} type="text" className="btn-xs w-100" defaultValue={template.name}
                   onChange={(e) => {
-                    setNameBtnActive(e.target.value === template.name ? false : true);
+                    anyChange()
                   }}
                 ></input>
-                <button className="btn-xs btn my-btn-dark text-secondary mx-1"
-                  disabled={!nameBtnActive}
-                  onClick={() => {
-                    nameInputSubmit(nameInputRef.current.value);
-                    nameInputRef.current.dispatchEvent(event);
-                  }}
-                >
-                  Zapisz
-                </button>
-                <button className="btn-xs btn my-btn-warning">
-                  Anuluj
-                </button>
+
+                <button className="btn-xs btn my-btn-warning mx-1"
+                  disabled={!saveButtonActive}
+                  onClick={() => discardChanges()}
+                >Anuluj</button>
+
+                <button className="btn-xs btn my-btn-success"
+                  disabled={!saveButtonActive}
+                  onClick={() => {saveChanges()}}
+                >Zapisz</button>
+
               </GTContent>
 
               <GTContent title="Geny:">
                 <div className="genelist">
                   {
-                    template.gene_ids.length !== 0 ?
-                      template.gene_ids.map((v, k) => {
+                    tempGeneArray !== 0 ?
+                      tempGeneArray.map((v, k) => {
                         const gene = state.default_genes.find(g => g.id === v);
 
                         if (gene == null) {

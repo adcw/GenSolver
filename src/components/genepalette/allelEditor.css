@@ -1,11 +1,8 @@
 .allelEditor
 {
-    min-width: 30px;
-    min-height: 150px;
-
-    margin: 40px;
-    margin-top: 20px;
-    margin-bottom: 0px;
+    /* min-width: 60px; */
+    min-height: 100px;
+    /* margin-bottom: 0px; */
 
     background-color: rgb(55, 55, 55);
     border-radius: 9px 9px 0 0;
@@ -21,11 +18,11 @@
 .allelEditor input.sup
 {
     position: fixed;
-    top: 190px;
-    left: 160px;
+    top: 60px;
+    left: 90px;
 
     max-width: 35px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 
     background-color: rgb(55, 55, 55) !important;
@@ -35,11 +32,11 @@
 .allelEditor input.sub
 {
     position: fixed;
-    top: 260px;
-    left: 160px;
+    top: 100px;
+    left: 90px;
 
     max-width: 35px;
-    font-size: 20px;
+    font-size: 24px;
     text-align: center;
 
     background-color: rgb(55, 55, 55) !important;
@@ -49,9 +46,10 @@
 .allelEditor input.txt
 {
     position: relative;
-    left: -16px;
+    left: -20px;
+    top: 20px;
 
-    max-width: 70px;
+    max-width: 60px;
     font-size: 40px;
     text-align: center;
 
@@ -61,12 +59,12 @@
 
 .ae-buttons
 {
-    min-width: 30px;
-    margin-left: 40px;
-    margin-right: 40px;
+    min-width: 60px;
+    margin-left: 30px;
+    margin-right: 30px;
     /* margin-top: 10px; */
 
-    background-color: rgb(55, 55, 55);
+    /* background-color: rgb(55, 55, 55);
     border-radius: 0 0 9px 9px;
     border: 0px;;
 
@@ -74,10 +72,15 @@
     align-items: center;
     justify-content: center;
     color: rgb(33, 33, 33);
-    font-size: 20px;
+    font-size: 20px; */
 }
 
 .ae-buttons button
 {
     float: left;
+}
+
+.popover-body
+{
+    /* padding: 0px; */
 }

@@ -1,18 +1,18 @@
 import './genSymbol.css';
 import SubSup from './SubSup';
 
-const GenSymbol = ({ content, isAddButton, onClick }) => {
+const AllelSymbol = ({ content, isAddButton, onClick }) => {
   return (
     <div className={`genSymbol ${isAddButton ? 'addBtn' : ''}`} onClick={onClick}>
       <p>{isAddButton ? "+" :
-        <SubSup allel={content} />
+        <SubSup allel={content} small={true}/>
       }</p>
     </div>
   )
 }
 
-GenSymbol.defaultProps = {
+AllelSymbol.defaultProps = {
   content: 'A'
 }
 
-export default GenSymbol
+export default AllelSymbol

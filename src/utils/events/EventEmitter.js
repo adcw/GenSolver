@@ -1,7 +1,7 @@
 import { EventEmitter } from "fbemitter";
 
 export const E = {
-  onGeneDeleted: "onGeneDeleted"
+  board_onTemplateChanged: "board_onTemplateChanged"
 };
 
 export default new EventEmitter();

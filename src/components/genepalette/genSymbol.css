@@ -2,15 +2,20 @@
 {
     display: flex;
     min-width: 30px;
-    min-height: 30px;
-    margin: 2px;
+    max-height: 30px;
+    /* margin: 2px; */
+    padding: 1px !important;
 
     background-color: rgb(41, 111, 232);
-    border-radius: 9px;
+    border-radius: 4px;
 
     text-align: center;
+    justify-content: center;
+    align-items: center;
+
     color: rgb(33, 33, 33);
     font-size: 20px;
+    color: white;
 }
 
 .addBtn

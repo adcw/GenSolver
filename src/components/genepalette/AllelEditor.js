@@ -72,14 +72,6 @@ const AllelEditor = ({ chosenAllel, saveModifiedAllel,
             >
             OK
           </button>
-
-          <button
-            type="button"
-            className="btn btn-danger btn-xs"
-            onClick={ (e) => removeAllel(chosenAllelIndex) }
-          >
-            Usuń
-          </button>
         </>
       }
 

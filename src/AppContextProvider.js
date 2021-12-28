@@ -162,6 +162,18 @@ function reducer(state, action) {
         ]
       }
 
+    case ACTION.SET_GENE_ALLELS:
+      return {
+        ...state,
+        default_genes: [
+          ...state.default_genes.map((gene) => {
+            return gene.id === action.payload.id ?
+            action.payload.allels
+            : gene
+          })
+        ]
+      }
+
     case ACTION.REMOVE_TEMPLATE:
 
       return {
@@ -233,6 +245,22 @@ function reducer(state, action) {
         ]
       }
 
+    case ACTION.SET_TEMPLATE_GENES:
+      console.log(JSON.stringify(action.payload));
+      return {
+        ...state,
+        templates: [
+          ...state.templates.map((template) => {
+            return template.id === action.payload.templateId ?
+            {
+              ...template,
+              gene_ids: [...action.payload.gene_ids]
+            }
+            : template
+          })
+        ]
+      }
+
     case ACTION.SET_DEFAULT:
       return initialState;
 
@@ -262,7 +290,7 @@ function newGene(state) {
   }
 }
 
-function newAllel() {
+export function newAllel() {
   return {
     "sup": "",
     "main": "A",
