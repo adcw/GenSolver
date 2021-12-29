@@ -34,6 +34,9 @@ export const ACTION = {
   SAVE_TEMPLATE_NAME: "SAVE_TEMPLATE_NAME",
   SET_TEMPLATE_GENES: "SET_TEMPLATE_GENES",
 
+  INITIALIZE_SELECTION: "INITIALIZE_SELECTION",
+  SET_GENOTYPES: "SET_GENOTYPES",
+
   SET_DEFAULT: "SET_DEFAULT"
 };
 
@@ -56,10 +59,6 @@ function AppWrapper() {
 function App() {
 
   const history = useHistory();
-
-  const gotoBoard = () => {
-    history.push("/board");
-  }
 
   const { initialState, state, dispatch } = useContext(AppContext);
 
@@ -84,22 +83,6 @@ function App() {
           <div className="row">
             <div className="col d-inline text-center">
               <h2 className="text-center">GenSolver</h2>
-
-              <button
-                className="btn btn-warning"
-                onClick={() => {
-                  dispatch({ type: ACTION.SET_DEFAULT });
-                  EventEmitter.emit(E.onRestoreDefault);
-                }}
-              >Przywróć domyślne dane</button>
-
-              <button
-                className="btn btn-success f-right"
-                onClick={gotoBoard}
-              >
-                Stwórz krzyżówkę
-              </button>
-
             </div>
           </div>
 

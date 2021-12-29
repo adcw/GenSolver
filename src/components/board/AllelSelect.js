@@ -1,13 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import SubSup from "../genepalette/SubSup";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
+import { AppContext } from "../../AppContextProvider";
 
-export const AllelSelect = ({ set, targetGenotype, onValueChanged}) => {
 
-  const [currentSelectedAllelIndex, setCurrentSelectedAllelIndex] = useState(0);
+export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
+  const { initialState, state, dispatch } = useContext(AppContext);
+
+  const [currentSelectedAllelIndex, setCurrentSelectedAllelIndex] = useState(defaultSelIndex);
 
   const changeSelection = (indx) => {
     setCurrentSelectedAllelIndex(indx);
@@ -15,11 +18,16 @@ export const AllelSelect = ({ set, targetGenotype, onValueChanged}) => {
   };
 
   useEffect(() => {
-    const subscription = EventEmitter.addListener(E.board_onTemplateChanged, () => {
-      setCurrentSelectedAllelIndex(0);
+    const sub_tch = EventEmitter.addListener(E.board_onTemplateChanged, () => {
+      setCurrentSelectedAllelIndex(defaultSelIndex);
+    });
+
+    const sub_def = EventEmitter.addListener(E.onRestoreDefault, () => {
+      setCurrentSelectedAllelIndex(defaultSelIndex);
     });
     return () => {
-      subscription.remove();
+      sub_tch.remove();
+      sub_def.remove();
     }
   })
 
@@ -41,7 +49,7 @@ export const AllelSelect = ({ set, targetGenotype, onValueChanged}) => {
 
   return (
     <div>
-      <OverlayTrigger trigger="click" placement="bottom" overlay={ popover } rootClose>
+      <OverlayTrigger trigger="click" placement="bottom" overlay={popover} rootClose>
         <div className="bg-first mx-1 px-2 pointer text-center pt-2" style={{ minWidth: "40px", minHeight: "40px" }}>
           <SubSup allel={set[currentSelectedAllelIndex]}></SubSup>
         </div>
@@ -49,4 +57,10 @@ export const AllelSelect = ({ set, targetGenotype, onValueChanged}) => {
 
     </div>
   )
+}
+
+AllelSelect.defaultProps =
+{
+  onValueChanged: () => console.log("val"),
+  defaultSelIndex: 0,
 }

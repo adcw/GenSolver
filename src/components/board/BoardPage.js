@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Container, Row, Col, Table } from 'react-bootstrap';
+import { ACTION } from "../../App";
 import { AppContext } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 
@@ -8,36 +9,20 @@ import GenotypeAssembly from "./GenotypeAssembly";
 
 const BoardPage = () => {
 
-  const getDefaultGenotype = () => {
-    return state.templates[currentSelectedIndex].gene_ids.map((geneId, k) => {
-      return {
-        geneId: geneId,
-        allel_1: 0,
-        allel_2: 0
-      }
-    })
-  }
-
   const { initialState, state, dispatch } = useContext(AppContext);
-  const [currentSelectedIndex, setCurrentSelectedIndex] = useState(0);
-
-  const [genotypeA, setGenotypeA] = useState(getDefaultGenotype);
-  const [genotypeB, setGenotypeB] = useState(getDefaultGenotype);
+  // const [currentSelectedIndex, setCurrentSelectedIndex] = useState(0);
 
   const setCurrentSelection = (selectedIndex) => {
     console.log("now selection is: " + selectedIndex);
 
-    setCurrentSelectedIndex(selectedIndex);
+    dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: selectedIndex }});
 
-    setGenotypeA(getDefaultGenotype());
-    setGenotypeB(getDefaultGenotype());
+    // setCurrentSelectedIndex(selectedIndex);
   }
 
-  useEffect(() => {
-    setGenotypeA(getDefaultGenotype());
-    setGenotypeB(getDefaultGenotype());
-    EventEmitter.emit(E.board_onTemplateChanged);
-  }, [currentSelectedIndex])
+  // useEffect(() => {
+  //   EventEmitter.emit(E.board_onTemplateChanged);
+  // }, [currentSelectedIndex])
 
   return (
     <Container fluid>
@@ -47,7 +32,7 @@ const BoardPage = () => {
             {
               state.templates.map((v, k) => {
                 if (v == null) return;
-                return <BoardTemplateChoice template={v} key={k} keyId={k} selected={k === currentSelectedIndex}
+                return <BoardTemplateChoice template={v} key={k} keyId={k}
                   _onChange={(e, _k) => e.target.checked && setCurrentSelection(_k)}
                 ></BoardTemplateChoice>
               })
@@ -55,13 +40,7 @@ const BoardPage = () => {
           </div>
 
           <div className="w-100 mt-3 bg-second shadowed-2 p-2">
-            <GenotypeAssembly currentSelectedIndex={currentSelectedIndex}
-              genotypeA={genotypeA}
-              genotypeB={genotypeB}
-              setGenotypeA={setGenotypeA}
-              setGenotypeB={setGenotypeB}
-              getDefalutGenotype={getDefaultGenotype}
-            ></GenotypeAssembly>
+            <GenotypeAssembly></GenotypeAssembly>
           </div>
 
         </Col>

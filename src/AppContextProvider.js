@@ -52,7 +52,15 @@ const initialState = {
       "id": 3,
       "name": "Czowiek",
       "gene_ids": [4]
-    }]
+    }],
+
+  "cross_data": {
+    "template_id": 1,
+    "genotypes": {
+      "A": [[0, 1], [1, 0], [1, 1]],
+      "B": [[1, 1], [0, 0], [0, 1]]
+    }
+  }
 }
 
 function reducer(state, action) {
@@ -168,8 +176,8 @@ function reducer(state, action) {
         default_genes: [
           ...state.default_genes.map((gene) => {
             return gene.id === action.payload.id ?
-            action.payload.allels
-            : gene
+              action.payload.allels
+              : gene
           })
         ]
       }
@@ -252,13 +260,41 @@ function reducer(state, action) {
         templates: [
           ...state.templates.map((template) => {
             return template.id === action.payload.templateId ?
-            {
-              ...template,
-              gene_ids: [...action.payload.gene_ids]
-            }
-            : template
+              {
+                ...template,
+                gene_ids: [...action.payload.gene_ids]
+              }
+              : template
           })
         ]
+      }
+
+    case ACTION.INITIALIZE_SELECTION:
+      console.log(JSON.stringify(action.payload));
+      return {
+        ...state,
+        cross_data: {
+          template_id: state.templates[action.payload.newId].id,
+          genotypes: {
+            A: state.templates[action.payload.newId].gene_ids.map(() => {
+              return [0, 0]
+            })
+            ,
+            B: state.templates[action.payload.newId].gene_ids.map(() => {
+              return [0, 0]
+            })
+          }
+        }
+      }
+
+    case ACTION.SET_GENOTYPES:
+      console.log(JSON.stringify(action.payload));
+      return {
+        ...state,
+        cross_data: {
+          ...state.cross_data,
+          genotypes: action.payload.genotypes
+        }
       }
 
     case ACTION.SET_DEFAULT:

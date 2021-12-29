@@ -1,13 +1,37 @@
-import { Navbar, Container, Nav } from "react-bootstrap"
+import { Navbar, Container, Nav, Button } from "react-bootstrap";
+import { ACTION } from "../../App";
+import AppContextProvider, { AppContext } from "../../AppContextProvider";
+import EventEmitter, { E } from "../../utils/events/EventEmitter";
+import React, { useContext } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 
 const MyNavbar = () => {
+
+  const { initialState, state, dispatch } = useContext(AppContext);
+  const history = useHistory();
+  const location = useLocation();
+
+  const updateHistory = (newPath) => {
+    if (location.pathname !== newPath) history.push(newPath);
+  }
+
   return (
     <Navbar className="bg-third" variant="dark" sticky="top">
       <Container>
         <Navbar.Brand href="#home">GenSolver</Navbar.Brand>
-        <Nav className="me-auto">
-          <Nav.Link href="/">Kreator genotypów</Nav.Link>
-          <Nav.Link href="/board">Kreator krzyżówek</Nav.Link>
+        <Nav className="me-auto d-flex">
+          <div className="nav-link pointer"
+            onClick={() => updateHistory("/")}
+          >Kreator genotypów</div>
+          <div className="nav-link pointer"
+            onClick={() => updateHistory("/board")}
+          >Kreator krzyżówek</div>
+          <div className="nav-link pointer"
+            onClick={() => {
+              dispatch({ type: ACTION.SET_DEFAULT });
+              EventEmitter.emit(E.onRestoreDefault);
+            }}
+          >Przywróć domyślne dane</div>
         </Nav>
       </Container>
     </Navbar>
