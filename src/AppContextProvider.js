@@ -8,14 +8,21 @@ const initialState = {
     {
       "id": 1,
       "name": "Kolor czarny, czekoladowy i cynamonowy",
-      "allels": [{ "sup": "", "main": "B", "sub": "" }, { "sup": "", "main": "b", "sub": "" }, { "sup": "", "main": "b1", "sub": "" }],
+      "allels": [
+        { "sup": "", "main": "B", "sub": "", "desc": "barwa czarna", "prior": 2 },
+        { "sup": "", "main": "b", "sub": "", "desc": "barwa czekoladowa", "prior": 1 },
+        { "sup": "", "main": "b1", "sub": "", "desc": "barwa cynamonowa", "prior": 0 }
+      ],
       "isActive": true, "triggerEdit": false
     },
 
     {
       "id": 2,
       "name": "Rozjaśnienie",
-      "allels": [{ "sup": "", "main": "D", "sub": "" }, { "sup": "", "main": "d", "sub": "" }],
+      "allels": [
+        { "sup": "", "main": "D", "sub": "", "desc": "brak rozjaśnienia", "prior": 1 },
+        { "sup": "", "main": "d", "sub": "", "desc": "obecność rozjaśnienia", "prior": 0 }
+      ],
       "isActive": true,
       "triggerEdit": false
     },
@@ -23,17 +30,25 @@ const initialState = {
     {
       "id": 3,
       "name": "Rudy",
-      "allels": [{ "sup": "", "main": "O", "sub": "" }, { "sup": "", "main": "o", "sub": "" }],
+      "allels": [
+        { "sup": "", "main": "O", "sub": "", "desc": "rudość", "prior": 1 },
+        { "sup": "", "main": "o", "sub": "", "desc": "brak rudości", "prior": 0 }
+      ],
       "isActive": true,
       "triggerEdit": false
     },
 
-    {
-      "id": 4,
-      "name": "Daltonizm",
-      "allels": [{ "sup": "d", "main": "X", "sub": "" }, { "sup": "d", "main": "X", "sub": "" }, { "sup": "", "main": "Y", "sub": "" }],
-      "isActive": true, "triggerEdit": false
-    }],
+    // {
+    //   "id": 4,
+    //   "name": "Daltonizm",
+    //   "allels": [
+    //     { "sup": "D", "main": "X", "sub": "" },
+    //     { "sup": "d", "main": "X", "sub": "" },
+    //     { "sup": "", "main": "Y", "sub": "" }
+    //   ],
+    //   "isActive": true, "triggerEdit": false
+    // }
+  ],
 
   "templates": [
     {
@@ -48,11 +63,12 @@ const initialState = {
       "gene_ids": [1, 2]
     },
 
-    {
-      "id": 3,
-      "name": "Czowiek",
-      "gene_ids": [4]
-    }],
+    // {
+    //   "id": 3,
+    //   "name": "Czowiek",
+    //   "gene_ids": [4]
+    // }
+  ],
 
   "cross_data": {
     "template_id": 1,
@@ -235,7 +251,21 @@ function reducer(state, action) {
               }
               : template
           })
-        ]
+        ],
+
+        cross_data: {
+          template_id: action.payload.templateId,
+          genotypes: {
+            A: state.templates[action.payload.templateId].gene_ids.map(() => {
+              return [0, 0]
+            })
+            ,
+            B: state.templates[action.payload.templateId].gene_ids.map(() => {
+              return [0, 0]
+            })
+          }
+        }
+
       }
 
     case ACTION.SAVE_TEMPLATE_NAME:

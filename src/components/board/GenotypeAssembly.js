@@ -33,12 +33,12 @@ const GenotypeAssembly = () => {
   const _extract = (allel, indx) => {
     const gene = state.default_genes.find(
       (g) => g.id === state.templates.find(
-        (elem) => elem.id === state.cross_data.template_id).gene_ids[indx]);
+        (elem) => elem.id === state.cross_data.template_id)?.gene_ids[indx]);
 
-    return <span key={indx} className="pr-1">
+    return gene ? <span key={indx} className="pr-1">
       <SubSup allel={gene.allels[allel[0]]}></SubSup>
       <SubSup allel={gene.allels[allel[1]]}></SubSup>
-    </span>
+    </span> : <span key={indx}></span>
   }
 
   const [_updatedGenotypes, set_updatedGenotypes] = useState({ ...state.cross_data.genotypes });
@@ -82,8 +82,7 @@ const GenotypeAssembly = () => {
         <Col>
           <h6 className="text-md">Osobnik A:</h6>
           {
-            state.templates.find((elem) => elem.id === state.cross_data.template_id)
-              .gene_ids.map((_geneID_template, _gid_t_i) => {
+            state.templates.find((elem) => elem.id === state.cross_data.template_id)?.gene_ids.map((_geneID_template, _gid_t_i) => {
                 var _gene = state.default_genes.find((v) => v.id === _geneID_template).allels;
 
                 return <div key={_gid_t_i} className="d-flex my-2">
@@ -103,7 +102,7 @@ const GenotypeAssembly = () => {
         <Col>
           <h6 className="text-md">Osobnik B:</h6>
           {
-            state.templates.find((elem) => elem.id === state.cross_data.template_id).gene_ids.map((_geneID_template, _gid_t_i) => {
+            state.templates.find((elem) => elem.id === state.cross_data.template_id)?.gene_ids.map((_geneID_template, _gid_t_i) => {
               var _gene = state.default_genes.find((v) => v.id === _geneID_template).allels;
 
               return <div key={_gid_t_i} className="d-flex my-2">
@@ -134,14 +133,6 @@ const GenotypeAssembly = () => {
               return _extract(_allel_i, _k)
             })
           }
-        </Col>
-      </Row>
-
-      <Row>
-        <Col>
-          <Button className="text-center w-100 btn-xs mt-3 bg-first btn-outline-dark txt-bright"
-
-          >Stwórz krzyżówkę</Button>
         </Col>
       </Row>
     </>

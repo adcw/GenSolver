@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import SubSup from "../genepalette/SubSup";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
@@ -15,9 +15,11 @@ export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
   const changeSelection = (indx) => {
     setCurrentSelectedAllelIndex(indx);
     onValueChanged(indx);
+    document.body.click();
   };
 
   useEffect(() => {
+    setCurrentSelectedAllelIndex(defaultSelIndex);
     const sub_tch = EventEmitter.addListener(E.board_onTemplateChanged, () => {
       setCurrentSelectedAllelIndex(defaultSelIndex);
     });

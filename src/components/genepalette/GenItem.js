@@ -36,7 +36,11 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
 	const D_removeAllel = (allelIndex) => dispatch({ type: ACTION.REMOVE_ALLEL, payload: { id: gene.id, modifiedAllelIndex: 0 } });
 	const D_setGeneAllels = (allels) => dispatch({ type: ACTION.SET_GENE_ALLELS, payload: { id:gene.id, allels: allels } });
-	//
+
+	// const D_setAllelDesc = (names) => {
+
+	// }
+
 	const [isSaveButtonActive, setIsSaveButtonActive] = useState(false);
 
 	const nameInputRef = useRef(null);
@@ -89,15 +93,42 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 		if (allelsChanged()) D_setGeneAllels(tempGeneContent);
 	};
 
-	const nameChanged = () => nameInputRef !== null ? nameInputRef.current.value !== gene.name : false;
+	const editDesc = (_allelIndx, _newDesc) => {
+		setTempGeneContent({
+			...tempGeneContent,
+			allels: tempGeneContent.allels.map((allel, k_allel) => {
+				return k_allel === _allelIndx ?
+				{
+					...allel,
+					desc: _newDesc
+				}
+				: allel
+			})
+		})
+	}
+
+	const editPriority = (_allelIndx, _priority) => {
+		setTempGeneContent({
+			...tempGeneContent,
+			allels: tempGeneContent.allels.map((allel, k_allel) => {
+				return k_allel === _allelIndx ?
+				{
+					...allel,
+					prior: _priority
+				}
+				: allel
+			})
+		})
+	}
+
+	const nameChanged = () => nameInputRef !== null ? nameInputRef.current.value !== gene.name : false
 	const allelsChanged = () => JSON.stringify(tempGeneContent) !== JSON.stringify(gene)
-	const onAnyChange = () => setIsSaveButtonActive(nameChanged() || allelsChanged());
+	const onAnyChange = () => setIsSaveButtonActive(nameChanged() || allelsChanged())
 
 	useEffect(() => {
 		onAnyChange();
 
 		const restDefSubscription = EventEmitter.addListener(E.onRestoreDefault, () => {
-			console.log("Restored default state");
 			discardChanges();
 		});
 
@@ -118,39 +149,6 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 			</Popover.Header>
 
 			<Popover.Body className="bg-first txt-bright popover-body">
-
-				{/* <Form>
-					<Form.Group>
-						<FormLabel className="txt-h6" htmlFor="gen-name-input">Nazwa:</FormLabel>
-						<Form.Control
-							ref={nameInput}
-							type="text"
-							id="gen-name-input"
-							defaultValue={gene.name}
-							onKeyDown={(e) => (e.key === 'Enter' && (e.preventDefault() || saveSettings()))}
-							onChange={e => setnewName(e.target.value)}>
-						</Form.Control>
-					</Form.Group>
-					<hr />
-
-					<div className="gen-symbols">
-						{
-							gene.allels.map((allel, index) => {
-								return <GenSymbol className={index === chosenAllelIndex ? "active" : ""} content={allel} key={index}
-									onClick={() => {
-										setChosenAllelIndex(index)
-									}} />
-							})
-						}
-						{
-							allelCount.current < 7 &&
-							<GenSymbol
-								isAddButton
-								onClick={addNewAllel}
-							/>
-						}
-
-					</div> */}
 
 				<AllelEditor
 					chosenAllel={tempGeneContent.allels[chosenAllelIndex]}
@@ -264,7 +262,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 								<div className='genelist'>
 									<button
 										onClick={ ()=> addAllel() }
-									>Dodaj test</button>
+									>Dodaj</button>
 									{
 										tempGeneContent.allels.map((allel, k) => {
 											return (
@@ -280,10 +278,16 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 														</div>
 													</OverlayTrigger>
 
-													<input className="btn-xs w-100" placeholder="podaj etykietę allelu"></input>
+													<input className="btn-xs w-100" value={tempGeneContent.allels[k].desc}
+														onChange={(e) => editDesc(k, e.target.value)}
+													></input>
 
 													<p className="text-sm m-0 pl-3 pr-2">Priorytet:</p>
-													<input className="priority-input" type="number" min="0" defaultValue="0"></input>
+
+													<input className="priority-input" type="number" min="0" value={tempGeneContent.allels[k].prior}
+														onChange={(e) => editPriority(k, e.target.value)}
+													></input>
+
 													<FontAwesomeIcon icon="times" className="f-right dismiss-btn mt-2 text-sm mx-2 pointer"
 														onClick={ () => deleteAllel(k) }
 													></FontAwesomeIcon>

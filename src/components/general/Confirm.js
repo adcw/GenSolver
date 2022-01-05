@@ -2,7 +2,7 @@ import { OverlayTrigger, Popover, Button } from "react-bootstrap"
 
 
 const Confirm = ({ onConfirm, onDiscard, children, confirmBtnText,
-  discardButtonText, content }) => {
+  discardButtonText, content, title }) => {
 
   const close = () => document.body.click();
 
@@ -18,7 +18,7 @@ const Confirm = ({ onConfirm, onDiscard, children, confirmBtnText,
 
   const popover = (
     <Popover id="popover-basic" className="bg-first shadowed">
-      <Popover.Header as="h3" className="bg-second">Potwierdź akcję</Popover.Header>
+      <Popover.Header as="h3" className="bg-second">{title}</Popover.Header>
       <Popover.Body className="txt-bright">
         {content}
         <div style={{ "textAlign": "center" }}>
@@ -57,7 +57,8 @@ Confirm.defaultProps = {
   confirmBtnText: "OK",
   discardButtonText: "Anuluj",
   children: <Button>press</Button>,
-  content: <p>Czy jesteś pewien?</p>
+  content: <p>Czy jesteś pewien?</p>,
+  title: "Potwierdź akcję",
 }
 
 export default Confirm;

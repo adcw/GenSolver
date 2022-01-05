@@ -6,6 +6,7 @@ body
 {
   background-color:rgb(33, 33, 33) !important;
   color: rgb(200, 200, 200) !important;
+  overflow-x: hidden;
 }
 
 .bg-first
@@ -126,6 +127,12 @@ body
   height: 400px !important;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.overflown-xy
+{
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 input
@@ -270,4 +277,32 @@ input:focus
 .selected-1
 {
   background-color: #1d1d1d;
+}
+
+ul.my-tabs
+{
+  border: none;
+}
+
+ul.my-tabs li
+{
+  font-size: 12px;
+}
+
+ul.my-tabs li button
+{
+  color: whitesmoke !important;
+  background-color: rgb(33, 33, 33) !important;
+  padding: 3px;
+}
+
+ul.my-tabs li button.active
+{
+  color: whitesmoke !important;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+
+  border-bottom-color: rgb(46, 46, 46) !important;
+  background-color: rgb(46, 46, 46) !important;
 }

@@ -24,6 +24,7 @@ export const TempllateIItem = ({ template, keyId }) => {
   const D_deleteGene = (_geneId) => dispatch({ type: ACTION.REMOVE_GENE_FROM_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
   const D_addGene = (_geneId) => dispatch({ type: ACTION.ADD_GENE_TO_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
   const D_setGenes = (_genes) => dispatch({ type: ACTION.SET_TEMPLATE_GENES, payload: { templateId: template.id, gene_ids: _genes } });
+  const D_initializeSelection = (_template_id) => dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: _template_id } })
   // --
 
   // Values to be submitted
@@ -48,7 +49,14 @@ export const TempllateIItem = ({ template, keyId }) => {
 
   const saveChanges = () => {
     if (nameChanged()) D_changeName(nameInputRef.current.value);
-    if (geneChanged()) D_setGenes(tempGeneArray);
+    if (geneChanged()) {
+      D_setGenes(tempGeneArray);
+      if (template.id === state.cross_data.template_id) {
+        state.templates.forEach((t, k_t) => {
+          if (t.id === template.id) D_initializeSelection(k_t)
+        })
+      }
+    }
   }
 
   const nameChanged = () => nameInputRef.current.value !== template.name;
@@ -65,9 +73,22 @@ export const TempllateIItem = ({ template, keyId }) => {
           state.default_genes.filter((g) => g.isActive).length !== 0 ?
             state.default_genes.map((_g, _k) => {
               if (_g.isActive) {
-                return <span key={_k} className="tmp-gene-list-item d-flex text-white px-2 pb-1 pointer hoverable"
-                onClick={() => addGene(_g.id)}
-              >{_g.name}</span>
+                return _g.allels.length === 0 ?
+                  <span key={_k} className="tmp-gene-list-item d-flex px-2 pb-1 text-warning">{_g.name}
+                    <span className="f-rigth">&nbsp;(Brak alleli)</span>
+                  </span>
+                  :
+                  <span key={_k} className="tmp-gene-list-item d-flex px-2 pb-1 pointer hoverable text-white"
+                    onClick={() => addGene(_g.id)}
+                  >{_g.name}</span>
+
+                  // <span key={_k} className={`tmp-gene-list-item d-flex px-2 pb-1 pointer hoverable ${_g.allels.length === 0 && "text-danger"}`}
+                  //   onClick={() => addGene(_g.id)}
+                  // >{_g.name}
+                  //   {
+                  //     _g.allels.length === 0 && <span className="f-rigth">&nbsp;(Brak alleli)</span>
+                  //   }
+                  // </span>
               }
             })
             : <p className="feedback">Brak genów. Dodaj geny lub włącz ich widoczność</p>
@@ -156,7 +177,7 @@ export const TempllateIItem = ({ template, keyId }) => {
 
                 <button className="btn-xs btn my-btn-success"
                   disabled={!saveButtonActive}
-                  onClick={() => {saveChanges()}}
+                  onClick={() => { saveChanges() }}
                 >Zapisz</button>
 
               </GTContent>
@@ -189,7 +210,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                       : <p>Brak genów</p>
                   }
 
-                  <OverlayTrigger trigger="click" placement="top" overlay={ popover } rootClose>
+                  <OverlayTrigger trigger="click" placement="top" overlay={popover} rootClose>
                     <button className="btn-xs w-100 btn-success">
                       Dodaj
                     </button>

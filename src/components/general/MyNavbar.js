@@ -4,6 +4,7 @@ import AppContextProvider, { AppContext } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import React, { useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
+import Confirm from "./Confirm";
 
 const MyNavbar = () => {
 
@@ -26,12 +27,24 @@ const MyNavbar = () => {
           <div className="nav-link pointer"
             onClick={() => updateHistory("/board")}
           >Kreator krzyżówek</div>
-          <div className="nav-link pointer"
-            onClick={() => {
+
+          <Confirm
+            onConfirm={() => {
               dispatch({ type: ACTION.SET_DEFAULT });
               EventEmitter.emit(E.onRestoreDefault);
             }}
-          >Przywróć domyślne dane</div>
+
+            content={
+              <p>Czy na pewno chcesz przywrócić domyślne dane?</p>
+            }
+          >
+            <div className="nav-link pointer text-warning">Przywróć domyślne dane</div>
+          </Confirm>
+
+          {/* <div className="nav-link pointer"
+            onClick={}
+          >Przywróć domyślne dane</div> */}
+
         </Nav>
       </Container>
     </Navbar>

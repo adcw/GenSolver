@@ -1,0 +1,60 @@
+.punnett-square
+{
+  color: whitesmoke;
+  font-size: 12px;
+
+  width: auto;
+  height: auto;
+}
+
+.punnett-square thead
+{
+
+}
+
+.punnett-square tr
+{
+  /* min-height: 100px !important; */
+}
+
+.punnett-square td
+{
+  border: 1px solid #212121;
+  min-width: 100px !important;
+  min-height: 100px !important;
+}
+
+.punnett-square td div
+{
+  min-height: 20px;
+}
+
+.punnett-square thead tr
+{
+
+}
+
+.punnett-square thead tr td
+{
+
+}
+
+.punnett-square tbody
+{
+
+}
+
+.punnett-square tbody tr
+{
+
+}
+
+.punnett-square tbody td:not(:first-of-type):hover
+{
+  background-color: rgb(28, 87, 87);
+}
+
+.punnett-square .sel
+{
+  background-color: rgb(6, 53, 53);
+}
