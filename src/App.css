@@ -153,6 +153,11 @@ input:focus
   color: cadetblue !important;
 }
 
+.text-orange
+{
+  color: orange;
+}
+
 .fillempty:empty::after
 {
   content: "\00a0";
@@ -284,9 +289,20 @@ ul.my-tabs
   border: none;
 }
 
+.flex-center
+{
+  display: flex;
+  align-items: center;
+}
+
 ul.my-tabs li
 {
   font-size: 12px;
+}
+
+.text-right
+{
+  text-align: right;
 }
 
 ul.my-tabs li button

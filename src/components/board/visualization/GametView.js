@@ -17,6 +17,7 @@ const GametView = ({ gamete, template_id }) => {
     <>
       {
         // JSON.stringify(gamete)
+        template &&
         template.gene_ids.map((gid, k_gid) => {
           const gene = state.default_genes.find((g) => g.id == gid)
           return <span key={k_gid} className="mr-2">

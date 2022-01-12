@@ -25,6 +25,7 @@ export const getCombinations = (arr) => {
 
 export const cross = (genA, genB, template_id, state) => {
   const template = state.templates.find((t) => t.id === template_id);
+  if (!template) return null;
   var gene = null;
 
   return genA.map((gametA) => {
@@ -49,5 +50,17 @@ export const sortAllelSet = (allelSet, indx, template, state) => {
 
   return allelSet.sort((a, b) => {
     return gene.allels[b].prior - gene.allels[a].prior
+  })
+}
+
+export const gen2fen = (genotype, template_id, state) => {
+  const template = state.templates.find(t => t.id === template_id)
+
+  return genotype.map((allelSet, k_aS) => {
+    const gene = state.default_genes.find(g => g.id === template.gene_ids[k_aS])
+
+    return (Number(gene.allels[allelSet[0]].prior) === Number(gene.allels[allelSet[1]].prior)
+    && allelSet[0] !== allelSet[1]) ?
+    [gene.id, [allelSet[0], allelSet[1]]] : [gene.id, [allelSet[0]]]
   })
 }

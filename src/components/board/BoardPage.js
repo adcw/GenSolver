@@ -9,6 +9,7 @@ import BoardTemplateChoice from "./BoardTemplateChoice";
 import GenotypeAssembly from "./GenotypeAssembly";
 import GenSelection from "./GenSelection";
 import ResultTable from "./ResultTable";
+import Statistics from "./Statistics";
 import { GenotypeView } from "./visualization/GenotypeView";
 
 const BoardPage = () => {
@@ -81,7 +82,7 @@ const BoardPage = () => {
 
             <Tab eventKey="stats" title="Statystyki">
               <div className="w-100 bg-second shadowed-2 p-2">
-                Statystyki
+                <Statistics></Statistics>
               </div>
             </Tab>
 

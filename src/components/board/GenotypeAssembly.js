@@ -51,7 +51,7 @@ const GenotypeAssembly = () => {
         A: state.cross_data.genotypes.A.map((v, k) => {
           return k === indx ?
             state.cross_data.genotypes.A[indx].map((v1, k1) => {
-              return k1 == _0or1 ?
+              return k1 === _0or1 ?
                 val : v1
             }) : v
         })
@@ -64,7 +64,7 @@ const GenotypeAssembly = () => {
         B: state.cross_data.genotypes.B.map((v, k) => {
           return k === indx ?
             state.cross_data.genotypes.B[indx].map((v1, k1) => {
-              return k1 == _0or1 ?
+              return k1 === _0or1 ?
                 val : v1
             }) : v
         })

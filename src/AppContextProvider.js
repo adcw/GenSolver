@@ -75,7 +75,7 @@ const initialState = {
     "genotypes": {
       "A": [[0, 1], [1, 0], [1, 1]],
       "B": [[1, 1], [0, 0], [0, 1]]
-    }
+    },
   }
 }
 
@@ -313,17 +313,36 @@ function reducer(state, action) {
             B: state.templates[action.payload.newId].gene_ids.map(() => {
               return [0, 0]
             })
-          }
+          },
+          square: null
         }
       }
 
     case ACTION.SET_GENOTYPES:
-      console.log(JSON.stringify(action.payload));
       return {
         ...state,
         cross_data: {
           ...state.cross_data,
           genotypes: action.payload.genotypes
+        }
+      }
+
+    case ACTION.SET_SQUARE:
+      return {
+        ...state,
+        cross_data: {
+          ...state.cross_data,
+          square: action.payload.square
+        }
+      }
+
+    case ACTION.SET_COUNT_LIST:
+      console.log(JSON.stringify(action.payload))
+      return {
+        ...state,
+        cross_data: {
+          ...state.cross_data,
+          count_list: action.payload.list
         }
       }
 
@@ -360,7 +379,9 @@ export function newAllel() {
   return {
     "sup": "",
     "main": "A",
-    "sub": ""
+    "sub": "",
+    "desc": "",
+    "prior": 0
   }
 }
 

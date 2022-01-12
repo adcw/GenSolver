@@ -71,7 +71,6 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 				allel
 			})]
 		});
-		console.log(JSON.stringify(tempGeneContent));
 	}
 
 	const toggleActive = () => {
@@ -83,14 +82,13 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 	}
 
 	const discardChanges = () => {
-		if (nameChanged()) nameInputRef.current.value = gene.name;
 		if (allelsChanged()) setTempGeneContent({ ...gene });
 		onAnyChange();
 	};
 
 	const saveChanges = () => {
-		if (nameChanged()) D_saveModifiedName(nameInputRef.current.value);
-		if (allelsChanged()) D_setGeneAllels(tempGeneContent);
+		D_setGeneAllels(tempGeneContent);
+		onAnyChange();
 	};
 
 	const editDesc = (_allelIndx, _newDesc) => {
@@ -121,9 +119,16 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 		})
 	}
 
-	const nameChanged = () => nameInputRef !== null ? nameInputRef.current.value !== gene.name : false
+	const editName = (name) => {
+		setTempGeneContent({
+			...tempGeneContent,
+			name: name
+		})
+		onAnyChange();
+	}
+
 	const allelsChanged = () => JSON.stringify(tempGeneContent) !== JSON.stringify(gene)
-	const onAnyChange = () => setIsSaveButtonActive(nameChanged() || allelsChanged())
+	const onAnyChange = () => setIsSaveButtonActive(allelsChanged())
 
 	useEffect(() => {
 		onAnyChange();
@@ -235,10 +240,9 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
 							<GTContent title="Nazwa:">
 								<input type="text"
-									ref={nameInputRef}
 									className="w-100 btn-xs"
-									defaultValue={gene.name}
-									onChange={() => onAnyChange()}
+									value={tempGeneContent.name}
+									onChange={(e) => editName(e.target.value)}
 									>
 								</input>
 

@@ -1,0 +1,12 @@
+.gs-description
+{
+  background-color: rgb(33, 33, 33);
+  padding: 3px;
+}
+
+.gs-description p
+{
+  font-size: 12px;
+  margin-top: 0px;
+  margin-bottom: 3px;
+}

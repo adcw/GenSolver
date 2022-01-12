@@ -31,7 +31,7 @@ export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
       sub_tch.remove();
       sub_def.remove();
     }
-  })
+  }, [defaultSelIndex])
 
   const popover = (
     <Popover id="popover-basic" className="bg-second text-brigth">
