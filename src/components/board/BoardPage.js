@@ -100,7 +100,7 @@ const BoardPage = () => {
         </Col>
 
         <Col lg="9" md="8" sm="8" xs="12">
-          <div className="w-100 mt-3 bg-second shadowed-2 p-2 overflown-xy">
+          <div className="w-100 mt-3 bg-second shadowed-2 p-2 overflown-xy flex-center" style={{ minHeight: "80vh", justifyContent: "center" }}>
             <ResultTable crossData={crossData} setCrossData={setCrossData} crossResult={crossResult}></ResultTable>
           </div>
         </Col>

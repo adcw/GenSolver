@@ -42,7 +42,7 @@ const GenSelection = ({ genotype, template_id }) => {
 
   const chance = () => {
     const fen = gen2fen(genotype, template_id, state);
-    return state.cross_data.count_list[JSON.stringify(fen)] / Object.values(state.cross_data.count_list).reduce((acc, v) => acc + v) * 100;
+    return state.cross_data.count_list[JSON.stringify(fen)] / Object.values(state.cross_data.count_list).reduce((acc, v) => acc + v, 0) * 100;
   }
 
   const curr_chance = useRef(null)

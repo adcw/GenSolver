@@ -36,18 +36,7 @@ const initialState = {
       ],
       "isActive": true,
       "triggerEdit": false
-    },
-
-    // {
-    //   "id": 4,
-    //   "name": "Daltonizm",
-    //   "allels": [
-    //     { "sup": "D", "main": "X", "sub": "" },
-    //     { "sup": "d", "main": "X", "sub": "" },
-    //     { "sup": "", "main": "Y", "sub": "" }
-    //   ],
-    //   "isActive": true, "triggerEdit": false
-    // }
+    }
   ],
 
   "templates": [
@@ -337,7 +326,6 @@ function reducer(state, action) {
       }
 
     case ACTION.SET_COUNT_LIST:
-      console.log(JSON.stringify(action.payload))
       return {
         ...state,
         cross_data: {
@@ -398,12 +386,14 @@ const AppContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState
     , () => {
       const data = localStorage.getItem('state');
+      // const data = sessionStorage.getItem('state');
       return data ? JSON.parse(data) : initialState;
     }
   );
 
   useEffect(() => {
     localStorage.setItem('state', JSON.stringify(state));
+    // sessionStorage.setItem('state', JSON.stringify(state));
     setContextItems(
       {
         initialState: initialState,
@@ -420,8 +410,6 @@ const AppContextProvider = ({ children }) => {
       dispatch: dispatch
     }
   );
-
-
 
   return (
     <AppContext.Provider value={contextItems}>

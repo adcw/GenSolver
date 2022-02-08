@@ -10,7 +10,7 @@ const Statistics = () => {
   const { initialState, dispatch, state } = useContext(AppContext)
 
   const chance = (fen) => {
-    return state.cross_data.count_list[fen] / Object.values(state.cross_data.count_list).reduce((acc, v) => acc + v) * 100;
+    return state.cross_data.count_list[fen] / Object.values(state.cross_data.count_list).reduce((acc, v) => acc + v, 0) * 100;
   }
 
   return (
@@ -57,7 +57,7 @@ const Statistics = () => {
               </div>
 
               <div className="col-md-3 col-md-3 col-xs-3 flex-center text-sm">
-                <p>{state.cross_data.count_list[k]}/{Object.values(state.cross_data.count_list).reduce((acc, v1) => acc + v1)} (<strong className={getStyle(chance(k))}>{chance(k)}%</strong>)</p>
+                <p>{state.cross_data.count_list[k]}/{Object.values(state.cross_data.count_list).reduce((acc, v1) => acc + v1, 0)} (<strong className={getStyle(chance(k))}>{chance(k)}%</strong>)</p>
               </div>
             </div>
             })}

@@ -17,29 +17,29 @@ import BoardPage from './components/board/BoardPage';
 import MyNavbar from './components/general/MyNavbar';
 
 export const ACTION = {
-  TOGGLE_ACTIVE: "TOGGLE_ACTIVE",
-  REMOVE_GENE: "REMOVE_GENE",
-  SAVE_GENE_NAME: "SAVE_GENE_NAME",
-  ADD_DEFAULT_GENE: "ADD_DEFAULT_GENE",
+  TOGGLE_ACTIVE: "TOGGLE_ACTIVE",       // modyfikacja widoczności genu w edytorze
+  REMOVE_GENE: "REMOVE_GENE",           // usuwanie genu
+  SAVE_GENE_NAME: "SAVE_GENE_NAME",     // zapisanie nazwy genu
+  ADD_DEFAULT_GENE: "ADD_DEFAULT_GENE", // dodanie nowrgo genu
 
-  MODIFY_ALLEL: "MODIFY_ALLEL",
-  ADD_ALLEL: "ADD_ALLEL",
-  REMOVE_ALLEL: "REMOVE_ALLEL",
-  SET_GENE_ALLELS: "SET_GENE_ALLELS",
+  MODIFY_ALLEL: "MODIFY_ALLEL",         // nadpisanie allelu
+  ADD_ALLEL: "ADD_ALLEL",               // dodanie allelu
+  REMOVE_ALLEL: "REMOVE_ALLEL",         // usunięcioe allelu
+  SET_GENE_ALLELS: "SET_GENE_ALLELS",   // ustawienie alleli danemu genowi
 
-  REMOVE_TEMPLATE: "REMOVE_TEMPLATE",
-  ADD_TEMPLATE: "ADD_TEMPLATE",
-  REMOVE_GENE_FROM_TEMPLATE: "REMOVE_GENE_FROM_TEMPLATE",
-  ADD_GENE_TO_TEMPLATE: "ADD_GENE_TO_TEMPLATE",
-  SAVE_TEMPLATE_NAME: "SAVE_TEMPLATE_NAME",
-  SET_TEMPLATE_GENES: "SET_TEMPLATE_GENES",
+  REMOVE_TEMPLATE: "REMOVE_TEMPLATE",                       // usunięcie szablonu
+  ADD_TEMPLATE: "ADD_TEMPLATE",                             // dodanie szablonu
+  REMOVE_GENE_FROM_TEMPLATE: "REMOVE_GENE_FROM_TEMPLATE",   // usunięcie genu z szablonu
+  ADD_GENE_TO_TEMPLATE: "ADD_GENE_TO_TEMPLATE",             // dodanie genu do szablonu
+  SAVE_TEMPLATE_NAME: "SAVE_TEMPLATE_NAME",                 // zapisanie nazwy szablonu
+  SET_TEMPLATE_GENES: "SET_TEMPLATE_GENES",                 // ustawienie genów szablonu
 
-  INITIALIZE_SELECTION: "INITIALIZE_SELECTION",
-  SET_GENOTYPES: "SET_GENOTYPES",
-  SET_SQUARE: "SET_SQUARE",
-  SET_COUNT_LIST: "SET_COUNT_LIST",
+  INITIALIZE_SELECTION: "INITIALIZE_SELECTION",   // iniclalizacja obecnie wybranego szablonu
+  SET_GENOTYPES: "SET_GENOTYPES",                 // zapisanie genotypów rodzicielskich
+  SET_SQUARE: "SET_SQUARE",                       // zapisanie krzyżówki
+  SET_COUNT_LIST: "SET_COUNT_LIST",               // zapisanie listy zliczeń fenotypów
 
-  SET_DEFAULT: "SET_DEFAULT"
+  SET_DEFAULT: "SET_DEFAULT"                      // przywrócenie domyslnyc danych
 };
 
 export const GENE_LIST = {

@@ -7,7 +7,7 @@ export const getCombinations = (arr) => {
   }
   var comb = [];
 
-  for (var j = 0; j < Math.pow(arr.length, 2) + 1; j++) {
+  for (var j = 0; j < Math.pow(arr.length, 2); j++) {
     var txt = [];
     var temp = j;
 
@@ -45,8 +45,6 @@ export const cross = (genA, genB, template_id, state) => {
 
 export const sortAllelSet = (allelSet, indx, template, state) => {
   const gene = state.default_genes.find((g) => g.id === template.gene_ids[indx])
-
-  console.log(JSON.stringify(template))
 
   return allelSet.sort((a, b) => {
     return gene.allels[b].prior - gene.allels[a].prior

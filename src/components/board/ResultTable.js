@@ -9,12 +9,14 @@ import { GenotypeView } from './visualization/GenotypeView';
 import GametView from './visualization/GametView';
 import { cross, gen2fen, getCombinations, sortAllelSet } from '../../utils/CrossFunctions';
 import { ACTION } from '../../App';
+import { GradientMaker } from '../../utils/Colors';
 
 const ResultTable = ({ crossData, setCrossData, crossResult }) => {
 
   const { initialState, state, dispatch } = useContext(AppContext)
   const [selectionPos, setSelectionPos] = useState([])
-  const [secondarySelections, setSecondarySelections] = useState([[0, 1], [1, 0]])
+  const [secondarySelections, setSecondarySelections] = useState([])
+  const [colormap, setColormap] = useState([])
 
   const combinationsA = useRef(null)
   const combinationsB = useRef(null)
@@ -35,13 +37,21 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
       const list = {}
       crossResult.current.forEach((row, k_row) => {
         row.forEach((gt, k_gt) => {
-          const key = JSON.stringify(gen2fen(gt, crossData.template_id, state))
-          if (key in list) list[key]++
+          const key = JSON.stringify(gen2fen(gt, state.cross_data.template_id, state))
+          if (key in list) list[key]++;
           else list[key] = 1
         });
       });
 
-      console.log(JSON.stringify(list))
+      const gradientMaker = new GradientMaker(Object.keys(list).length);
+      setColormap(
+        Object.keys(list).map(v => {
+          return {
+            fen: v,
+            color: gradientMaker.nextColor()
+          }
+        })
+      )
 
       dispatch({ type: ACTION.SET_COUNT_LIST, payload: { list } })
 
@@ -81,46 +91,54 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
 
   return (
     <div>
-
-      <Table className="punnett-square">
-        <thead>
-          <tr>
-            <td>
-              <div style={{ position: "relative" }}>
-                <span style={{ position: "relative", top: "6px" }}>A</span>
-                <span style={{ float: "right"}}><span style={{ position: "relative", top: "-6px" }}>B</span></span>
-              </div>
-            </td>
+      {
+        crossResult.current ?
+        <Table className="punnett-square shadowed">
+          <thead>
+            <tr>
+              <td>
+                <div style={{ position: "relative" }}>
+                  <span style={{ position: "relative", top: "6px" }}>A</span>
+                  <span style={{ float: "right" }}><span style={{ position: "relative", top: "-6px" }}>B</span></span>
+                </div>
+              </td>
+              {
+                combinationsB.current &&
+                combinationsB.current.map((v, k) => {
+                  return <td key={k}><GametView gamete={v} template_id={crossData.template_id}></GametView></td>
+                })
+              }
+            </tr>
+          </thead>
+          <tbody>
             {
-              combinationsB.current &&
-              combinationsB.current.map((v, k) => {
-                return <td key={k}><GametView gamete={v} template_id={crossData.template_id}></GametView></td>
+              combinationsA.current && combinationsB.current && crossResult.current &&
+              crossResult.current.map((v, k) => {
+                // const template = state.templates.find((t) => t.id === crossData.template_id);
+                return <tr key={k}>
+                  {
+                    combinationsA.current &&
+                    <td><GametView gamete={combinationsA.current[k]} template_id={crossData.template_id}></GametView></td>
+                  }
+                  {
+                    v.map((v1, k1) => {
+                      const color = colormap.find(c => JSON.stringify(gen2fen(v1, crossData.template_id, state)) == c.fen)?.color
+
+                      return <td style={{ backgroundColor: `${color ?? ""}` }}
+                        className={`pointer slow-trans ${k === selectionPos[0] && k1 === selectionPos[1] ? "glow" : ""} ${secondarySelections.map(sel => JSON.stringify(sel)).includes(JSON.stringify([k, k1])) ? "glow2" : ""}`} key={k1} onClick={() => crossResultClick(v1, [k, k1])}>
+                        <div className="d-inline"><GenotypeView genotype={v1} template_id={crossData.template_id}></GenotypeView></div>
+                      </td>
+                    })
+                  }
+                </tr>
               })
             }
-          </tr>
-        </thead>
-        <tbody>
-          {
-            combinationsA.current && combinationsB.current && crossResult.current &&
-            crossResult.current.map((v, k) => {
-              // const template = state.templates.find((t) => t.id === crossData.template_id);
-              return <tr key={k}>
-                {
-                  combinationsA.current &&
-                  <td><GametView gamete={combinationsA.current[k]} template_id={crossData.template_id}></GametView></td>
-                }
-                {
-                  v.map((v1, k1) => {
-                    return <td className={`pointer ${k === selectionPos[0] && k1 === selectionPos[1] ? "sel" : ""} ${secondarySelections.map(v => JSON.stringify(v)).includes(JSON.stringify([k, k1])) ? "sel2" : ""}`} key={k1} onClick={() => crossResultClick(v1, [k, k1]) }>
-                      <div className="d-inline"><GenotypeView genotype={v1} template_id={crossData.template_id}></GenotypeView></div>
-                    </td>
-                  })
-                }
-              </tr>
-            })
-          }
-        </tbody>
-      </Table>
+          </tbody>
+        </Table>
+        :
+        <h4>Brak wyników. Aby stworzyć krzyżówkę, wprowadź dane w panelu danych wejściowych.</h4>
+      }
+
 
     </div>
   )

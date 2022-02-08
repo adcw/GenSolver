@@ -11,13 +11,13 @@ const AllelEditor = ({ chosenAllel, saveModifiedAllel,
   const [modifiedAllel, setModifiedAllel] = useState();
 
   useEffect(() => {
-    console.log("Chosen allel is " + JSON.stringify(chosenAllel) + " chosenAllelIndex: " + chosenAllelIndex
-       + " geneId: " + geneId);
+    // console.log("Chosen allel is " + JSON.stringify(chosenAllel) + " chosenAllelIndex: " + chosenAllelIndex
+      //  + " geneId: " + geneId);
     setModifiedAllel(chosenAllel);
   }, [chosenAllel]);
 
   useEffect(() => {
-    console.log("Modified allel is " + JSON.stringify(modifiedAllel));
+    // console.log("Modified allel is " + JSON.stringify(modifiedAllel));
   }, [modifiedAllel])
 
   const modifiyAllel = () => {
@@ -31,7 +31,7 @@ const AllelEditor = ({ chosenAllel, saveModifiedAllel,
   }
 
   const saveAllel = () => {
-    console.log("save");
+    // console.log("save");
     console.log(JSON.stringify(modifiedAllel) === JSON.stringify(chosenAllel));
     saveModifiedAllel(chosenAllelIndex, modifiedAllel);
   }
