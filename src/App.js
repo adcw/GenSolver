@@ -39,7 +39,7 @@ export const ACTION = {
   SET_SQUARE: "SET_SQUARE",                       // zapisanie krzyżówki
   SET_COUNT_LIST: "SET_COUNT_LIST",               // zapisanie listy zliczeń fenotypów
 
-  SET_DEFAULT: "SET_DEFAULT"                      // przywrócenie domyslnyc danych
+  SET_DEFAULT: "SET_DEFAULT"                      // przywrócenie domyslnych danych
 };
 
 export const GENE_LIST = {
@@ -81,12 +81,6 @@ function App() {
         <MyNavbar></MyNavbar>
 
         <div className="container-fluid">
-
-          <div className="row">
-            <div className="col d-inline text-center">
-              <h2 className="text-center">GenSolver</h2>
-            </div>
-          </div>
 
           <RowDivider />
 

@@ -18,8 +18,8 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
   const [secondarySelections, setSecondarySelections] = useState([])
   const [colormap, setColormap] = useState([])
 
-  const combinationsA = useRef(null)
-  const combinationsB = useRef(null)
+  const combinationsA = useRef(getCombinations(state.cross_data.genotypes.A))
+  const combinationsB = useRef(getCombinations(state.cross_data.genotypes.B))
 
   const crossResultClick = (data, pos) => {
     EventEmitter.emit(E.onCrossResultClick, { genotype: data })

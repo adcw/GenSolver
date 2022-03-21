@@ -23,7 +23,7 @@ const BoardPage = () => {
   const [currentSelectedResult, setCurrentSelectedResult] = useState(null)
   const [currEventKey, setCurrEventKey] = useState("input")
   const [crossData, setCrossData] = useState(state.cross_data)
-  const crossResult = useRef(null)
+  const crossResult = useRef(state.cross_data.square) //
 
   useEffect(() => {
     const crossClickSub = EventEmitter.addListener(E.onCrossResultClick, (data) => {

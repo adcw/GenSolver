@@ -7,7 +7,7 @@ export const getCombinations = (arr) => {
   }
   var comb = [];
 
-  for (var j = 0; j < Math.pow(arr.length, 2); j++) {
+  for (var j = 0; j < Math.pow(arr.length, 2) + 1; j++) {
     var txt = [];
     var temp = j;
 
