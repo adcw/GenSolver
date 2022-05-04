@@ -56,27 +56,42 @@ const BoardPage = () => {
             <Tab eventKey="input" title="Dane wejściowe">
               <div className="w-100 bg-second shadowed-2 p-2">
                 {
-                  state.templates.map((v, k) => {
-                    if (v == null) return;
-                    return <BoardTemplateChoice template={v} key={k} keyId={k}
-                      _onChange={(e, _k) => e.target.checked && setCurrentSelection(_k)}
-                    ></BoardTemplateChoice>
-                  })
+                  state.templates.length != 0 ?
+                    state.templates.map((v, k) => {
+                      if (v == null) return;
+                      return <BoardTemplateChoice template={v} key={k} keyId={k}
+                        _onChange={(e, _k) => e.target.checked && setCurrentSelection(_k)}
+                      ></BoardTemplateChoice>
+                    })
+                    :
+                    <p>Brak szablonów. Utwórz nowy szablon w zakładce "kreator genotypów".</p>
                 }
               </div>
-
               <div className="w-100 mt-3 bg-second shadowed-2 p-2">
-                <GenotypeAssembly></GenotypeAssembly>
+                {
+                  state.templates.length != 0 &&
+                  <>
+                    {
+                      state.templates.find((t) => t.id === state.cross_data.template_id) &&
+                      state.templates.find((t) => t.id === state.cross_data.template_id).gene_ids.length != 0 ?
+                        <>
 
-                <Confirm content={
-                  <p>Czy na pewno chcesz stworzyć krzyżówkę? Poprzednie dane zostaną utracone</p>
+                          <GenotypeAssembly></GenotypeAssembly>
+                          <Confirm content={
+                            <p>Czy na pewno chcesz stworzyć krzyżówkę? Poprzednie dane zostaną utracone</p>
+                          }
+                            onConfirm={() => EventEmitter.emit(E.onCreatePunnetSquare)}
+                          >
+                            <Button className="text-center w-100 btn-xs mt-3 bg-first btn-outline-dark txt-bright">Stwórz krzyżówkę</Button>
+                          </Confirm>
+
+                        </>
+                      :
+                      <p>Wybrany szablon nie posiada przypisanych genów.</p>
+                    }
+
+                  </>
                 }
-                  onConfirm={() => EventEmitter.emit(E.onCreatePunnetSquare)}
-                >
-                  <Button className="text-center w-100 btn-xs mt-3 bg-first btn-outline-dark txt-bright">Stwórz krzyżówkę</Button>
-                </Confirm>
-
-
               </div>
             </Tab>
 

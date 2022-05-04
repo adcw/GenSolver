@@ -5,7 +5,8 @@ export const E = {
   onRestoreDefault: "onRestoreDefault",
   onCreatePunnetSquare: "onCreatePunnetSquare",
   onCrossResultClick: "onCrossResultClick",
-  onStatClick: "onStatClick"
+  onStatClick: "onStatClick",
+  onPageSwitchToPunnetSquare: "onPageSwitchToPunnetSquare"
 };
 
 export default new EventEmitter();

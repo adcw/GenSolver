@@ -8,7 +8,10 @@ export const GenotypeView = ({ genotype, template_id, big }) => {
 
   const _extract = (allel, indx) => {
 
-    const _gene_id = state.templates.find((t) => t.id === template_id).gene_ids[indx];
+    const template = state.templates.find((t) => t.id === template_id)
+    if (template == null) return
+    const _gene_id = template.gene_ids[indx];
+
     const gene = state.default_genes.find((g) => g.id === _gene_id)
 
     return <span key={indx} className="pr-1">
@@ -35,6 +38,7 @@ export const GenotypeView = ({ genotype, template_id, big }) => {
   return (
     <>
       {
+
         genotype.map((gene, g_k) => {
           return _extract(gene, g_k);
         })

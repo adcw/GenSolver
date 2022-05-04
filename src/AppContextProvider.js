@@ -65,10 +65,14 @@ const initialState = {
       "A": [[0, 1], [1, 0], [1, 1]],
       "B": [[1, 1], [0, 0], [0, 1]]
     },
-  }
+  },
+
+  "project_name": "Demo Project"
 }
 
 function reducer(state, action) {
+
+  console.log(action.type.toString() + "\n\n" + JSON.stringify(action.payload));
 
   switch (action.type) {
     case ACTION.TOGGLE_ACTIVE:
@@ -111,7 +115,6 @@ function reducer(state, action) {
 
     case ACTION.SAVE_GENE_NAME:
 
-      console.log(JSON.stringify(action.payload));
       return {
         ...state,
         default_genes: [
@@ -123,7 +126,6 @@ function reducer(state, action) {
 
     case ACTION.MODIFY_ALLEL:
 
-      console.log(action.payload);
       return {
         ...state,
         default_genes: [
@@ -208,7 +210,6 @@ function reducer(state, action) {
       }
 
     case ACTION.REMOVE_GENE_FROM_TEMPLATE:
-      console.log(JSON.stringify(action));
       return {
         ...state,
         templates: [
@@ -224,7 +225,6 @@ function reducer(state, action) {
       }
 
     case ACTION.ADD_GENE_TO_TEMPLATE:
-      console.log(JSON.stringify(action));
       return {
         ...state,
         templates: [
@@ -273,7 +273,6 @@ function reducer(state, action) {
       }
 
     case ACTION.SET_TEMPLATE_GENES:
-      console.log(JSON.stringify(action.payload));
       return {
         ...state,
         templates: [
@@ -289,7 +288,7 @@ function reducer(state, action) {
       }
 
     case ACTION.INITIALIZE_SELECTION:
-      console.log(JSON.stringify(action.payload));
+      console.log("ASDA");
       return {
         ...state,
         cross_data: {
@@ -304,7 +303,8 @@ function reducer(state, action) {
             })
           },
           square: null
-        }
+        },
+        templates: state.templates
       }
 
     case ACTION.SET_GENOTYPES:
@@ -337,8 +337,11 @@ function reducer(state, action) {
     case ACTION.SET_DEFAULT:
       return initialState;
 
+    case ACTION.SET_STATE:
+      return action.payload.state
+
     default:
-      return state;
+      return state
   }
 }
 

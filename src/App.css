@@ -221,6 +221,10 @@ input:focus
   color: red !important;
 }
 
+.hover-white:hover {
+  color: white;
+}
+
 .feedback
 {
   color: rgb(145, 233, 233) !important;

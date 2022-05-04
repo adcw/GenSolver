@@ -24,7 +24,9 @@ export const TempllateIItem = ({ template, keyId }) => {
   const D_deleteGene = (_geneId) => dispatch({ type: ACTION.REMOVE_GENE_FROM_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
   const D_addGene = (_geneId) => dispatch({ type: ACTION.ADD_GENE_TO_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
   const D_setGenes = (_genes) => dispatch({ type: ACTION.SET_TEMPLATE_GENES, payload: { templateId: template.id, gene_ids: _genes } });
-  const D_initializeSelection = (_template_id) => dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: _template_id } })
+  const D_initializeSelection = (_template_id) => {
+    dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: _template_id } })
+  }
   // --
 
   // Values to be submitted
