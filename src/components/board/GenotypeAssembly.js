@@ -1,15 +1,18 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext, ACTION } from "../../AppContextProvider";
 import SubSup from "../genepalette/SubSup";
 import { TempllateIItem } from "../genotypetemplate/TempllateIItem";
 import { AllelSelect } from "./AllelSelect";
 import { Container, Row, Col, Table, Button } from "react-bootstrap";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
-import { ACTION } from "../../App";
 
 const GenotypeAssembly = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
-  const currState = useRef(state.projects[state.curr]);
+  const [currState, setCurrState] = useState(state.projects[state.curr]);
+
+  useEffect(() => {
+    setCurrState(state.projects[state.curr]);
+  }, [state]);
 
   // const [state.cross_data, setstate.cross_data] = useState(
   //   {...state.cross_data}
@@ -31,11 +34,11 @@ const GenotypeAssembly = () => {
   // })
 
   const _extract = (allel, indx) => {
-    const gene = currState.current.default_genes.find(
+    const gene = currState.default_genes.find(
       (g) =>
         g.id ===
-        currState.current.templates.find(
-          (elem) => elem.id === currState.current.cross_data.template_id
+        currState.templates.find(
+          (elem) => elem.id === currState.cross_data.template_id
         )?.gene_ids[indx]
     );
 
@@ -50,16 +53,16 @@ const GenotypeAssembly = () => {
   };
 
   const [_updatedGenotypes, set_updatedGenotypes] = useState({
-    ...currState.current.cross_data.genotypes,
+    ...currState.cross_data.genotypes,
   });
   const updateGenotype = (AorB, _0or1, indx, val) => {
     console.log(`${AorB}, ${_0or1}, ${indx}, ${val}`);
     if (AorB === "A") {
       set_updatedGenotypes({
-        ...currState.current.cross_data.genotypes,
-        A: currState.current.cross_data.genotypes.A.map((v, k) => {
+        ...currState.cross_data.genotypes,
+        A: currState.cross_data.genotypes.A.map((v, k) => {
           return k === indx
-            ? currState.current.cross_data.genotypes.A[indx].map((v1, k1) => {
+            ? currState.cross_data.genotypes.A[indx].map((v1, k1) => {
                 return k1 === _0or1 ? val : v1;
               })
             : v;
@@ -69,10 +72,10 @@ const GenotypeAssembly = () => {
 
     if (AorB === "B") {
       set_updatedGenotypes({
-        ...currState.current.cross_data.genotypes,
-        B: currState.current.cross_data.genotypes.B.map((v, k) => {
+        ...currState.cross_data.genotypes,
+        B: currState.cross_data.genotypes.B.map((v, k) => {
           return k === indx
-            ? currState.current.cross_data.genotypes.B[indx].map((v1, k1) => {
+            ? currState.cross_data.genotypes.B[indx].map((v1, k1) => {
                 return k1 === _0or1 ? val : v1;
               })
             : v;
@@ -93,12 +96,10 @@ const GenotypeAssembly = () => {
       <Row className="text-center">
         <Col>
           <h6 className="text-md">Osobnik A:</h6>
-          {currState.current.templates
-            .find(
-              (elem) => elem.id === currState.current.cross_data.template_id
-            )
+          {currState.templates
+            .find((elem) => elem.id === currState.cross_data.template_id)
             ?.gene_ids.map((_geneID_template, _gid_t_i) => {
-              var _gene = currState.current.default_genes.find(
+              var _gene = currState.default_genes.find(
                 (v) => v.id === _geneID_template
               ).allels;
 
@@ -108,7 +109,7 @@ const GenotypeAssembly = () => {
                   <AllelSelect
                     set={_gene}
                     defaultSelIndex={
-                      currState.current.cross_data.genotypes.A[_gid_t_i][0]
+                      currState.cross_data.genotypes.A[_gid_t_i][0]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("A", 0, _gid_t_i, val)
@@ -118,7 +119,7 @@ const GenotypeAssembly = () => {
                   <AllelSelect
                     set={_gene}
                     defaultSelIndex={
-                      currState.current.cross_data.genotypes.A[_gid_t_i][1]
+                      currState.cross_data.genotypes.A[_gid_t_i][1]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("A", 1, _gid_t_i, val)
@@ -131,12 +132,10 @@ const GenotypeAssembly = () => {
 
         <Col>
           <h6 className="text-md">Osobnik B:</h6>
-          {currState.current.templates
-            .find(
-              (elem) => elem.id === currState.current.cross_data.template_id
-            )
+          {currState.templates
+            .find((elem) => elem.id === currState.cross_data.template_id)
             ?.gene_ids.map((_geneID_template, _gid_t_i) => {
-              var _gene = currState.current.default_genes.find(
+              var _gene = currState.default_genes.find(
                 (v) => v.id === _geneID_template
               ).allels;
 
@@ -146,7 +145,7 @@ const GenotypeAssembly = () => {
                   <AllelSelect
                     set={_gene}
                     defaultSelIndex={
-                      currState.current.cross_data.genotypes.B[_gid_t_i][0]
+                      currState.cross_data.genotypes.B[_gid_t_i][0]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("B", 0, _gid_t_i, val)
@@ -156,7 +155,7 @@ const GenotypeAssembly = () => {
                   <AllelSelect
                     set={_gene}
                     defaultSelIndex={
-                      currState.current.cross_data.genotypes.B[_gid_t_i][1]
+                      currState.cross_data.genotypes.B[_gid_t_i][1]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("B", 1, _gid_t_i, val)
@@ -170,11 +169,11 @@ const GenotypeAssembly = () => {
 
       <Row>
         <Col className="text-center">
-          {currState.current.cross_data.genotypes.A.map((_allel_i, _k) => {
+          {currState.cross_data.genotypes.A.map((_allel_i, _k) => {
             return _extract(_allel_i, _k);
           })}
           <span className="pr-2 text-success">x</span>
-          {currState.current.cross_data.genotypes.B.map((_allel_i, _k) => {
+          {currState.cross_data.genotypes.B.map((_allel_i, _k) => {
             return _extract(_allel_i, _k);
           })}
         </Col>

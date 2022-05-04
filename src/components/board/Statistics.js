@@ -8,12 +8,16 @@ import { getStyle } from "./GenSelection";
 
 const Statistics = () => {
   const { initialState, dispatch, state } = useContext(AppContext);
-  const currState = useRef(state.projects[state.curr]);
+  const [currState, setCurrState] = useState(state.projects[state.curr]);
+
+  useEffect(() => {
+    setCurrState(state.projects[state.curr]);
+  }, [state]);
 
   const chance = (fen) => {
     return (
-      (currState.current.cross_data.count_list[fen] /
-        Object.values(currState.current.cross_data.count_list).reduce(
+      (currState.cross_data.count_list[fen] /
+        Object.values(currState.cross_data.count_list).reduce(
           (acc, v) => acc + v,
           0
         )) *
@@ -24,12 +28,12 @@ const Statistics = () => {
   return (
     <div>
       {
-        // JSON.stringify(currState.current.cross_data.count_list)
-        // currState.current.cross_data.count_list &&
-        // Object.keys(currState.current.cross_data.count_list).map((v, k) => {
-        //   <p key={k}>{JSON.stringify(currState.current.cross_data.count_list[v])}</p>
+        // JSON.stringify(currState.cross_data.count_list)
+        // currState.cross_data.count_list &&
+        // Object.keys(currState.cross_data.count_list).map((v, k) => {
+        //   <p key={k}>{JSON.stringify(currState.cross_data.count_list[v])}</p>
         // })
-        currState.current.cross_data.count_list && (
+        currState.cross_data.count_list && (
           <>
             <p>Statystyki:</p>
 
@@ -44,7 +48,7 @@ const Statistics = () => {
                 </div>
               </div>
 
-              {Object.entries(currState.current.cross_data.count_list)
+              {Object.entries(currState.cross_data.count_list)
                 .sort((a, b) => b[1] - a[1])
                 .map(([k, v]) => {
                   // return <p key={k}>{`k = ${k} v = ${v}`}</p>
@@ -58,7 +62,7 @@ const Statistics = () => {
                     >
                       <div className="col-md-9 col-sm-9 col-xs-9 text-sm">
                         {JSON.parse(k).map((g_a, k_g_a) => {
-                          const gene = currState.current.default_genes.find(
+                          const gene = currState.default_genes.find(
                             (g) => g.id === g_a[0]
                           );
                           // return <p key={k_g_a} className="my-0">{gene?.allels[g_a[1][0]].desc}</p>
@@ -78,9 +82,9 @@ const Statistics = () => {
 
                       <div className="col-md-3 col-md-3 col-xs-3 flex-center text-sm">
                         <p>
-                          {currState.current.cross_data.count_list[k]}/
+                          {currState.cross_data.count_list[k]}/
                           {Object.values(
-                            currState.current.cross_data.count_list
+                            currState.cross_data.count_list
                           ).reduce((acc, v1) => acc + v1, 0)}{" "}
                           (
                           <strong className={getStyle(chance(k))}>

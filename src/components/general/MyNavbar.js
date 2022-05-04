@@ -2,10 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useState } from "react";
 import { Container, Nav, Navbar, Row, Col } from "react-bootstrap";
 import { useHistory, useLocation } from "react-router-dom";
-import { ACTION } from "../../App";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext, ACTION } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
-import { downloadState } from "../../utils/ProjectManager";
+import { downloadProject } from "../../utils/ProjectManager";
 import Confirm from "./Confirm";
 import "./myNavbar.css";
 
@@ -43,7 +42,9 @@ const MyNavbar = () => {
 
             <Col md="9">
               {" "}
-              <h2 className="my-0">{state?.project_name}</h2>
+              <h2 className="my-0">
+                {state.projects[state.curr]?.project_name}
+              </h2>
             </Col>
           </Row>
         </Container>
@@ -97,7 +98,7 @@ const MyNavbar = () => {
           <div className="mx-3 my-3">
             <div
               className="hstack gap-3 pointer hover"
-              onClick={() => downloadState(state)}
+              onClick={() => downloadProject(state.projects[state.curr])}
             >
               <FontAwesomeIcon
                 icon="download"

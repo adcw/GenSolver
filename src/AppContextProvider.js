@@ -1,5 +1,31 @@
 import React, { useState, useReducer, useEffect } from "react";
-import { ACTION } from "./App";
+
+export const ACTION = {
+  TOGGLE_ACTIVE: "TOGGLE_ACTIVE", // modyfikacja widoczności genu w edytorze
+  REMOVE_GENE: "REMOVE_GENE", // usuwanie genu
+  SAVE_GENE_NAME: "SAVE_GENE_NAME", // zapisanie nazwy genu
+  ADD_DEFAULT_GENE: "ADD_DEFAULT_GENE", // dodanie nowrgo genu
+
+  MODIFY_ALLEL: "MODIFY_ALLEL", // nadpisanie allelu
+  ADD_ALLEL: "ADD_ALLEL", // dodanie allelu
+  REMOVE_ALLEL: "REMOVE_ALLEL", // usunięcioe allelu
+  SET_GENE_ALLELS: "SET_GENE_ALLELS", // ustawienie alleli danemu genowi
+
+  REMOVE_TEMPLATE: "REMOVE_TEMPLATE", // usunięcie szablonu
+  ADD_TEMPLATE: "ADD_TEMPLATE", // dodanie szablonu
+  REMOVE_GENE_FROM_TEMPLATE: "REMOVE_GENE_FROM_TEMPLATE", // usunięcie genu z szablonu
+  ADD_GENE_TO_TEMPLATE: "ADD_GENE_TO_TEMPLATE", // dodanie genu do szablonu
+  SAVE_TEMPLATE_NAME: "SAVE_TEMPLATE_NAME", // zapisanie nazwy szablonu
+  SET_TEMPLATE_GENES: "SET_TEMPLATE_GENES", // ustawienie genów szablonu
+
+  INITIALIZE_SELECTION: "INITIALIZE_SELECTION", // iniclalizacja obecnie wybranego szablonu
+  SET_GENOTYPES: "SET_GENOTYPES", // zapisanie genotypów rodzicielskich
+  SET_SQUARE: "SET_SQUARE", // zapisanie krzyżówki
+  SET_COUNT_LIST: "SET_COUNT_LIST", // zapisanie listy zliczeń fenotypów
+
+  SET_DEFAULT: "SET_DEFAULT", // przywrócenie domyslnych danych
+  SET_STATE: "SET_STATE",
+};
 
 export const AppContext = React.createContext();
 
@@ -131,19 +157,29 @@ function reducer(state, action) {
     case ACTION.REMOVE_GENE:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.filter(
-            (gene) => gene.id !== action.payload.id
-          ),
-        ],
-        templates: [
-          ...state.templates.map((template) => {
-            return {
-              ...template,
-              gene_ids: template.gene_ids.filter(
-                (id) => id !== action.payload.id
-              ),
-            };
+
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.filter(
+                      (gene) => gene.id !== action.payload.id
+                    ),
+                  ],
+                  templates: [
+                    ...proj.templates.map((template) => {
+                      return {
+                        ...template,
+                        gene_ids: template.gene_ids.filter(
+                          (id) => id !== action.payload.id
+                        ),
+                      };
+                    }),
+                  ],
+                }
+              : proj;
           }),
         ],
       };
@@ -151,17 +187,35 @@ function reducer(state, action) {
     case ACTION.ADD_DEFAULT_GENE:
       return {
         ...state,
-        default_genes: [...state.default_genes, newGene(state)],
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  default_genes: [...proj.default_genes, newGene(proj)],
+                }
+              : proj;
+          }),
+        ],
       };
 
     case ACTION.SAVE_GENE_NAME:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id
-              ? { ...gene, name: action.payload.name }
-              : gene;
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.map((gene) => {
+                      return gene.id === action.payload.id
+                        ? { ...gene, name: action.payload.name }
+                        : gene;
+                    }),
+                  ],
+                }
+              : proj;
           }),
         ],
       };
@@ -169,20 +223,29 @@ function reducer(state, action) {
     case ACTION.MODIFY_ALLEL:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...gene,
-                  allels: [
-                    ...gene.allels.map((e, i) =>
-                      i === action.payload.modifiedAllelIndex
-                        ? action.payload.newAllel
-                        : e
-                    ),
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.map((gene) => {
+                      return gene.id === action.payload.id
+                        ? {
+                            ...gene,
+                            allels: [
+                              ...gene.allels.map((e, i) =>
+                                i === action.payload.modifiedAllelIndex
+                                  ? action.payload.newAllel
+                                  : e
+                              ),
+                            ],
+                          }
+                        : gene;
+                    }),
                   ],
                 }
-              : gene;
+              : proj;
           }),
         ],
       };
@@ -190,14 +253,23 @@ function reducer(state, action) {
     case ACTION.ADD_ALLEL:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...gene,
-                  allels: [...gene.allels, newAllel()],
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.map((gene) => {
+                      return gene.id === action.payload.id
+                        ? {
+                            ...gene,
+                            allels: [...gene.allels, newAllel()],
+                          }
+                        : gene;
+                    }),
+                  ],
                 }
-              : gene;
+              : proj;
           }),
         ],
       };
@@ -205,18 +277,28 @@ function reducer(state, action) {
     case ACTION.REMOVE_ALLEL:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...gene,
-                  allels: [
-                    ...gene.allels.filter(
-                      (e, i) => i !== action.payload.modifiedAllelIndex
-                    ),
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.map((gene) => {
+                      return gene.id === action.payload.id
+                        ? {
+                            ...gene,
+                            allels: [
+                              ...gene.allels.filter(
+                                (e, i) =>
+                                  i !== action.payload.modifiedAllelIndex
+                              ),
+                            ],
+                          }
+                        : gene;
+                    }),
                   ],
                 }
-              : gene;
+              : proj;
           }),
         ],
       };
@@ -224,9 +306,20 @@ function reducer(state, action) {
     case ACTION.SET_GENE_ALLELS:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id ? action.payload.allels : gene;
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.map((gene) => {
+                      return gene.id === action.payload.id
+                        ? action.payload.allels
+                        : gene;
+                    }),
+                  ],
+                }
+              : proj;
           }),
         ],
       };
@@ -234,9 +327,18 @@ function reducer(state, action) {
     case ACTION.REMOVE_TEMPLATE:
       return {
         ...state,
-        templates: [
-          ...state.templates.filter((v) => {
-            return v.id !== action.payload.templateId;
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  templates: [
+                    ...proj.templates.filter((v) => {
+                      return v.id !== action.payload.templateId;
+                    }),
+                  ],
+                }
+              : proj;
           }),
         ],
       };
@@ -244,22 +346,40 @@ function reducer(state, action) {
     case ACTION.ADD_TEMPLATE:
       return {
         ...state,
-        templates: [...state.templates, newTemplate(state)],
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  templates: [...proj.templates, newTemplate(proj)],
+                }
+              : proj;
+          }),
+        ],
       };
 
     case ACTION.REMOVE_GENE_FROM_TEMPLATE:
       return {
         ...state,
-        templates: [
-          ...state.templates.map((template) => {
-            return template.id === action.payload.templateId
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...template,
-                  gene_ids: template.gene_ids.filter(
-                    (id) => id !== action.payload.geneId
-                  ),
+                  ...proj,
+                  templates: [
+                    ...proj.templates.map((template) => {
+                      return template.id === action.payload.templateId
+                        ? {
+                            ...template,
+                            gene_ids: template.gene_ids.filter(
+                              (id) => id !== action.payload.geneId
+                            ),
+                          }
+                        : template;
+                    }),
+                  ],
                 }
-              : template;
+              : proj;
           }),
         ],
       };
@@ -267,42 +387,67 @@ function reducer(state, action) {
     case ACTION.ADD_GENE_TO_TEMPLATE:
       return {
         ...state,
-        templates: [
-          ...state.templates.map((template) => {
-            return template.id === action.payload.templateId &&
-              !template.gene_ids.includes(action.payload.geneId)
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...template,
-                  gene_ids: [...template.gene_ids, action.payload.geneId],
+                  ...proj,
+                  templates: [
+                    ...proj.templates.map((template) => {
+                      return template.id === action.payload.templateId &&
+                        !template.gene_ids.includes(action.payload.geneId)
+                        ? {
+                            ...template,
+                            gene_ids: [
+                              ...template.gene_ids,
+                              action.payload.geneId,
+                            ],
+                          }
+                        : template;
+                    }),
+                  ],
+
+                  cross_data: {
+                    template_id: action.payload.templateId,
+                    genotypes: {
+                      A: proj.templates[action.payload.templateId].gene_ids.map(
+                        () => {
+                          return [0, 0];
+                        }
+                      ),
+                      B: proj.templates[action.payload.templateId].gene_ids.map(
+                        () => {
+                          return [0, 0];
+                        }
+                      ),
+                    },
+                  },
                 }
-              : template;
+              : proj;
           }),
         ],
-
-        cross_data: {
-          template_id: action.payload.templateId,
-          genotypes: {
-            A: state.templates[action.payload.templateId].gene_ids.map(() => {
-              return [0, 0];
-            }),
-            B: state.templates[action.payload.templateId].gene_ids.map(() => {
-              return [0, 0];
-            }),
-          },
-        },
       };
 
     case ACTION.SAVE_TEMPLATE_NAME:
       return {
         ...state,
-        templates: [
-          ...state.templates.map((template) => {
-            return template.id === action.payload.templateId
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...template,
-                  name: action.payload.name,
+                  ...proj,
+                  templates: [
+                    ...proj.templates.map((template) => {
+                      return template.id === action.payload.templateId
+                        ? {
+                            ...template,
+                            name: action.payload.name,
+                          }
+                        : template;
+                    }),
+                  ],
                 }
-              : template;
+              : proj;
           }),
         ],
       };
@@ -310,62 +455,110 @@ function reducer(state, action) {
     case ACTION.SET_TEMPLATE_GENES:
       return {
         ...state,
-        templates: [
-          ...state.templates.map((template) => {
-            return template.id === action.payload.templateId
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
               ? {
-                  ...template,
-                  gene_ids: [...action.payload.gene_ids],
+                  ...proj,
+                  templates: [
+                    ...proj.templates.map((template) => {
+                      return template.id === action.payload.templateId
+                        ? {
+                            ...template,
+                            gene_ids: [...action.payload.gene_ids],
+                          }
+                        : template;
+                    }),
+                  ],
                 }
-              : template;
+              : proj;
           }),
         ],
       };
 
     case ACTION.INITIALIZE_SELECTION:
-      console.log("ASDA");
       return {
         ...state,
-        cross_data: {
-          template_id: state.templates[action.payload.newId].id,
-          genotypes: {
-            A: state.templates[action.payload.newId].gene_ids.map(() => {
-              return [0, 0];
-            }),
-            B: state.templates[action.payload.newId].gene_ids.map(() => {
-              return [0, 0];
-            }),
-          },
-          square: null,
-        },
-        templates: state.templates,
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  cross_data: {
+                    template_id: proj.templates[action.payload.newId].id,
+                    genotypes: {
+                      A: proj.templates[action.payload.newId].gene_ids.map(
+                        () => {
+                          return [0, 0];
+                        }
+                      ),
+                      B: proj.templates[action.payload.newId].gene_ids.map(
+                        () => {
+                          return [0, 0];
+                        }
+                      ),
+                    },
+                    square: null,
+                  },
+                  templates: proj.templates,
+                }
+              : proj;
+          }),
+        ],
       };
 
     case ACTION.SET_GENOTYPES:
       return {
         ...state,
-        cross_data: {
-          ...state.cross_data,
-          genotypes: action.payload.genotypes,
-        },
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  cross_data: {
+                    ...proj.cross_data,
+                    genotypes: action.payload.genotypes,
+                  },
+                }
+              : proj;
+          }),
+        ],
       };
 
     case ACTION.SET_SQUARE:
       return {
         ...state,
-        cross_data: {
-          ...state.cross_data,
-          square: action.payload.square,
-        },
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  cross_data: {
+                    ...proj.cross_data,
+                    square: action.payload.square,
+                  },
+                }
+              : proj;
+          }),
+        ],
       };
 
     case ACTION.SET_COUNT_LIST:
       return {
         ...state,
-        cross_data: {
-          ...state.cross_data,
-          count_list: action.payload.list,
-        },
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  cross_data: {
+                    ...proj.cross_data,
+                    count_list: action.payload.list,
+                  },
+                }
+              : proj;
+          }),
+        ],
       };
 
     case ACTION.SET_DEFAULT:

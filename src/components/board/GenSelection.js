@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { GenotypeView } from "./visualization/GenotypeView";
 import "./genSelection.css";
 import { AppContext } from "../../AppContextProvider";
@@ -19,19 +19,21 @@ export const getStyle = (percentage) => {
 
 const GenSelection = ({ genotype, template_id }) => {
   const { initialState, state, dispatch } = useContext(AppContext);
-  const currState = useRef(state.projects[state.curr]);
+  const [currState, setCurrState] = useState(state.projects[state.curr]);
+
+  useEffect(() => {
+    setCurrState(state.projects[state.curr]);
+  }, [state]);
 
   const getDesc = () => {
     if (!genotype) return;
-    const template = currState.current.templates.find(
-      (t) => t.id === template_id
-    );
+    const template = currState.templates.find((t) => t.id === template_id);
 
     return (
       <>
         {genotype.map((allelSet, k_aS) => {
           const geneAllel = allelSet[0];
-          const gene = currState.current.default_genes.find(
+          const gene = currState.default_genes.find(
             (g) => g.id === template.gene_ids[k_aS]
           );
 
@@ -51,10 +53,10 @@ const GenSelection = ({ genotype, template_id }) => {
   };
 
   const chance = () => {
-    const fen = gen2fen(genotype, template_id, currState.current);
+    const fen = gen2fen(genotype, template_id, currState);
     return (
-      (currState.current.cross_data.count_list[JSON.stringify(fen)] /
-        Object.values(currState.current.cross_data.count_list).reduce(
+      (currState.cross_data.count_list[JSON.stringify(fen)] /
+        Object.values(currState.cross_data.count_list).reduce(
           (acc, v) => acc + v,
           0
         )) *
@@ -66,7 +68,7 @@ const GenSelection = ({ genotype, template_id }) => {
   return (
     <>
       <p className="">Aktualne zaznaczenie:</p>
-      {genotype && currState.current.cross_data.count_list && (
+      {genotype && currState.cross_data.count_list && (
         <>
           <div className="selected-gen text-info">
             {genotype && (

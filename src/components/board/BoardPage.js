@@ -1,7 +1,6 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Table, Button, Tabs, Tab } from "react-bootstrap";
-import { ACTION } from "../../App";
-import { AppContext } from "../../AppContextProvider";
+import { ACTION, AppContext } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import Confirm from "../general/Confirm";
 
@@ -14,7 +13,11 @@ import { GenotypeView } from "./visualization/GenotypeView";
 
 const BoardPage = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
-  const currState = useRef(state.projects[state.curr]);
+  const [currState, setCurrState] = useState(state.projects[state.curr]);
+
+  useEffect(() => {
+    setCurrState(state.projects[state.curr]);
+  }, [state]);
 
   const setCurrentSelection = (selectedIndex) => {
     dispatch({
@@ -25,8 +28,8 @@ const BoardPage = () => {
 
   const [currentSelectedResult, setCurrentSelectedResult] = useState(null);
   const [currEventKey, setCurrEventKey] = useState("input");
-  const [crossData, setCrossData] = useState(currState.current.cross_data);
-  const crossResult = useRef(currState.current.cross_data.square); //
+  const [crossData, setCrossData] = useState(currState.cross_data);
+  const crossResult = useRef(currState.cross_data.square); //
 
   useEffect(() => {
     const crossClickSub = EventEmitter.addListener(
@@ -67,8 +70,8 @@ const BoardPage = () => {
           >
             <Tab eventKey="input" title="Dane wejściowe">
               <div className="w-100 bg-second shadowed-2 p-2">
-                {currState.current.templates.length !== 0 ? (
-                  currState.current.templates.map((v, k) => {
+                {currState.templates.length !== 0 ? (
+                  currState.templates.map((v, k) => {
                     if (v == null) return;
                     return (
                       <BoardTemplateChoice
@@ -89,13 +92,13 @@ const BoardPage = () => {
                 )}
               </div>
               <div className="w-100 mt-3 bg-second shadowed-2 p-2">
-                {currState.current.templates.length != 0 && (
+                {currState.templates.length != 0 && (
                   <>
-                    {currState.current.templates.find(
-                      (t) => t.id === currState.current.cross_data.template_id
+                    {currState.templates.find(
+                      (t) => t.id === currState.cross_data.template_id
                     ) &&
-                    currState.current.templates.find(
-                      (t) => t.id === currState.current.cross_data.template_id
+                    currState.templates.find(
+                      (t) => t.id === currState.cross_data.template_id
                     ).gene_ids.length != 0 ? (
                       <>
                         <GenotypeAssembly></GenotypeAssembly>

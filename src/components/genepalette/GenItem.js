@@ -10,12 +10,11 @@ import {
 import AllelSymbol from "./AllelSymbol";
 import "./GenItem.css";
 import "../../App.css";
-import { ACTION } from "../../App.js";
 import Confirm from "../general/Confirm";
 import AllelEditor from "./AllelEditor";
 import SubSup from "./SubSup";
 import { GTContent } from "../genotypetemplate/elements/GTContent";
-import { newAllel } from "../../AppContextProvider";
+import { newAllel, ACTION } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter.js";
 
 const GenItem = ({ gene, keyId, dispatch }) => {

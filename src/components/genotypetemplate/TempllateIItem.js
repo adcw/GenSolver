@@ -9,16 +9,22 @@ import {
   OverlayTrigger,
   Popover,
 } from "react-bootstrap";
-import AppContextProvider, { AppContext } from "../../AppContextProvider";
+import AppContextProvider, {
+  AppContext,
+  ACTION,
+} from "../../AppContextProvider";
 import Confirm from "../general/Confirm";
-import { ACTION } from "../../App";
 import { GTContent } from "./elements/GTContent";
 import { ButtonDelete } from "../general/ButtonDelete";
 
 export const TempllateIItem = ({ template, keyId }) => {
   const [collapseOpen, setCollapseOpen] = useState(false);
   const { initialState, state, dispatch } = useContext(AppContext);
-  const currState = useRef(state.projects[state.curr]);
+  const [currState, setCurrState] = useState(state.projects[state.curr]);
+
+  useEffect(() => {
+    setCurrState(state.projects[state.curr]);
+  }, [state]);
 
   // Submit functions
   const D_deleteTemplate = () => {
@@ -85,8 +91,8 @@ export const TempllateIItem = ({ template, keyId }) => {
     if (nameChanged()) D_changeName(nameInputRef.current.value);
     if (geneChanged()) {
       D_setGenes(tempGeneArray);
-      if (template.id === currState.current.cross_data.template_id) {
-        currState.current.templates.forEach((t, k_t) => {
+      if (template.id === currState.cross_data.template_id) {
+        currState.templates.forEach((t, k_t) => {
           if (t.id === template.id) D_initializeSelection(k_t);
         });
       }
@@ -112,9 +118,8 @@ export const TempllateIItem = ({ template, keyId }) => {
         Wybierz geny
       </Popover.Header>
       <Popover.Body>
-        {currState.current.default_genes.filter((g) => g.isActive).length !==
-        0 ? (
-          currState.current.default_genes.map((_g, _k) => {
+        {currState.default_genes.filter((g) => g.isActive).length !== 0 ? (
+          currState.default_genes.map((_g, _k) => {
             if (_g.isActive) {
               return _g.allels.length === 0 ? (
                 <span
@@ -168,9 +173,7 @@ export const TempllateIItem = ({ template, keyId }) => {
             <div className="m-0 txt-right fill-empty d-flex">
               {tempGeneArray.length !== 0 ? (
                 tempGeneArray.map((v, k) => {
-                  const gene = currState.current.default_genes.find(
-                    (g) => g.id === v
-                  );
+                  const gene = currState.default_genes.find((g) => g.id === v);
 
                   if (gene == null) {
                     console.log("gene is null");
@@ -253,7 +256,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                 <div className="genelist">
                   {tempGeneArray !== 0 ? (
                     tempGeneArray.map((v, k) => {
-                      const gene = currState.current.default_genes.find(
+                      const gene = currState.default_genes.find(
                         (g) => g.id === v
                       );
 

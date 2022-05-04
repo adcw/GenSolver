@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useContext, useRef } from "react";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext, ACTION } from "../../AppContextProvider";
 import { Table } from "react-bootstrap";
 import "./resultTable.css";
 import { GenotypeView } from "./visualization/GenotypeView";
@@ -13,22 +13,25 @@ import {
   getCombinations,
   sortAllelSet,
 } from "../../utils/CrossFunctions";
-import { ACTION } from "../../App";
 import { GradientMaker } from "../../utils/Colors";
 
 const ResultTable = ({ crossData, setCrossData, crossResult }) => {
   const { initialState, state, dispatch } = useContext(AppContext);
-  const currState = useRef(state.projects[state.curr]);
+  const [currState, setCurrState] = useState(state.projects[state.curr]);
+
+  useEffect(() => {
+    setCurrState(state.projects[state.curr]);
+  }, [state]);
 
   const [selectionPos, setSelectionPos] = useState([]);
   const [secondarySelections, setSecondarySelections] = useState([]);
   const [colormap, setColormap] = useState([]);
 
   const combinationsA = useRef(
-    getCombinations(currState.current.cross_data.genotypes.A)
+    getCombinations(currState.cross_data.genotypes.A)
   );
   const combinationsB = useRef(
-    getCombinations(currState.current.cross_data.genotypes.B)
+    getCombinations(currState.cross_data.genotypes.B)
   );
 
   const crossResultClick = (data, pos) => {
@@ -40,16 +43,12 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
     console.log("LOAD");
     const el = document.getElementsByClassName("cell")[0];
 
-    if (
-      el &&
-      !el.hasAttribute("style") &&
-      currState.current.cross_data.count_list
-    ) {
+    if (el && !el.hasAttribute("style") && currState.cross_data.count_list) {
       const gradientMaker = new GradientMaker(
-        Object.keys(currState.current.cross_data.count_list).length
+        Object.keys(currState.cross_data.count_list).length
       );
       setColormap(
-        Object.keys(currState.current.cross_data.count_list).map((v) => {
+        Object.keys(currState.cross_data.count_list).map((v) => {
           return {
             fen: v,
             color: gradientMaker.nextColor(),
@@ -62,8 +61,8 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
       E.onPageSwitchToPunnetSquare,
       () => {
         console.log("Page sqitch");
-        if (currState.current.cross_data.count_list) {
-          console.log(JSON.stringify(currState.current.cross_data.count_list));
+        if (currState.cross_data.count_list) {
+          console.log(JSON.stringify(currState.cross_data.count_list));
         }
       }
     );
@@ -101,18 +100,18 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
     const onCreatePunnetSquare = EventEmitter.addListener(
       E.onCreatePunnetSquare,
       () => {
-        setCrossData(currState.current.cross_data);
+        setCrossData(currState.cross_data);
         combinationsA.current = getCombinations(
-          currState.current.cross_data.genotypes.A
+          currState.cross_data.genotypes.A
         );
         combinationsB.current = getCombinations(
-          currState.current.cross_data.genotypes.B
+          currState.cross_data.genotypes.B
         );
         crossResult.current = cross(
           combinationsA.current,
           combinationsB.current,
           crossData.template_id,
-          currState.current
+          currState
         );
         dispatch({
           type: ACTION.SET_SQUARE,
@@ -123,11 +122,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
         crossResult.current.forEach((row, k_row) => {
           row.forEach((gt, k_gt) => {
             const key = JSON.stringify(
-              gen2fen(
-                gt,
-                currState.current.cross_data.template_id,
-                currState.current
-              )
+              gen2fen(gt, currState.cross_data.template_id, currState)
             );
             if (key in list) list[key]++;
             else list[key] = 1;
@@ -148,7 +143,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
 
         // crossResult.current.map((row, k_row) => {
         //   row.map((gt, k_gt) => {
-        //     console.log(JSON.stringify(gen2fen(gt, crossData.template_id, currState.current)))
+        //     console.log(JSON.stringify(gen2fen(gt, crossData.template_id, currState)))
         //   })
         // })
       }
@@ -161,11 +156,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
         crossResult.current
           .map((row, r_indx) => {
             return row.map((genotype, g_indx) => {
-              const fen = gen2fen(
-                genotype,
-                crossData.template_id,
-                currState.current
-              );
+              const fen = gen2fen(genotype, crossData.template_id, currState);
               return fen.toString() == JSON.parse(data.fen).toString()
                 ? [r_indx, g_indx]
                 : [100, 100];
@@ -196,9 +187,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
   return (
     <div>
       {crossResult.current &&
-      currState.current.templates.find(
-        (t) => t.id === crossData.template_id
-      ) ? (
+      currState.templates.find((t) => t.id === crossData.template_id) ? (
         <Table className="punnett-square shadowed">
           <thead>
             <tr>
@@ -228,7 +217,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
               combinationsB.current &&
               crossResult.current &&
               crossResult.current.map((v, k) => {
-                // const template = currState.current.templates.find((t) => t.id === crossData.template_id);
+                // const template = currState.templates.find((t) => t.id === crossData.template_id);
                 return (
                   <tr key={k}>
                     {combinationsA.current && (
@@ -243,11 +232,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
                       const color = colormap.find(
                         (c) =>
                           JSON.stringify(
-                            gen2fen(
-                              v1,
-                              crossData.template_id,
-                              currState.current
-                            )
+                            gen2fen(v1, crossData.template_id, currState)
                           ) == c.fen
                       )?.color;
 

@@ -14,14 +14,6 @@ export const download = (filename, text) => {
   document.body.removeChild(element);
 };
 
-export const downloadState = (state) => {
+export const downloadProject = (state) => {
   download(state.project_name ?? "Untitled Project", JSON.stringify(state));
-};
-
-export const utf8_to_b64 = (str) => {
-  return window.btoa(decodeURI(encodeURIComponent(str)));
-};
-
-export const b64_to_utf8 = (str) => {
-  return decodeURIComponent(encodeURI(window.atob(str)));
 };
