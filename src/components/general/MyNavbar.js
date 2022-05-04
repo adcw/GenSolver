@@ -95,13 +95,22 @@ const MyNavbar = () => {
             &times;
           </div>
           <div className="mx-3 my-3">
-            <h4
-              className="pointer hover-white"
-              style={{ whiteSpace: "nowrap" }}
+            <div
+              className="hstack gap-3 pointer hover"
               onClick={() => downloadState(state)}
             >
-              Pobierz projekt
-            </h4>
+              <FontAwesomeIcon
+                icon="download"
+                className="mb-1"
+              ></FontAwesomeIcon>
+
+              <h4
+                className="pointer hover-white"
+                style={{ whiteSpace: "nowrap" }}
+              >
+                Pobierz projekt
+              </h4>
+            </div>
           </div>
         </div>
       </Navbar>
