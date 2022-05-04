@@ -4,85 +4,102 @@ import { ACTION } from "./App";
 export const AppContext = React.createContext();
 
 const initialState = {
-  default_genes: [
+  curr: 0,
+  projects: [
     {
-      id: 1,
-      name: "Kolor czarny, czekoladowy i cynamonowy",
-      allels: [
-        { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
-        { sup: "", main: "b", sub: "", desc: "barwa czekoladowa", prior: 1 },
-        { sup: "", main: "b1", sub: "", desc: "barwa cynamonowa", prior: 0 },
-      ],
-      isActive: true,
-      triggerEdit: false,
-    },
-
-    {
-      id: 2,
-      name: "Rozjaśnienie",
-      allels: [
-        { sup: "", main: "D", sub: "", desc: "brak rozjaśnienia", prior: 1 },
+      default_genes: [
         {
-          sup: "",
-          main: "d",
-          sub: "",
-          desc: "obecność rozjaśnienia",
-          prior: 0,
+          id: 1,
+          name: "Kolor czarny, czekoladowy i cynamonowy",
+          allels: [
+            { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
+            {
+              sup: "",
+              main: "b",
+              sub: "",
+              desc: "barwa czekoladowa",
+              prior: 1,
+            },
+            {
+              sup: "",
+              main: "b1",
+              sub: "",
+              desc: "barwa cynamonowa",
+              prior: 0,
+            },
+          ],
+          isActive: true,
+          triggerEdit: false,
+        },
+
+        {
+          id: 2,
+          name: "Rozjaśnienie",
+          allels: [
+            {
+              sup: "",
+              main: "D",
+              sub: "",
+              desc: "brak rozjaśnienia",
+              prior: 1,
+            },
+            {
+              sup: "",
+              main: "d",
+              sub: "",
+              desc: "obecność rozjaśnienia",
+              prior: 0,
+            },
+          ],
+          isActive: true,
+          triggerEdit: false,
+        },
+
+        {
+          id: 3,
+          name: "Rudy",
+          allels: [
+            { sup: "", main: "O", sub: "", desc: "rudość", prior: 1 },
+            { sup: "", main: "o", sub: "", desc: "brak rudości", prior: 0 },
+          ],
+          isActive: true,
+          triggerEdit: false,
         },
       ],
-      isActive: true,
-      triggerEdit: false,
-    },
 
-    {
-      id: 3,
-      name: "Rudy",
-      allels: [
-        { sup: "", main: "O", sub: "", desc: "rudość", prior: 1 },
-        { sup: "", main: "o", sub: "", desc: "brak rudości", prior: 0 },
+      templates: [
+        {
+          id: 1,
+          name: "Dziedziczenie koloru u kota",
+          gene_ids: [1, 2, 3],
+        },
+
+        {
+          id: 2,
+          name: "Dziedziczenie 2",
+          gene_ids: [1, 2],
+        },
       ],
-      isActive: true,
-      triggerEdit: false,
+
+      cross_data: {
+        template_id: 1,
+        genotypes: {
+          A: [
+            [0, 1],
+            [1, 0],
+            [1, 1],
+          ],
+          B: [
+            [1, 1],
+            [0, 0],
+            [0, 1],
+          ],
+        },
+      },
+
+      project_name: "Demo Project",
     },
   ],
-
-  templates: [
-    {
-      id: 1,
-      name: "Dziedziczenie koloru u kota",
-      gene_ids: [1, 2, 3],
-    },
-
-    {
-      id: 2,
-      name: "Dziedziczenie 2",
-      gene_ids: [1, 2],
-    },
-
-    // {
-    //   "id": 3,
-    //   "name": "Czowiek",
-    //   "gene_ids": [4]
-    // }
-  ],
-
-  cross_data: {
-    template_id: 1,
-    genotypes: {
-      A: [
-        [0, 1],
-        [1, 0],
-        [1, 1],
-      ],
-      B: [
-        [1, 1],
-        [0, 0],
-        [0, 1],
-      ],
-    },
-  },
-
-  project_name: "Demo Project",
 };
 
 function reducer(state, action) {
@@ -92,11 +109,21 @@ function reducer(state, action) {
     case ACTION.TOGGLE_ACTIVE:
       return {
         ...state,
-        default_genes: [
-          ...state.default_genes.map((gene) => {
-            return gene.id === action.payload.id
-              ? { ...gene, isActive: !gene.isActive }
-              : gene;
+
+        projects: [
+          ...state.projects.map((proj, indx) => {
+            return indx === state.curr
+              ? {
+                  ...proj,
+                  default_genes: [
+                    ...proj.default_genes.map((gene) => {
+                      return gene.id === action.payload.id
+                        ? { ...gene, isActive: !gene.isActive }
+                        : gene;
+                    }),
+                  ],
+                }
+              : proj;
           }),
         ],
       };

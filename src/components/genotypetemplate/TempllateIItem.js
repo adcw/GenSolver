@@ -1,9 +1,14 @@
-import AllelSymbol from "../genepalette/AllelSymbol"
-import SubSup from "../genepalette/SubSup"
-import "../genotypetemplate/templateItem.css"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AllelSymbol from "../genepalette/AllelSymbol";
+import SubSup from "../genepalette/SubSup";
+import "../genotypetemplate/templateItem.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState, useEffect, useContext, useRef } from "react";
-import { Collapse, FormControl, OverlayTrigger, Popover } from "react-bootstrap";
+import {
+  Collapse,
+  FormControl,
+  OverlayTrigger,
+  Popover,
+} from "react-bootstrap";
 import AppContextProvider, { AppContext } from "../../AppContextProvider";
 import Confirm from "../general/Confirm";
 import { ACTION } from "../../App";
@@ -11,32 +16,59 @@ import { GTContent } from "./elements/GTContent";
 import { ButtonDelete } from "../general/ButtonDelete";
 
 export const TempllateIItem = ({ template, keyId }) => {
-
   const [collapseOpen, setCollapseOpen] = useState(false);
   const { initialState, state, dispatch } = useContext(AppContext);
+  const currState = useRef(state.projects[state.curr]);
 
   // Submit functions
   const D_deleteTemplate = () => {
-    dispatch({ type: ACTION.REMOVE_TEMPLATE, payload: { templateId: template.id } });
-  }
+    dispatch({
+      type: ACTION.REMOVE_TEMPLATE,
+      payload: { templateId: template.id },
+    });
+  };
 
-  const D_changeName = (_name) => { dispatch({ type: ACTION.SAVE_TEMPLATE_NAME, payload: { templateId: template.id, name: _name } }); }
-  const D_deleteGene = (_geneId) => dispatch({ type: ACTION.REMOVE_GENE_FROM_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
-  const D_addGene = (_geneId) => dispatch({ type: ACTION.ADD_GENE_TO_TEMPLATE, payload: { templateId: template.id, geneId: _geneId } });
-  const D_setGenes = (_genes) => dispatch({ type: ACTION.SET_TEMPLATE_GENES, payload: { templateId: template.id, gene_ids: _genes } });
+  const D_changeName = (_name) => {
+    dispatch({
+      type: ACTION.SAVE_TEMPLATE_NAME,
+      payload: { templateId: template.id, name: _name },
+    });
+  };
+  const D_deleteGene = (_geneId) =>
+    dispatch({
+      type: ACTION.REMOVE_GENE_FROM_TEMPLATE,
+      payload: { templateId: template.id, geneId: _geneId },
+    });
+  const D_addGene = (_geneId) =>
+    dispatch({
+      type: ACTION.ADD_GENE_TO_TEMPLATE,
+      payload: { templateId: template.id, geneId: _geneId },
+    });
+  const D_setGenes = (_genes) =>
+    dispatch({
+      type: ACTION.SET_TEMPLATE_GENES,
+      payload: { templateId: template.id, gene_ids: _genes },
+    });
   const D_initializeSelection = (_template_id) => {
-    dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: _template_id } })
-  }
+    dispatch({
+      type: ACTION.INITIALIZE_SELECTION,
+      payload: { newId: _template_id },
+    });
+  };
   // --
 
   // Values to be submitted
   const nameInputRef = useRef(null);
-  const [tempGeneArray, setTempGeneArray] = useState([
-    ...template.gene_ids
-  ]);
+  const [tempGeneArray, setTempGeneArray] = useState([...template.gene_ids]);
 
-  const deleteGene = (_geneId) => setTempGeneArray([...tempGeneArray].filter((val) => val !== _geneId));
-  const addGene = (_geneId) => setTempGeneArray(tempGeneArray.includes(_geneId) ? [...tempGeneArray] : [...tempGeneArray, _geneId]);
+  const deleteGene = (_geneId) =>
+    setTempGeneArray([...tempGeneArray].filter((val) => val !== _geneId));
+  const addGene = (_geneId) =>
+    setTempGeneArray(
+      tempGeneArray.includes(_geneId)
+        ? [...tempGeneArray]
+        : [...tempGeneArray, _geneId]
+    );
 
   //
   // const
@@ -47,54 +79,75 @@ export const TempllateIItem = ({ template, keyId }) => {
     if (nameChanged()) nameInputRef.current.value = template.name;
     if (geneChanged()) setTempGeneArray([...template.gene_ids]);
     anyChange();
-  }
+  };
 
   const saveChanges = () => {
     if (nameChanged()) D_changeName(nameInputRef.current.value);
     if (geneChanged()) {
       D_setGenes(tempGeneArray);
-      if (template.id === state.cross_data.template_id) {
-        state.templates.forEach((t, k_t) => {
-          if (t.id === template.id) D_initializeSelection(k_t)
-        })
+      if (template.id === currState.current.cross_data.template_id) {
+        currState.current.templates.forEach((t, k_t) => {
+          if (t.id === template.id) D_initializeSelection(k_t);
+        });
       }
     }
-  }
+  };
 
   const nameChanged = () => nameInputRef.current.value !== template.name;
-  const geneChanged = () => JSON.stringify(tempGeneArray) !== JSON.stringify(template.gene_ids);
+  const geneChanged = () =>
+    JSON.stringify(tempGeneArray) !== JSON.stringify(template.gene_ids);
   const anyChange = () => setSaveButtonActive(nameChanged() || geneChanged());
 
-  useEffect(() => { anyChange(); });
+  useEffect(() => {
+    anyChange();
+  });
 
   const popover = (
-    <Popover id="popover-basic" className="bg-second" style={{ minWidth: "300px" }}>
-      <Popover.Header as="h3" className="bg-dark">Wybierz geny</Popover.Header>
+    <Popover
+      id="popover-basic"
+      className="bg-second"
+      style={{ minWidth: "300px" }}
+    >
+      <Popover.Header as="h3" className="bg-dark">
+        Wybierz geny
+      </Popover.Header>
       <Popover.Body>
-        {
-          state.default_genes.filter((g) => g.isActive).length !== 0 ?
-            state.default_genes.map((_g, _k) => {
-              if (_g.isActive) {
-                return _g.allels.length === 0 ?
-                  <span key={_k} className="tmp-gene-list-item d-flex px-2 pb-1 text-warning">{_g.name}
-                    <span className="f-rigth">&nbsp;(Brak alleli)</span>
-                  </span>
-                  :
-                  <span key={_k} className="tmp-gene-list-item d-flex px-2 pb-1 pointer hoverable text-white"
-                    onClick={() => addGene(_g.id)}
-                  >{_g.name}</span>
+        {currState.current.default_genes.filter((g) => g.isActive).length !==
+        0 ? (
+          currState.current.default_genes.map((_g, _k) => {
+            if (_g.isActive) {
+              return _g.allels.length === 0 ? (
+                <span
+                  key={_k}
+                  className="tmp-gene-list-item d-flex px-2 pb-1 text-warning"
+                >
+                  {_g.name}
+                  <span className="f-rigth">&nbsp;(Brak alleli)</span>
+                </span>
+              ) : (
+                <span
+                  key={_k}
+                  className="tmp-gene-list-item d-flex px-2 pb-1 pointer hoverable text-white"
+                  onClick={() => addGene(_g.id)}
+                >
+                  {_g.name}
+                </span>
+              );
 
-                  // <span key={_k} className={`tmp-gene-list-item d-flex px-2 pb-1 pointer hoverable ${_g.allels.length === 0 && "text-danger"}`}
-                  //   onClick={() => addGene(_g.id)}
-                  // >{_g.name}
-                  //   {
-                  //     _g.allels.length === 0 && <span className="f-rigth">&nbsp;(Brak alleli)</span>
-                  //   }
-                  // </span>
-              }
-            })
-            : <p className="feedback">Brak genów. Dodaj geny lub włącz ich widoczność</p>
-        }
+              // <span key={_k} className={`tmp-gene-list-item d-flex px-2 pb-1 pointer hoverable ${_g.allels.length === 0 && "text-danger"}`}
+              //   onClick={() => addGene(_g.id)}
+              // >{_g.name}
+              //   {
+              //     _g.allels.length === 0 && <span className="f-rigth">&nbsp;(Brak alleli)</span>
+              //   }
+              // </span>
+            }
+          })
+        ) : (
+          <p className="feedback">
+            Brak genów. Dodaj geny lub włącz ich widoczność
+          </p>
+        )}
       </Popover.Body>
     </Popover>
   );
@@ -113,25 +166,26 @@ export const TempllateIItem = ({ template, keyId }) => {
         <td className="m-0 p-1">
           <div>
             <div className="m-0 txt-right fill-empty d-flex">
-              {
-                tempGeneArray.length !== 0 ?
-                  tempGeneArray.map((v, k) => {
+              {tempGeneArray.length !== 0 ? (
+                tempGeneArray.map((v, k) => {
+                  const gene = currState.current.default_genes.find(
+                    (g) => g.id === v
+                  );
 
-                    const gene = state.default_genes.find(g => g.id === v);
-
-                    if (gene == null) {
-                      console.log("gene is null");
-                    }
-                    else {
-                      return (
-                        <div key={k} className="d-inline feedback">
-                          <SubSup allel={gene.allels[0]}></SubSup>{k < tempGeneArray.length - 1 && <>,&nbsp;</>}
-                        </div>
-                      )
-                    }
-                  })
-                  : <p className="text-sm">Brak genów</p>
-              }
+                  if (gene == null) {
+                    console.log("gene is null");
+                  } else {
+                    return (
+                      <div key={k} className="d-inline feedback">
+                        <SubSup allel={gene.allels[0]}></SubSup>
+                        {k < tempGeneArray.length - 1 && <>,&nbsp;</>}
+                      </div>
+                    );
+                  }
+                })
+              ) : (
+                <p className="text-sm">Brak genów</p>
+              )}
             </div>
           </div>
         </td>
@@ -143,13 +197,15 @@ export const TempllateIItem = ({ template, keyId }) => {
             aria-controls="collapse-menu"
             aria-expanded="false"
           >
-            <FontAwesomeIcon
-              icon="pencil-alt">
-            </FontAwesomeIcon>
+            <FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon>
           </button>
 
           <Confirm
-            content={<center className="mb-3">Czy na pewno chcesz usunąć bezpowrotnie te szablon?</center>}
+            content={
+              <center className="mb-3">
+                Czy na pewno chcesz usunąć bezpowrotnie te szablon?
+              </center>
+            }
             onConfirm={() => D_deleteTemplate()}
           >
             <button className="btn btn-xs btn-delete">
@@ -157,75 +213,89 @@ export const TempllateIItem = ({ template, keyId }) => {
             </button>
           </Confirm>
         </td>
-
       </tr>
 
       <tr className="p-1">
         <td colSpan="12" className="w-100 py-0 template-content">
           <Collapse in={collapseOpen}>
             <div id="collapse-menu" className="w-100">
-
               <GTContent title="Nazwa:">
-                <input ref={nameInputRef} type="text" className="btn-xs w-100" defaultValue={template.name}
+                <input
+                  ref={nameInputRef}
+                  type="text"
+                  className="btn-xs w-100"
+                  defaultValue={template.name}
                   onChange={(e) => {
-                    anyChange()
+                    anyChange();
                   }}
                 ></input>
 
-                <button className="btn-xs btn my-btn-warning mx-1"
+                <button
+                  className="btn-xs btn my-btn-warning mx-1"
                   disabled={!saveButtonActive}
                   onClick={() => discardChanges()}
-                >Anuluj</button>
+                >
+                  Anuluj
+                </button>
 
-                <button className="btn-xs btn my-btn-success"
+                <button
+                  className="btn-xs btn my-btn-success"
                   disabled={!saveButtonActive}
-                  onClick={() => { saveChanges() }}
-                >Zapisz</button>
-
+                  onClick={() => {
+                    saveChanges();
+                  }}
+                >
+                  Zapisz
+                </button>
               </GTContent>
 
               <GTContent title="Geny:">
                 <div className="genelist">
-                  {
-                    tempGeneArray !== 0 ?
-                      tempGeneArray.map((v, k) => {
-                        const gene = state.default_genes.find(g => g.id === v);
+                  {tempGeneArray !== 0 ? (
+                    tempGeneArray.map((v, k) => {
+                      const gene = currState.current.default_genes.find(
+                        (g) => g.id === v
+                      );
 
-                        if (gene == null) {
-                          console.log("Gene was removed");
-                        }
-                        else {
-                          return (
-                            <span key={k} className="tmp-gene-list-item d-flex">
-                              <p className="mb-0 mt-0">{`${k + 1}. ${gene.name}`}</p>
+                      if (gene == null) {
+                        console.log("Gene was removed");
+                      } else {
+                        return (
+                          <span key={k} className="tmp-gene-list-item d-flex">
+                            <p className="mb-0 mt-0">{`${k + 1}. ${
+                              gene.name
+                            }`}</p>
 
-                              <span className="f-rigth" style={{ marginLeft: "auto", order: "2" }}>
-                                <ButtonDelete
-                                  onClick={() => deleteGene(v)}
-                                ></ButtonDelete>
-                              </span>
-
+                            <span
+                              className="f-rigth"
+                              style={{ marginLeft: "auto", order: "2" }}
+                            >
+                              <ButtonDelete
+                                onClick={() => deleteGene(v)}
+                              ></ButtonDelete>
                             </span>
-                          )
-                        }
-                      })
-                      : <p>Brak genów</p>
-                  }
+                          </span>
+                        );
+                      }
+                    })
+                  ) : (
+                    <p>Brak genów</p>
+                  )}
 
-                  <OverlayTrigger trigger="click" placement="top" overlay={popover} rootClose>
-                    <button className="btn-xs w-100 btn-success">
-                      Dodaj
-                    </button>
+                  <OverlayTrigger
+                    trigger="click"
+                    placement="top"
+                    overlay={popover}
+                    rootClose
+                  >
+                    <button className="btn-xs w-100 btn-success">Dodaj</button>
                   </OverlayTrigger>
-
                 </div>
               </GTContent>
-
-
             </div>
           </Collapse>
         </td>
       </tr>
     </>
-  )
-}
+  );
+};

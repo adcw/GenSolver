@@ -1,5 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useContext } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Button, Tab, Table, Tabs } from "react-bootstrap";
 import {
   BrowserRouter as Router,
@@ -65,6 +65,7 @@ function App() {
   const history = useHistory();
 
   const { initialState, state, dispatch } = useContext(AppContext);
+  const currState = useRef(state.projects[state.curr]);
 
   // useEffect(() => {
 
@@ -103,15 +104,15 @@ function App() {
                     <div className="pt-2 overflown">
                       <Table className="genItem">
                         <tbody>
-                          {state.default_genes === undefined ||
-                          state.default_genes.length === 0 ? (
+                          {currState.current.default_genes === undefined ||
+                          currState.current.default_genes.length === 0 ? (
                             <tr>
                               <td>
                                 <p className="feedback">Brak genów</p>
                               </td>
                             </tr>
                           ) : (
-                            state.default_genes.map((v, k) => {
+                            currState.current.default_genes.map((v, k) => {
                               return (
                                 <GenItem
                                   gene={v}
@@ -155,7 +156,7 @@ function App() {
                   Dodaj nowy szablon
                 </Button>
                 {
-                  // state.default_genes.map((v, k) => {
+                  // currState.current.default_genes.map((v, k) => {
                   //   return <p>{JSON.stringify(v, null, 2)}</p>
                   // })
                 }
@@ -166,14 +167,14 @@ function App() {
                     style={{ borderBottomWidth: "0px !important" }}
                   >
                     <tbody>
-                      {state.default_genes === undefined ? (
+                      {currState.current.default_genes === undefined ? (
                         <tr>
                           <td>
                             <p className="feedback">Brak genów</p>
                           </td>
                         </tr>
                       ) : (
-                        state.templates.map((v, k) => {
+                        currState.current.templates.map((v, k) => {
                           if (v == null) return;
                           return (
                             <TempllateIItem
