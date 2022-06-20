@@ -69,6 +69,7 @@ export const TempllateIItem = ({ template, keyId }) => {
 
   const deleteGene = (_geneId) =>
     setTempGeneArray([...tempGeneArray].filter((val) => val !== _geneId));
+
   const addGene = (_geneId) =>
     setTempGeneArray(
       tempGeneArray.includes(_geneId)

@@ -66,7 +66,7 @@ function App() {
               <Card>
                 <h4 className="mb-3">Paleta genów</h4>
 
-                <Tabs
+                {/* <Tabs
                   variant="pills"
                   defaultActiveKey="normal"
                   id="uncontrolled-tab-example"
@@ -76,34 +76,34 @@ function App() {
                     <AddNewGeneBtn
                       targetGeneList={GENE_LIST.NORMAL}
                       dispatch={dispatch}
-                    />
+                    /> */}
 
-                    <div className="pt-2 overflown">
-                      <Table className="genItem">
-                        <tbody>
-                          {currState.default_genes === undefined ||
-                          currState.default_genes.length === 0 ? (
-                            <tr>
-                              <td>
-                                <p className="feedback">Brak genów</p>
-                              </td>
-                            </tr>
-                          ) : (
-                            currState.default_genes.map((v, k) => {
-                              return (
-                                <GenItem
-                                  gene={v}
-                                  key={k}
-                                  keyId={k + 1}
-                                  dispatch={dispatch}
-                                />
-                              );
-                            })
-                          )}
-                        </tbody>
-                      </Table>
-                    </div>
-                  </Tab>
+                <div className="pt-2 overflown">
+                  <Table className="genItem">
+                    <tbody>
+                      {currState.default_genes === undefined ||
+                      currState.default_genes.length === 0 ? (
+                        <tr>
+                          <td>
+                            <p className="feedback">Brak genów</p>
+                          </td>
+                        </tr>
+                      ) : (
+                        currState.default_genes.map((v, k) => {
+                          return (
+                            <GenItem
+                              gene={v}
+                              key={k}
+                              keyId={k + 1}
+                              dispatch={dispatch}
+                            />
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </Table>
+                </div>
+                {/* </Tab>
 
                   <Tab eventKey="gender" title="Geny płci">
                     <AddNewGeneBtn
@@ -118,7 +118,7 @@ function App() {
                       dispatch={dispatch}
                     />
                   </Tab>
-                </Tabs>
+                </Tabs> */}
               </Card>
             </div>
 

@@ -71,19 +71,21 @@ const BoardPage = () => {
             <Tab eventKey="input" title="Dane wejściowe">
               <div className="w-100 bg-second shadowed-2 p-2">
                 {currState.templates.length !== 0 ? (
-                  currState.templates.map((v, k) => {
-                    if (v == null) return;
-                    return (
-                      <BoardTemplateChoice
-                        template={v}
-                        key={k}
-                        keyId={k}
-                        _onChange={(e, _k) =>
-                          e.target.checked && setCurrentSelection(_k)
-                        }
-                      ></BoardTemplateChoice>
-                    );
-                  })
+                  currState.templates
+                    .map((v, k) => {
+                      if (v == null) return null;
+                      return (
+                        <BoardTemplateChoice
+                          template={v}
+                          key={k}
+                          keyId={k}
+                          _onChange={(e, _k) =>
+                            e.target.checked && setCurrentSelection(_k)
+                          }
+                        ></BoardTemplateChoice>
+                      );
+                    })
+                    .filter((val) => val)
                 ) : (
                   <p>
                     Brak szablonów. Utwórz nowy szablon w zakładce "kreator
@@ -92,14 +94,14 @@ const BoardPage = () => {
                 )}
               </div>
               <div className="w-100 mt-3 bg-second shadowed-2 p-2">
-                {currState.templates.length != 0 && (
+                {currState.templates.length !== 0 && (
                   <>
                     {currState.templates.find(
                       (t) => t.id === currState.cross_data.template_id
                     ) &&
                     currState.templates.find(
                       (t) => t.id === currState.cross_data.template_id
-                    ).gene_ids.length != 0 ? (
+                    ).gene_ids.length !== 0 ? (
                       <>
                         <GenotypeAssembly></GenotypeAssembly>
                         <Confirm
