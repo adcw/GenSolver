@@ -23,109 +23,157 @@ export const ACTION = {
   SET_SQUARE: "SET_SQUARE", // zapisanie krzyżówki
   SET_COUNT_LIST: "SET_COUNT_LIST", // zapisanie listy zliczeń fenotypów
 
+  SET_PROJECT: "SET_PROJECT", // Zmiana projektu
+
   SET_DEFAULT: "SET_DEFAULT", // przywrócenie domyslnych danych
   SET_STATE: "SET_STATE",
 };
 
 export const AppContext = React.createContext();
 
-const initialState = {
-  curr: 0,
-  projects: [
+const pr1 = {
+  default_genes: [
     {
-      default_genes: [
+      id: 1,
+      name: "Kolor czarny, czekoladowy i cynamonowy",
+      allels: [
+        { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
         {
-          id: 1,
-          name: "Kolor czarny, czekoladowy i cynamonowy",
-          allels: [
-            { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
-            {
-              sup: "",
-              main: "b",
-              sub: "",
-              desc: "barwa czekoladowa",
-              prior: 1,
-            },
-            {
-              sup: "",
-              main: "b1",
-              sub: "",
-              desc: "barwa cynamonowa",
-              prior: 0,
-            },
-          ],
-          isActive: true,
-          triggerEdit: false,
+          sup: "",
+          main: "b",
+          sub: "",
+          desc: "barwa czekoladowa",
+          prior: 1,
         },
-
         {
-          id: 2,
-          name: "Rozjaśnienie",
-          allels: [
-            {
-              sup: "",
-              main: "D",
-              sub: "",
-              desc: "brak rozjaśnienia",
-              prior: 1,
-            },
-            {
-              sup: "",
-              main: "d",
-              sub: "",
-              desc: "obecność rozjaśnienia",
-              prior: 0,
-            },
-          ],
-          isActive: true,
-          triggerEdit: false,
-        },
-
-        {
-          id: 3,
-          name: "Rudy",
-          allels: [
-            { sup: "", main: "O", sub: "", desc: "rudość", prior: 1 },
-            { sup: "", main: "o", sub: "", desc: "brak rudości", prior: 0 },
-          ],
-          isActive: true,
-          triggerEdit: false,
+          sup: "",
+          main: "b1",
+          sub: "",
+          desc: "barwa cynamonowa",
+          prior: 0,
         },
       ],
+      isActive: true,
+      triggerEdit: false,
+    },
 
-      templates: [
+    {
+      id: 2,
+      name: "Rozjaśnienie",
+      allels: [
         {
-          id: 1,
-          name: "Dziedziczenie koloru u kota",
-          gene_ids: [1, 2, 3],
+          sup: "",
+          main: "D",
+          sub: "",
+          desc: "brak rozjaśnienia",
+          prior: 1,
         },
-
         {
-          id: 2,
-          name: "Dziedziczenie 2",
-          gene_ids: [1, 2],
+          sup: "",
+          main: "d",
+          sub: "",
+          desc: "obecność rozjaśnienia",
+          prior: 0,
         },
       ],
+      isActive: true,
+      triggerEdit: false,
+    },
 
-      cross_data: {
-        template_id: 1,
-        genotypes: {
-          A: [
-            [0, 1],
-            [1, 0],
-            [1, 1],
-          ],
-          B: [
-            [1, 1],
-            [0, 0],
-            [0, 1],
-          ],
-        },
-      },
-
-      project_name: "Demo Project",
+    {
+      id: 3,
+      name: "Rudy",
+      allels: [
+        { sup: "", main: "O", sub: "", desc: "rudość", prior: 1 },
+        { sup: "", main: "o", sub: "", desc: "brak rudości", prior: 0 },
+      ],
+      isActive: true,
+      triggerEdit: false,
     },
   ],
+
+  templates: [
+    {
+      id: 1,
+      name: "Dziedziczenie koloru u kota",
+      gene_ids: [1, 2, 3],
+    },
+
+    {
+      id: 2,
+      name: "Dziedziczenie 2",
+      gene_ids: [1, 2],
+    },
+  ],
+
+  cross_data: {
+    template_id: 1,
+    genotypes: {
+      A: [
+        [0, 1],
+        [1, 0],
+        [1, 1],
+      ],
+      B: [
+        [1, 1],
+        [0, 0],
+        [0, 1],
+      ],
+    },
+  },
+
+  project_name: "Demo Project",
+};
+
+const pr2 = {
+  default_genes: [
+    {
+      id: 1,
+      name: "Kolor czarny, czekoladowy i cynamonowy",
+      allels: [
+        { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
+        {
+          sup: "",
+          main: "b",
+          sub: "",
+          desc: "barwa czekoladowa",
+          prior: 1,
+        },
+        {
+          sup: "",
+          main: "b1",
+          sub: "",
+          desc: "barwa cynamonowa",
+          prior: 0,
+        },
+      ],
+      isActive: true,
+      triggerEdit: false,
+    },
+  ],
+
+  templates: [
+    {
+      id: 1,
+      name: "Dziedziczenie koloru u kota",
+      gene_ids: [1],
+    },
+  ],
+
+  cross_data: {
+    template_id: 1,
+    genotypes: {
+      A: [[0, 1]],
+      B: [[1, 1]],
+    },
+  },
+
+  project_name: "Test proj",
+};
+
+const initialState = {
+  curr: 1,
+  projects: [pr1, pr2],
 };
 
 function reducer(state, action) {
@@ -559,6 +607,12 @@ function reducer(state, action) {
               : proj;
           }),
         ],
+      };
+
+    case ACTION.SET_PROJECT:
+      return {
+        ...state,
+        curr: action.payload.projId,
       };
 
     case ACTION.SET_DEFAULT:
