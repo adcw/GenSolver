@@ -18,7 +18,7 @@ export const ACTION = {
   SAVE_TEMPLATE_NAME: "SAVE_TEMPLATE_NAME", // zapisanie nazwy szablonu
   SET_TEMPLATE_GENES: "SET_TEMPLATE_GENES", // ustawienie genów szablonu
 
-  INITIALIZE_SELECTION: "INITIALIZE_SELECTION", // iniclalizacja obecnie wybranego szablonu
+  INITIALIZE_SELECTION: "INITIALIZE_SELECTION", // inicjalizacja obecnie wybranego szablonu
   SET_GENOTYPES: "SET_GENOTYPES", // zapisanie genotypów rodzicielskich
   SET_SQUARE: "SET_SQUARE", // zapisanie krzyżówki
   SET_COUNT_LIST: "SET_COUNT_LIST", // zapisanie listy zliczeń fenotypów

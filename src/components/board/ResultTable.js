@@ -67,27 +67,6 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
       }
     );
 
-    // if (crossResult.current) {
-    //   const list = {}
-    //   crossResult.current.forEach((row, k_row) => {
-    //     row.forEach((gt, k_gt) => {
-    //       const key = JSON.stringify(gen2fen(gt, state.cross_data.template_id, state))
-    //       if (key in list) list[key]++;
-    //       else list[key] = 1
-    //     });
-    //   });
-
-    //   const gradientMaker = new GradientMaker(Object.keys(list).length);
-    //   setColormap(
-    //     Object.keys(list).map(v => {
-    //       return {
-    //         fen: v,
-    //         color: gradientMaker.nextColor()
-    //       }
-    //     })
-    //   )
-    // }
-
     const onRestoreDefault = EventEmitter.addListener(
       E.onRestoreDefault,
       () => {
@@ -140,12 +119,6 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
         );
 
         dispatch({ type: ACTION.SET_COUNT_LIST, payload: { list } });
-
-        // crossResult.current.map((row, k_row) => {
-        //   row.map((gt, k_gt) => {
-        //     console.log(JSON.stringify(gen2fen(gt, crossData.template_id, currState)))
-        //   })
-        // })
       }
     );
 

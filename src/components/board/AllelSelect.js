@@ -44,6 +44,7 @@ export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
               onClick={() => changeSelection(k)}
             >
               <SubSup allel={v}></SubSup>
+              :&nbsp;{v.desc}
             </div>
           );
         })}
