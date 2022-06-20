@@ -33,8 +33,6 @@ const AllelEditor = ({
   };
 
   const saveAllel = () => {
-    // console.log("save");
-    console.log(JSON.stringify(modifiedAllel) === JSON.stringify(chosenAllel));
     saveModifiedAllel(chosenAllelIndex, modifiedAllel);
   };
 

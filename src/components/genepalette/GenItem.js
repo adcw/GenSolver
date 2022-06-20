@@ -19,8 +19,6 @@ import EventEmitter, { E } from "../../utils/events/EventEmitter.js";
 
 const GenItem = ({ gene, keyId, dispatch }) => {
   const [firstTime, setFirstTime] = useState(true);
-  const nameInput = useRef(null);
-  const editBtn = useRef(null);
   const allelCount = useRef(Object.keys(gene.allels).length);
 
   /*
@@ -31,15 +29,6 @@ const GenItem = ({ gene, keyId, dispatch }) => {
   const D_deleteGene = () => {
     dispatch({ type: ACTION.REMOVE_GENE, payload: { id: gene.id } });
   };
-
-  // const D_saveModifiedName = (_newName) => dispatch({ type: ACTION.SAVE_GENE_NAME, payload: { id: gene.id, name: _newName } });
-  // const D_saveModifiedAllel = (modifiedAllelIndex, newAllel) => dispatch({ type: ACTION.MODIFY_ALLEL, payload: { id: gene.id, modifiedAllelIndex, newAllel } });
-  // const D_addNewAllel = () => {
-  // 	if (allelCount.current < 7) {
-  // 		dispatch({ type: ACTION.ADD_ALLEL, payload: { id: gene.id } });
-  // 		allelCount.current++;
-  // 	}
-  // }
 
   const D_removeAllel = (allelIndex) => {
     dispatch({
@@ -52,13 +41,15 @@ const GenItem = ({ gene, keyId, dispatch }) => {
       type: ACTION.SET_GENE_ALLELS,
       payload: { id: gene.id, allels: allels },
     });
-    dispatch({ type: ACTION.SET_SQUARE, payload: { square: null } });
-    // dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: 0 } })
+    // dispatch({ type: ACTION.SET_SQUARE, payload: { square: null } });
+
+    console.log(allels);
+    console.log(`old: ${allels.allels.length}, new: ${gene.allels.length}`);
+
+    if (allels.allels.length < gene.allels.length) {
+      dispatch({ type: ACTION.INITIALIZE_SELECTION, payload: { newId: 0 } });
+    }
   };
-
-  // const D_setAllelDesc = (names) => {
-
-  // }
 
   const [isSaveButtonActive, setIsSaveButtonActive] = useState(false);
 
@@ -223,7 +214,6 @@ const GenItem = ({ gene, keyId, dispatch }) => {
             {/* <OverlayTrigger rootClose trigger="click" placement="bottom" overlay={popover} > */}
             <button
               className="btn btn-sm btn-edit"
-              ref={editBtn}
               onClick={() => setCollapseOpen(!collapseOpen)}
             >
               <FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon>
