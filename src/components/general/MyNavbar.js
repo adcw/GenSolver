@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { Container, Nav, Navbar, Row, Col } from "react-bootstrap";
 import { useHistory, useLocation } from "react-router-dom";
 import { AppContext, ACTION } from "../../AppContextProvider";
@@ -7,6 +7,7 @@ import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import { downloadProject } from "../../utils/ProjectManager";
 import Confirm from "./Confirm";
 import EditProject from "./EditProject";
+import { FileInput } from "./FileInput";
 import "./myNavbar.css";
 
 const MyNavbar = () => {
@@ -31,6 +32,8 @@ const MyNavbar = () => {
   const [sidemenuOpen, setSidemenuOpen] = useState(false);
 
   const [isProjectEditOpen, setIsProjectEditOpen] = useState(false);
+
+  const openRef = useRef(null);
 
   return (
     <>
@@ -118,7 +121,7 @@ const MyNavbar = () => {
           <div className="mx-3 my-3">
             <div
               className="hstack gap-3 pointer hover"
-              // onClick={() => downloadProject(state.projects[state.curr])}
+              onClick={() => openRef.current.focus()}
             >
               <FontAwesomeIcon icon="plus" className="mb-1"></FontAwesomeIcon>
 
@@ -144,10 +147,7 @@ const MyNavbar = () => {
               </h6>
             </div>
 
-            <div
-              className="hstack gap-3 pointer hover mb-3"
-              onClick={() => downloadProject(state.projects[state.curr])}
-            >
+            <FileInput onSubmit={(val) => console.log(val)}>
               <FontAwesomeIcon
                 icon="download"
                 className="mb-1"
@@ -159,7 +159,7 @@ const MyNavbar = () => {
               >
                 Importuj projekt
               </h6>
-            </div>
+            </FileInput>
 
             <div className="hstack pointer text-light">
               <p style={{ whiteSpace: "nowrap" }}>

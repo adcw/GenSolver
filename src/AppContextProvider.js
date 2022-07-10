@@ -1,4 +1,9 @@
 import React, { useState, useReducer, useEffect } from "react";
+import {
+  addDefaultGene,
+  removeGene,
+  toggleActive,
+} from "./components/api/actions";
 
 export const ACTION = {
   TOGGLE_ACTIVE: "TOGGLE_ACTIVE", // modyfikacja widoczności genu w edytorze
@@ -181,71 +186,13 @@ function reducer(state, action) {
 
   switch (action.type) {
     case ACTION.TOGGLE_ACTIVE:
-      return {
-        ...state,
-
-        projects: [
-          ...state.projects.map((proj, indx) => {
-            return indx === state.curr
-              ? {
-                  ...proj,
-                  default_genes: [
-                    ...proj.default_genes.map((gene) => {
-                      return gene.id === action.payload.id
-                        ? { ...gene, isActive: !gene.isActive }
-                        : gene;
-                    }),
-                  ],
-                }
-              : proj;
-          }),
-        ],
-      };
+      return toggleActive(state, action.payload.id);
 
     case ACTION.REMOVE_GENE:
-      return {
-        ...state,
-
-        projects: [
-          ...state.projects.map((proj, indx) => {
-            return indx === state.curr
-              ? {
-                  ...proj,
-                  default_genes: [
-                    ...proj.default_genes.filter(
-                      (gene) => gene.id !== action.payload.id
-                    ),
-                  ],
-                  templates: [
-                    ...proj.templates.map((template) => {
-                      return {
-                        ...template,
-                        gene_ids: template.gene_ids.filter(
-                          (id) => id !== action.payload.id
-                        ),
-                      };
-                    }),
-                  ],
-                }
-              : proj;
-          }),
-        ],
-      };
+      return removeGene(state, action.payload.id);
 
     case ACTION.ADD_DEFAULT_GENE:
-      return {
-        ...state,
-        projects: [
-          ...state.projects.map((proj, indx) => {
-            return indx === state.curr
-              ? {
-                  ...proj,
-                  default_genes: [...proj.default_genes, newGene(proj)],
-                }
-              : proj;
-          }),
-        ],
-      };
+      return addDefaultGene(state);
 
     case ACTION.SAVE_GENE_NAME:
       return {
@@ -637,7 +584,7 @@ function newGeneId(state) {
 const newTemplateId = (state) =>
   1 + state.templates.reduce((acc, val) => Math.max(acc, val.id), 0);
 
-function newGene(state) {
+export const newGene = (state) => {
   return {
     id: newGeneId(state),
     name: "nowy gen",
@@ -645,7 +592,7 @@ function newGene(state) {
     isActive: true,
     triggerEdit: false,
   };
-}
+};
 
 export function newAllel() {
   return {
