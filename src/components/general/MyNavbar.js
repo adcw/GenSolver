@@ -1,22 +1,42 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useContext, useState, useRef } from "react";
-import { Container, Nav, Navbar, Row, Col } from "react-bootstrap";
+import {
+  Container,
+  Nav,
+  Navbar,
+  Row,
+  Col,
+  Button,
+  Stack,
+} from "react-bootstrap";
 import { useHistory, useLocation } from "react-router-dom";
+import { object } from "yup";
 import { AppContext, ACTION } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import { downloadProject } from "../../utils/ProjectManager";
 import Confirm from "./Confirm";
 import EditProject from "./EditProject";
 import { FileInput } from "./FileInput";
+import { AppModal } from "./Modal";
 import "./myNavbar.css";
+import { ProjPreview } from "./ProjPreview";
 
 const MyNavbar = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
+  const [isPreviewShow, setIsPreviewShow] = useState(false);
+  const [importedProject, setImportedProject] = useState(null);
+
   const history = useHistory();
   const location = useLocation();
 
   const updateHistory = (newPath) => {
     if (location.pathname !== newPath) history.push(newPath);
+  };
+
+  const handleProjectSubmit = (obj) => {
+    if (!obj) return;
+    setIsPreviewShow(true);
+    setImportedProject(obj);
   };
 
   const handleProjectChange = (newName) => {
@@ -30,8 +50,6 @@ const MyNavbar = () => {
   };
 
   const [sidemenuOpen, setSidemenuOpen] = useState(false);
-
-  const [isProjectEditOpen, setIsProjectEditOpen] = useState(false);
 
   const openRef = useRef(null);
 
@@ -64,10 +82,7 @@ const MyNavbar = () => {
             </Col>
 
             <Col xs="1">
-              <EditProject
-                isOpen={isProjectEditOpen}
-                setIsOpen={setIsProjectEditOpen}
-              />
+              <EditProject />
             </Col>
           </Row>
         </Container>
@@ -104,10 +119,6 @@ const MyNavbar = () => {
                 Przywróć domyślne dane
               </div>
             </Confirm>
-
-            {/* <div className="nav-link pointer"
-            onClick={}
-          >Przywróć domyślne dane</div> */}
           </Nav>
         </Container>
 
@@ -147,7 +158,7 @@ const MyNavbar = () => {
               </h6>
             </div>
 
-            <FileInput onSubmit={(val) => console.log(val)}>
+            <FileInput onSubmit={handleProjectSubmit}>
               <FontAwesomeIcon
                 icon="download"
                 className="mb-1"
@@ -160,6 +171,28 @@ const MyNavbar = () => {
                 Importuj projekt
               </h6>
             </FileInput>
+
+            <AppModal
+              isOpen={isPreviewShow}
+              title="Podgląd projektu"
+              footer={
+                <Stack
+                  className="my-1"
+                  direction="horizontal"
+                  style={{ gap: "6px" }}
+                >
+                  <Button
+                    className="ms-auto btn-xs btn-light"
+                    onClick={() => setIsPreviewShow(false)}
+                  >
+                    Anuluj
+                  </Button>
+                  <Button className="btn-xs btn-info">Importuj</Button>
+                </Stack>
+              }
+            >
+              <ProjPreview project={importedProject} />
+            </AppModal>
 
             <div className="hstack pointer text-light">
               <p style={{ whiteSpace: "nowrap" }}>

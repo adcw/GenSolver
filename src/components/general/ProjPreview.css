@@ -1,0 +1,10 @@
+.pr-accordion button {
+  padding: 6px;
+  background: rgb(46, 46, 46);
+  color: antiquewhite;
+}
+
+.accordion-button:not(.collapsed) {
+  background-color: rgb(89, 85, 85);
+  color: whitesmoke;
+}

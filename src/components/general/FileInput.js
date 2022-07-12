@@ -88,6 +88,7 @@ export const FileInput = ({ children, onSubmit }) => {
           ref={openRef}
           onChange={(e) => handleChange(e.target.files[0])}
           type="file"
+          accept="application/JSON"
         />
       </Form>
       {children}
