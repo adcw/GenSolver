@@ -24,6 +24,10 @@ const EditProject = () => {
   const [error, setError] = useState();
 
   useEffect(() => {
+    setProjectName(state.projects[state.curr].project_name);
+  }, [state.curr, state.projects]);
+
+  useEffect(() => {
     setError(validateProject__(currentProject, state, true));
   }, [currentProject]);
 

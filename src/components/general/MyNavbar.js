@@ -65,6 +65,14 @@ const MyNavbar = () => {
     setImportedProject(obj);
   };
 
+  const handleProjectImport = () => {
+    dispatch({
+      type: ACTION.ADD_PROJECT,
+      payload: { project: importedProject },
+    });
+    setImportedProject(null);
+  };
+
   const handleNameChange = (newName) => {
     setImportedProject({
       ...importedProject,
@@ -212,7 +220,11 @@ const MyNavbar = () => {
                   >
                     Anuluj
                   </Button>
-                  <Button className="btn-xs btn-info" disabled={error}>
+                  <Button
+                    className="btn-xs btn-info"
+                    disabled={error}
+                    onClick={handleProjectImport}
+                  >
                     Importuj
                   </Button>
                 </Stack>
