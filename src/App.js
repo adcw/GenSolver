@@ -65,7 +65,6 @@ function App() {
             <div className="col-md-6">
               <Card>
                 <h4 className="mb-3">Paleta genów</h4>
-
                 {/* <Tabs
                   variant="pills"
                   defaultActiveKey="normal"
@@ -73,11 +72,12 @@ function App() {
                   className="mb-3"
                 >
                   <Tab eventKey="normal" title="Zwykłe">
-                    <AddNewGeneBtn
-                      targetGeneList={GENE_LIST.NORMAL}
-                      dispatch={dispatch}
-                    /> */}
+                   */}
 
+                <AddNewGeneBtn
+                  targetGeneList={GENE_LIST.NORMAL}
+                  dispatch={dispatch}
+                />
                 <div className="pt-2 overflown">
                   <Table className="genItem">
                     <tbody>

@@ -8,3 +8,7 @@
   background-color: rgb(89, 85, 85);
   color: whitesmoke;
 }
+
+.accordion-body {
+  padding: 10px;
+}

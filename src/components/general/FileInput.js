@@ -1,9 +1,11 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import * as yup from "yup";
+import { AppModal } from "./Modal";
 
 export const FileInput = ({ children, onSubmit }) => {
   const openRef = useRef(null);
+  const [error, setError] = useState(null);
 
   const schema = yup
     .object()
@@ -60,15 +62,12 @@ export const FileInput = ({ children, onSubmit }) => {
     const fr = new FileReader();
 
     fr.onload = () => {
-      // onSubmit(fr.result);
       let result;
       try {
         const raw = fr.result;
-        console.log(raw);
         result = schema.validateSync(JSON.parse(raw));
-      } catch (error) {
-        console.log(error);
-        console.log("INVALID");
+      } catch (e) {
+        setError(`Nie udało się zaimportować projektu. ${e.message}`);
         return undefined;
       }
       onSubmit(result);
@@ -78,20 +77,34 @@ export const FileInput = ({ children, onSubmit }) => {
     fr.readAsText(file);
   };
 
-  return (
-    <div
-      className="hstack gap-3 pointer hover mb-3"
-      onClick={() => openRef.current.click()}
+  const errorWindow = (
+    <AppModal
+      title={"Błąd"}
+      isOpen={error}
+      closeButton
+      onHide={() => setError(undefined)}
     >
-      <Form style={{ display: "none" }}>
-        <Form.Control
-          ref={openRef}
-          onChange={(e) => handleChange(e.target.files[0])}
-          type="file"
-          accept="application/JSON"
-        />
-      </Form>
-      {children}
-    </div>
+      <p>{error}</p>
+    </AppModal>
+  );
+
+  return (
+    <>
+      <div
+        className="hstack gap-3 pointer hover mb-3"
+        onClick={() => openRef.current.click()}
+      >
+        <Form style={{ display: "none" }}>
+          <Form.Control
+            ref={openRef}
+            onChange={(e) => handleChange(e.target.files[0])}
+            type="file"
+            accept="application/JSON"
+          />
+        </Form>
+        {children}
+      </div>
+      {errorWindow}
+    </>
   );
 };

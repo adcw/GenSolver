@@ -1,5 +1,11 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useContext, useState, useRef } from "react";
+import React, {
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import {
   Container,
   Nav,
@@ -21,13 +27,32 @@ import { AppModal } from "./Modal";
 import "./myNavbar.css";
 import { ProjPreview } from "./ProjPreview";
 
+export const validateProject__ = (project, state) => {
+  if (
+    project &&
+    state.projects.map((p) => p.project_name).includes(project.project_name)
+  ) {
+    return `Projekt o nazwie ${project.project_name} już istnieje!`;
+  } else {
+    return null;
+  }
+};
+
 const MyNavbar = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
-  const [isPreviewShow, setIsPreviewShow] = useState(false);
   const [importedProject, setImportedProject] = useState(null);
+  const [error, setError] = useState(null);
+
+  const [sidemenuOpen, setSidemenuOpen] = useState(false);
 
   const history = useHistory();
   const location = useLocation();
+
+  const validateProject = useCallback(() => {
+    setError(validateProject__(importedProject, state));
+  }, [importedProject, state.projects]);
+
+  useEffect(() => validateProject(), [importedProject]);
 
   const updateHistory = (newPath) => {
     if (location.pathname !== newPath) history.push(newPath);
@@ -35,23 +60,24 @@ const MyNavbar = () => {
 
   const handleProjectSubmit = (obj) => {
     if (!obj) return;
-    setIsPreviewShow(true);
     setImportedProject(obj);
+  };
+
+  const handleNameChange = (newName) => {
+    setImportedProject({
+      ...importedProject,
+      project_name: newName,
+    });
   };
 
   const handleProjectChange = (newName) => {
     state.projects.forEach((proj, indx) => {
       if (proj.project_name === newName) {
-        console.log("set project to " + indx);
-        dispatch({ type: ACTION.SET_PROJECT, payload: { projId: indx } });
+        dispatch({ type: ACTION.CHANGE_PROJECT, payload: { projId: indx } });
         history.push("/");
       }
     });
   };
-
-  const [sidemenuOpen, setSidemenuOpen] = useState(false);
-
-  const openRef = useRef(null);
 
   return (
     <>
@@ -130,10 +156,7 @@ const MyNavbar = () => {
             &times;
           </div>
           <div className="mx-3 my-3">
-            <div
-              className="hstack gap-3 pointer hover"
-              onClick={() => openRef.current.focus()}
-            >
+            <div className="hstack gap-3 pointer hover">
               <FontAwesomeIcon icon="plus" className="mb-1"></FontAwesomeIcon>
 
               <h6
@@ -173,7 +196,7 @@ const MyNavbar = () => {
             </FileInput>
 
             <AppModal
-              isOpen={isPreviewShow}
+              isOpen={!!importedProject}
               title="Podgląd projektu"
               footer={
                 <Stack
@@ -183,15 +206,21 @@ const MyNavbar = () => {
                 >
                   <Button
                     className="ms-auto btn-xs btn-light"
-                    onClick={() => setIsPreviewShow(false)}
+                    onClick={() => setImportedProject(null)}
                   >
                     Anuluj
                   </Button>
-                  <Button className="btn-xs btn-info">Importuj</Button>
+                  <Button className="btn-xs btn-info" disabled={error}>
+                    Importuj
+                  </Button>
                 </Stack>
               }
             >
-              <ProjPreview project={importedProject} />
+              <ProjPreview
+                project={importedProject}
+                error={error}
+                onChange={handleNameChange}
+              />
             </AppModal>
 
             <div className="hstack pointer text-light">

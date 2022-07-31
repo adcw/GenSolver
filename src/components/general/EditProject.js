@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Popover, Button } from "react-bootstrap";
 import "../../App.css";
 import "../genepalette/GenItem.css";
 import { AppModal } from "./Modal";
 
-import { AppContext } from "../../AppContextProvider";
+import { ACTION, AppContext } from "../../AppContextProvider";
+import { validateProject__ } from "./MyNavbar";
 
 const EditProject = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
@@ -14,9 +15,35 @@ const EditProject = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const [projectName, setProjectName] = useState(
+    state.projects[state.curr].project_name
+  );
+
+  const [error, setError] = useState();
+
+  useEffect(() => {
+    setError(validateProject__(state.projects[state.curr].project_name, state));
+  }, [projectName, state]);
+
+  useEffect(() => {
+    state && setProjectName(state.projects[state.curr].project_name);
+  }, [state]);
+
   const handleHide = () => {
     setIsOpen(false);
     setIsEditing(false);
+  };
+
+  const handleSubmit = () => {
+    if (isEditing) {
+      dispatch({
+        type: ACTION.SET_PROJECT,
+        payload: {
+          project: { ...state.projects[state.curr], project_name: projectName },
+        },
+      });
+    }
+    handleHide();
   };
 
   const startEdit = () => {
@@ -36,10 +63,10 @@ const EditProject = () => {
         <div className="vstack">
           <p className="mb-1 text-sm">Zmiana nazwy projektu:</p>
           <input
-            defaultValue={
-              isEditing ? state.projects[state.curr].project_name : ""
-            }
+            value={projectName}
+            onChange={(e) => setProjectName(e.target.value)}
           />
+          <p className="text-danger">{error}</p>
 
           <hr className="text-light" />
           <p className="text-sm p-0 m-0 hover pointer text-danger">
@@ -54,7 +81,9 @@ const EditProject = () => {
             <Button className="btn-xs btn-light ms-auto" onClick={handleHide}>
               Anuluj
             </Button>
-            <Button className="btn-xs btn-info">Zapisz</Button>
+            <Button className="btn-xs btn-info" onClick={() => handleSubmit()}>
+              Zapisz
+            </Button>
           </div>
         </div>
       </AppModal>

@@ -28,7 +28,8 @@ export const ACTION = {
   SET_SQUARE: "SET_SQUARE", // zapisanie krzyżówki
   SET_COUNT_LIST: "SET_COUNT_LIST", // zapisanie listy zliczeń fenotypów
 
-  SET_PROJECT: "SET_PROJECT", // Zmiana projektu
+  CHANGE_PROJECT: "CHANGE_PROJECT", // Zmiana projektu
+  SET_PROJECT: "SET_PROJECT", // Aktualizacja projektu
 
   SET_DEFAULT: "SET_DEFAULT", // przywrócenie domyslnych danych
   SET_STATE: "SET_STATE",
@@ -556,10 +557,18 @@ function reducer(state, action) {
         ],
       };
 
-    case ACTION.SET_PROJECT:
+    case ACTION.CHANGE_PROJECT:
       return {
         ...state,
         curr: action.payload.projId,
+      };
+
+    case ACTION.SET_PROJECT:
+      return {
+        ...state,
+        projects: state.projects.map((proj, indx) => {
+          return indx === state.curr ? action.payload.project : proj;
+        }),
       };
 
     case ACTION.SET_DEFAULT:
@@ -574,7 +583,7 @@ function reducer(state, action) {
 }
 
 function newGeneId(state) {
-  var id = 0;
+  let id = 0;
   state.default_genes.forEach((element) => {
     if (element.id > id) id = element.id;
   });
