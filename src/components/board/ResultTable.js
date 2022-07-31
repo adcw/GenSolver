@@ -206,7 +206,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
                         (c) =>
                           JSON.stringify(
                             gen2fen(v1, crossData.template_id, currState)
-                          ) == c.fen
+                          ) === c.fen
                       )?.color;
 
                       return (

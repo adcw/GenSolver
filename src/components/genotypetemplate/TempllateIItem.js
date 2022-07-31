@@ -176,7 +176,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                 tempGeneArray.map((v, k) => {
                   const gene = currState.default_genes.find((g) => g.id === v);
 
-                  if (gene == null) {
+                  if (!gene) {
                     console.log("gene is null");
                   } else {
                     return (
@@ -261,7 +261,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                         (g) => g.id === v
                       );
 
-                      if (gene == null) {
+                      if (!gene) {
                         console.log("Gene was removed");
                       } else {
                         return (

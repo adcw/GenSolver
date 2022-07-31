@@ -252,7 +252,10 @@ const MyNavbar = () => {
                     key={i}
                     onClick={() => handleProjectChange(proj.project_name)}
                   >
-                    <p className="text-gray" style={{ whiteSpace: "nowrap" }}>
+                    <p
+                      className="text-gray  mb-1"
+                      style={{ whiteSpace: "nowrap" }}
+                    >
                       {proj.project_name}
                     </p>
                   </div>
