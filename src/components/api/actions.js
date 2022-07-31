@@ -24,6 +24,13 @@ export const toggleActive = (state, targetId) => {
 };
 
 export const removeGene = (state, targetId) => {
+  const currentProject = state.projects[state.curr];
+  const usedTemplate = currentProject.templates.find(
+    (t) => t.id === currentProject.cross_data.template_id
+  );
+
+  console.log(usedTemplate);
+
   return {
     ...state,
 
@@ -43,6 +50,21 @@ export const removeGene = (state, targetId) => {
                   };
                 }),
               ],
+              cross_data:
+                usedTemplate && usedTemplate.gene_ids.includes(targetId)
+                  ? {
+                      template_id: 0,
+                      genotypes: {
+                        A: proj.templates[0].gene_ids.map(() => {
+                          return [0, 0];
+                        }),
+                        B: proj.templates[0].gene_ids.map(() => {
+                          return [0, 0];
+                        }),
+                      },
+                      square: null,
+                    }
+                  : proj.cross_data,
             }
           : proj;
       }),

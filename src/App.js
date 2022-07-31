@@ -152,7 +152,7 @@ function App() {
                         </tr>
                       ) : (
                         currState.templates.map((v, k) => {
-                          if (v == null) return;
+                          if (v === null) return;
                           return (
                             <TempllateIItem
                               key={k}

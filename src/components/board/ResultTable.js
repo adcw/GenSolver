@@ -92,12 +92,18 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
           crossData.template_id,
           currState
         );
+
+        if (!crossResult.current) {
+          return;
+        }
+
         dispatch({
           type: ACTION.SET_SQUARE,
           payload: { square: crossResult.current },
         });
 
         const list = {};
+
         crossResult.current.forEach((row, k_row) => {
           row.forEach((gt, k_gt) => {
             const key = JSON.stringify(

@@ -29,7 +29,7 @@ const BoardPage = () => {
   const [currentSelectedResult, setCurrentSelectedResult] = useState(null);
   const [currEventKey, setCurrEventKey] = useState("input");
   const [crossData, setCrossData] = useState(currState.cross_data);
-  const crossResult = useRef(currState.cross_data.square); //
+  const crossResult = useRef(currState.cross_data?.square); //
 
   useEffect(() => {
     const crossClickSub = EventEmitter.addListener(
@@ -94,7 +94,7 @@ const BoardPage = () => {
                 )}
               </div>
               <div className="w-100 mt-3 bg-second shadowed-2 p-2">
-                {currState.templates.length !== 0 && (
+                {currState.cross_data && currState.templates.length !== 0 && (
                   <>
                     {currState.templates.find(
                       (t) => t.id === currState.cross_data.template_id
@@ -136,10 +136,12 @@ const BoardPage = () => {
 
             <Tab eventKey="selection" title="Właściwości">
               <div className="w-100 bg-second shadowed-2 p-2">
-                <GenSelection
-                  genotype={currentSelectedResult}
-                  template_id={crossData.template_id}
-                ></GenSelection>
+                {crossData && (
+                  <GenSelection
+                    genotype={currentSelectedResult}
+                    template_id={crossData.template_id}
+                  ></GenSelection>
+                )}
               </div>
             </Tab>
           </Tabs>
@@ -154,11 +156,13 @@ const BoardPage = () => {
             className="w-100 mt-3 bg-second shadowed-2 p-2 overflown-xy flex-center"
             style={{ minHeight: "80vh", justifyContent: "center" }}
           >
-            <ResultTable
-              crossData={crossData}
-              setCrossData={setCrossData}
-              crossResult={crossResult}
-            ></ResultTable>
+            {crossResult && (
+              <ResultTable
+                crossData={crossData}
+                setCrossData={setCrossData}
+                crossResult={crossResult}
+              ></ResultTable>
+            )}
           </div>
         </Col>
       </Row>
