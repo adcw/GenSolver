@@ -27,10 +27,12 @@ import { AppModal } from "./Modal";
 import "./myNavbar.css";
 import { ProjPreview } from "./ProjPreview";
 
-export const validateProject__ = (project, state) => {
+export const validateProject__ = (project, state, isEdited) => {
   if (
-    project &&
-    state.projects.map((p) => p.project_name).includes(project.project_name)
+    state.projects
+      .filter((p, i) => !isEdited || i !== state.curr)
+      .map((p) => p.project_name)
+      .includes(project.project_name)
   ) {
     return `Projekt o nazwie ${project.project_name} już istnieje!`;
   } else {
@@ -49,7 +51,7 @@ const MyNavbar = () => {
   const location = useLocation();
 
   const validateProject = useCallback(() => {
-    setError(validateProject__(importedProject, state));
+    importedProject && setError(validateProject__(importedProject, state));
   }, [importedProject, state.projects]);
 
   useEffect(() => validateProject(), [importedProject]);

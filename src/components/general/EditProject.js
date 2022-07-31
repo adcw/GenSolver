@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext, useEffect, useRef } from "react";
 import { Popover, Button } from "react-bootstrap";
 import "../../App.css";
 import "../genepalette/GenItem.css";
@@ -15,19 +15,21 @@ const EditProject = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  const [projectName, setProjectName] = useState(
-    state.projects[state.curr].project_name
+  const [currentProject, setcurrentProject] = useState(
+    state.projects[state.curr]
   );
+
+  const [projectName, setProjectName] = useState(currentProject.project_name);
 
   const [error, setError] = useState();
 
   useEffect(() => {
-    setError(validateProject__(state.projects[state.curr].project_name, state));
-  }, [projectName, state]);
+    setError(validateProject__(currentProject, state, true));
+  }, [currentProject]);
 
   useEffect(() => {
-    state && setProjectName(state.projects[state.curr].project_name);
-  }, [state]);
+    setcurrentProject({ ...currentProject, project_name: projectName });
+  }, [projectName]);
 
   const handleHide = () => {
     setIsOpen(false);
@@ -39,7 +41,7 @@ const EditProject = () => {
       dispatch({
         type: ACTION.SET_PROJECT,
         payload: {
-          project: { ...state.projects[state.curr], project_name: projectName },
+          project: currentProject,
         },
       });
     }
