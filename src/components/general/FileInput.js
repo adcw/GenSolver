@@ -49,7 +49,9 @@ export const FileInput = ({ children, onSubmit }) => {
             A: yup.array().of(yup.array().of(yup.number())),
             B: yup.array().of(yup.array().of(yup.number())),
           }),
-          square: yup.array().of(yup.array().of(yup.array().of(yup.number()))),
+          square: yup
+            .array()
+            .of(yup.array().of(yup.array().of(yup.array().of(yup.number())))),
           count_list: yup.object(),
         })
 
@@ -65,11 +67,13 @@ export const FileInput = ({ children, onSubmit }) => {
       let result;
       try {
         const raw = fr.result;
-        result = schema.validateSync(JSON.parse(raw));
+        const parsed = JSON.parse(raw);
+        result = schema.validateSync(parsed);
       } catch (e) {
         setError(`Nie udało się zaimportować projektu. ${e.message}`);
         return undefined;
       }
+      console.log(`result: ${JSON.stringify(result, null, 4)}`);
       onSubmit(result);
       openRef.current.value = "";
     };

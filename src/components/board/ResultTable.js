@@ -161,7 +161,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
       onRestoreDefault.remove();
       onPageSwitchToPunnetSquare.remove();
     };
-  });
+  }, [currState, crossResult, setCrossData, crossData.template_id, dispatch]);
 
   return (
     <div>
@@ -196,7 +196,6 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
               combinationsB.current &&
               crossResult.current &&
               crossResult.current.map((v, k) => {
-                // const template = currState.templates.find((t) => t.id === crossData.template_id);
                 return (
                   <tr key={k}>
                     {combinationsA.current && (
