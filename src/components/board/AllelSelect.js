@@ -1,10 +1,7 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React from "react";
-import { useState, useEffect, useContext, useRef } from "react";
-import SubSup from "../genepalette/SubSup";
+import React, { useEffect, useState } from "react";
 import { OverlayTrigger, Popover } from "react-bootstrap";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
-import { AppContext } from "../../AppContextProvider";
+import SubSup from "../genepalette/SubSup";
 
 export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
   const [currentSelectedAllelIndex, setCurrentSelectedAllelIndex] =

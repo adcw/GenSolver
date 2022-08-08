@@ -31,6 +31,7 @@ export const ACTION = {
   CHANGE_PROJECT: "CHANGE_PROJECT", // Zmiana projektu
   SET_PROJECT: "SET_PROJECT", // Aktualizacja projektu
   ADD_PROJECT: "ADD_PROJECT", // Dodanie nowego projektu
+  REMOVE_PROJECT: "DELETE_PROJECT", // Usunięcie projektu
 
   SET_DEFAULT: "SET_DEFAULT", // przywrócenie domyslnych danych
   SET_STATE: "SET_STATE",
@@ -576,6 +577,12 @@ function reducer(state, action) {
       return {
         ...state,
         projects: [...state.projects, action.payload.project],
+      };
+
+    case ACTION.REMOVE_PROJECT:
+      return {
+        ...state,
+        projects: state.projects.filter((_p, i) => i !== action.payload.id),
       };
 
     case ACTION.SET_DEFAULT:

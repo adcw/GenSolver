@@ -136,7 +136,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
           .map((row, r_indx) => {
             return row.map((genotype, g_indx) => {
               const fen = gen2fen(genotype, crossData.template_id, currState);
-              return fen.toString() == JSON.parse(data.fen).toString()
+              return fen.toString() === JSON.parse(data.fen).toString()
                 ? [r_indx, g_indx]
                 : [100, 100];
             });

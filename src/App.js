@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useContext, useEffect, useRef, useState } from "react";
-import { Button, Tab, Table, Tabs } from "react-bootstrap";
+import { useContext, useEffect, useState } from "react";
+import { Button, Table } from "react-bootstrap";
 import {
   BrowserRouter as Router,
   Route,
@@ -8,7 +8,7 @@ import {
   useHistory,
 } from "react-router-dom";
 import "./App.css";
-import AppContextProvider, { AppContext, ACTION } from "./AppContextProvider";
+import AppContextProvider, { ACTION, AppContext } from "./AppContextProvider";
 import BoardPage from "./components/board/BoardPage";
 import GenItem from "./components/genepalette/GenItem";
 import AddNewGeneBtn from "./components/general/AddNewGeneBtn";
@@ -44,15 +44,6 @@ function App() {
     setCurrState(state.projects[state.curr]);
   }, [state]);
 
-  // useEffect(() => {
-
-  //   const handle = (data) => console.log(`DEL: ${data}`);
-  //   const listener = EventEmitter.addListener(E.onGeneDeleted, handle)
-  //   return () => {
-  //     listener.remove();
-  //   }
-  // }, [])
-
   return (
     <Switch>
       <Route path="/" exact>
@@ -81,8 +72,10 @@ function App() {
                 <div className="pt-2 overflown">
                   <Table className="genItem">
                     <tbody>
-                      {currState.default_genes === undefined ||
-                      currState.default_genes.length === 0 ? (
+                      {!currState && <p>Brak projeków. Utwórz nowy</p>}
+                      {/* {currState &&
+                      (currState.default_genes === undefined ||
+                        currState.default_genes.length === 0) ? (
                         <tr>
                           <td>
                             <p className="feedback">Brak genów</p>
@@ -99,7 +92,7 @@ function App() {
                             />
                           );
                         })
-                      )}
+                      )} */}
                     </tbody>
                   </Table>
                 </div>
@@ -144,24 +137,26 @@ function App() {
                     style={{ borderBottomWidth: "0px !important" }}
                   >
                     <tbody>
-                      {currState.default_genes === undefined ? (
+                      {currState && !currState.default_genes && (
                         <tr>
                           <td>
                             <p className="feedback">Brak genów</p>
                           </td>
                         </tr>
-                      ) : (
-                        currState.templates.map((v, k) => {
-                          if (v === null) return;
-                          return (
-                            <TempllateIItem
-                              key={k}
-                              template={v}
-                              keyId={k}
-                            ></TempllateIItem>
-                          );
-                        })
                       )}
+                      {currState &&
+                        currState.default_genes &&
+                        currState.templates
+                          .filter((v) => v)
+                          .map((v, k) => {
+                            return (
+                              <TempllateIItem
+                                key={k}
+                                template={v}
+                                keyId={k}
+                              ></TempllateIItem>
+                            );
+                          })}
                     </tbody>
                   </Table>
                 </div>

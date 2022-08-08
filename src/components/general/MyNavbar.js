@@ -29,6 +29,7 @@ import { ProjPreview } from "./ProjPreview";
 
 export const validateProject__ = (project, state, isEdited) => {
   if (
+    project &&
     state.projects
       .filter((p, i) => !isEdited || i !== state.curr)
       .map((p) => p.project_name)
@@ -239,7 +240,8 @@ const MyNavbar = () => {
 
             <div className="hstack pointer text-light">
               <p style={{ whiteSpace: "nowrap" }}>
-                {state.projects[state.curr].project_name}
+                {state.projects[state.curr] &&
+                  state.projects[state.curr].project_name}
               </p>
             </div>
 

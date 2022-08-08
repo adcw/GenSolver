@@ -19,12 +19,12 @@ const EditProject = () => {
     state.projects[state.curr]
   );
 
-  const [projectName, setProjectName] = useState(currentProject.project_name);
+  const [projectName, setProjectName] = useState(currentProject?.project_name);
 
   const [error, setError] = useState();
 
   useEffect(() => {
-    setProjectName(state.projects[state.curr].project_name);
+    setProjectName(state.projects[state.curr]?.project_name);
   }, [state.curr, state.projects]);
 
   useEffect(() => {
@@ -52,6 +52,16 @@ const EditProject = () => {
     handleHide();
   };
 
+  const handleDelete = () => {
+    dispatch({
+      type: ACTION.REMOVE_PROJECT,
+      payload: {
+        id: state.curr,
+      },
+    });
+    handleHide();
+  };
+
   const startEdit = () => {
     setIsOpen(true);
     setIsEditing(true);
@@ -75,7 +85,10 @@ const EditProject = () => {
           <p className="text-danger">{error}</p>
 
           <hr className="text-light" />
-          <p className="text-sm p-0 m-0 hover pointer text-danger">
+          <p
+            className="text-sm p-0 m-0 hover pointer text-danger"
+            onClick={() => handleDelete()}
+          >
             Usuń projekt
           </p>
           <p className="text-sm p-0 m-0 hover pointer text-warning">

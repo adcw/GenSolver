@@ -13,7 +13,7 @@ export const GenotypeView = ({ genotype, template_id, big }) => {
   const _extract = useCallback(
     (allel, indx) => {
       const template = currState.templates.find((t) => t.id === template_id);
-      if (template == null) return;
+      if (template === null) return;
       const _gene_id = template.gene_ids[indx];
 
       const gene = currState.default_genes.find((g) => g.id === _gene_id);

@@ -14,7 +14,7 @@ export const ProjPreview = ({ project, error, onChange }) => {
   // const [editedVersion, setEditedVersion] = useState(project);
 
   const projectNames = useMemo(
-    () => state.projects.map((p) => p.project_name),
+    () => state.projects && state.projects.map((p) => p.project_name),
     [state]
   );
 

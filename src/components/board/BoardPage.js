@@ -73,7 +73,7 @@ const BoardPage = () => {
                 {currState.templates.length !== 0 ? (
                   currState.templates
                     .map((v, k) => {
-                      if (v == null) return null;
+                      if (v === null) return null;
                       return (
                         <BoardTemplateChoice
                           template={v}
