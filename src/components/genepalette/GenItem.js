@@ -213,7 +213,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
             {/* Edycja */}
             {/* <OverlayTrigger rootClose trigger="click" placement="bottom" overlay={popover} > */}
             <button
-              className="btn btn-sm btn-edit"
+              className="btn btn-sm btn-edit btn-edit-bright"
               onClick={() => setCollapseOpen(!collapseOpen)}
             >
               <FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon>
@@ -237,7 +237,10 @@ const GenItem = ({ gene, keyId, dispatch }) => {
               }
               onConfirm={D_deleteGene}
             >
-              <button id="btn-delete" className="btn btn-sm btn-delete">
+              <button
+                id="btn-delete"
+                className="btn btn-sm btn-delete btn-edit-bright"
+              >
                 <FontAwesomeIcon icon="times" />
               </button>
             </Confirm>
