@@ -45,6 +45,8 @@ const MyNavbar = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
   const [importedProject, setImportedProject] = useState(null);
   const [error, setError] = useState(null);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const [sidemenuOpen, setSidemenuOpen] = useState(false);
 
@@ -119,7 +121,20 @@ const MyNavbar = () => {
             </Col>
 
             <Col xs="1">
-              <EditProject />
+              <EditProject
+                isOpen={isEditOpen}
+                setIsOpen={setIsEditOpen}
+                isEditing={isEditing}
+              />
+              <FontAwesomeIcon
+                size="1x"
+                icon="pencil-alt"
+                className="text-light pointer"
+                onClick={() => {
+                  setIsEditing(true);
+                  setIsEditOpen(true);
+                }}
+              ></FontAwesomeIcon>
             </Col>
           </Row>
         </Container>
@@ -173,6 +188,10 @@ const MyNavbar = () => {
               <h6
                 className="pointer hover-white"
                 style={{ whiteSpace: "nowrap" }}
+                onClick={() => {
+                  setIsEditing(false);
+                  setIsEditOpen(true);
+                }}
               >
                 Stwórz nowy projekt
               </h6>

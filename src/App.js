@@ -73,6 +73,28 @@ function App() {
                   <Table className="genItem">
                     <tbody>
                       {!currState && <p>Brak projeków. Utwórz nowy</p>}
+                      {currState &&
+                        (currState.default_genes === undefined ||
+                          (currState.default_genes.length === 0 && (
+                            <tr>
+                              <td>
+                                <p className="feedback">Brak genów</p>
+                              </td>
+                            </tr>
+                          )))}
+                      {currState &&
+                        currState.default_genes &&
+                        currState.default_genes.length > 0 &&
+                        currState.default_genes.map((v, k) => {
+                          return (
+                            <GenItem
+                              gene={v}
+                              key={k}
+                              keyId={k + 1}
+                              dispatch={dispatch}
+                            />
+                          );
+                        })}
                       {/* {currState &&
                       (currState.default_genes === undefined ||
                         currState.default_genes.length === 0) ? (

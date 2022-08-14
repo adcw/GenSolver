@@ -583,6 +583,7 @@ function reducer(state, action) {
       return {
         ...state,
         projects: state.projects.filter((_p, i) => i !== action.payload.id),
+        curr: 0,
       };
 
     case ACTION.SET_DEFAULT:
