@@ -44,19 +44,12 @@ function App() {
     setCurrState(state.projects[state.curr]);
   }, [state]);
 
-  return (
-    <Switch>
-      <Route path="/" exact>
-        <MyNavbar></MyNavbar>
-
-        <div className="container-fluid">
-          <RowDivider />
-
-          <div className="row">
-            <div className="col-md-6">
-              <Card>
-                <h4 className="mb-3">Paleta genów</h4>
-                {/* <Tabs
+  const controlls = (
+    <>
+      <div className="col-md-6">
+        <Card>
+          <h4 className="mb-3">Paleta genów</h4>
+          {/* <Tabs
                   variant="pills"
                   defaultActiveKey="normal"
                   id="uncontrolled-tab-example"
@@ -65,37 +58,37 @@ function App() {
                   <Tab eventKey="normal" title="Zwykłe">
                    */}
 
-                <AddNewGeneBtn
-                  targetGeneList={GENE_LIST.NORMAL}
-                  dispatch={dispatch}
-                />
-                <div className="pt-2 overflown">
-                  <Table className="genItem">
-                    <tbody>
-                      {!currState && <p>Brak projeków. Utwórz nowy</p>}
-                      {currState &&
-                        (currState.default_genes === undefined ||
-                          (currState.default_genes.length === 0 && (
-                            <tr>
-                              <td>
-                                <p className="feedback">Brak genów</p>
-                              </td>
-                            </tr>
-                          )))}
-                      {currState &&
-                        currState.default_genes &&
-                        currState.default_genes.length > 0 &&
-                        currState.default_genes.map((v, k) => {
-                          return (
-                            <GenItem
-                              gene={v}
-                              key={k}
-                              keyId={k + 1}
-                              dispatch={dispatch}
-                            />
-                          );
-                        })}
-                      {/* {currState &&
+          <AddNewGeneBtn
+            targetGeneList={GENE_LIST.NORMAL}
+            dispatch={dispatch}
+          />
+          <div className="pt-2 overflown">
+            <Table className="genItem">
+              <tbody>
+                {!currState && <p>Brak projeków. Utwórz nowy</p>}
+                {currState &&
+                  (currState.default_genes === undefined ||
+                    (currState.default_genes.length === 0 && (
+                      <tr>
+                        <td>
+                          <p className="feedback">Brak genów</p>
+                        </td>
+                      </tr>
+                    )))}
+                {currState &&
+                  currState.default_genes &&
+                  currState.default_genes.length > 0 &&
+                  currState.default_genes.map((v, k) => {
+                    return (
+                      <GenItem
+                        gene={v}
+                        key={k}
+                        keyId={k + 1}
+                        dispatch={dispatch}
+                      />
+                    );
+                  })}
+                {/* {currState &&
                       (currState.default_genes === undefined ||
                         currState.default_genes.length === 0) ? (
                         <tr>
@@ -115,10 +108,10 @@ function App() {
                           );
                         })
                       )} */}
-                    </tbody>
-                  </Table>
-                </div>
-                {/* </Tab>
+              </tbody>
+            </Table>
+          </div>
+          {/* </Tab>
 
                   <Tab eventKey="gender" title="Geny płci">
                     <AddNewGeneBtn
@@ -134,63 +127,98 @@ function App() {
                     />
                   </Tab>
                 </Tabs> */}
-              </Card>
-            </div>
+        </Card>
+      </div>
 
-            <div className="col-md-6">
-              <Card>
-                <h4 className="mb-3">Kreator szablonów genotypów</h4>
-                <Button
-                  onClick={() => dispatch({ type: ACTION.ADD_TEMPLATE })}
-                  className="my-btn-dark w-100 btn-sm"
-                >
-                  Dodaj nowy szablon
-                </Button>
-                {
-                  // currState.default_genes.map((v, k) => {
-                  //   return <p>{JSON.stringify(v, null, 2)}</p>
-                  // })
-                }
+      <div className="col-md-6">
+        <Card>
+          <h4 className="mb-3">Kreator szablonów genotypów</h4>
+          <Button
+            onClick={() => dispatch({ type: ACTION.ADD_TEMPLATE })}
+            className="my-btn-dark w-100 btn-sm"
+          >
+            Dodaj nowy szablon
+          </Button>
+          {
+            // currState.default_genes.map((v, k) => {
+            //   return <p>{JSON.stringify(v, null, 2)}</p>
+            // })
+          }
 
-                <div className="overflown" style={{ marginTop: "12px" }}>
-                  <Table
-                    className="genItem"
-                    style={{ borderBottomWidth: "0px !important" }}
-                  >
-                    <tbody>
-                      {currState && !currState.default_genes && (
-                        <tr>
-                          <td>
-                            <p className="feedback">Brak genów</p>
-                          </td>
-                        </tr>
-                      )}
-                      {currState &&
-                        currState.default_genes &&
-                        currState.templates
-                          .filter((v) => v)
-                          .map((v, k) => {
-                            return (
-                              <TempllateIItem
-                                key={k}
-                                template={v}
-                                keyId={k}
-                              ></TempllateIItem>
-                            );
-                          })}
-                    </tbody>
-                  </Table>
-                </div>
-              </Card>
-            </div>
+          <div className="overflown" style={{ marginTop: "12px" }}>
+            <Table
+              className="genItem"
+              style={{ borderBottomWidth: "0px !important" }}
+            >
+              <tbody>
+                {currState && !currState.default_genes && (
+                  <tr>
+                    <td>
+                      <p className="feedback">Brak genów</p>
+                    </td>
+                  </tr>
+                )}
+                {currState &&
+                  currState.default_genes &&
+                  currState.templates
+                    .filter((v) => v)
+                    .map((v, k) => {
+                      return (
+                        <TempllateIItem
+                          key={k}
+                          template={v}
+                          keyId={k}
+                        ></TempllateIItem>
+                      );
+                    })}
+              </tbody>
+            </Table>
+          </div>
+        </Card>
+      </div>
+    </>
+  );
+
+  return (
+    <Switch>
+      <Route path="/" exact>
+        <MyNavbar></MyNavbar>
+
+        <div className="container-fluid">
+          <RowDivider />
+
+          <div className="row">
+            {currState ? (
+              controlls
+            ) : (
+              <div className="col-md-12 text-center">
+                <h5>
+                  Projekt jest pusty. Wybierz projekt z listy projektów lub
+                  stwórz nowy.
+                </h5>
+              </div>
+            )}
           </div>
         </div>
       </Route>
 
       <Route path="/board">
         <MyNavbar></MyNavbar>
-
-        <BoardPage></BoardPage>
+        {currState ? (
+          <BoardPage></BoardPage>
+        ) : (
+          <>
+            <RowDivider />
+            <div className="row">
+              <div className="col-md-12 text-center">
+                <h5>
+                  Projekt jest pusty. Wybierz projekt z listy projektów lub
+                  stwórz nowy.
+                </h5>
+              </div>
+            </div>
+          </>
+        )}
       </Route>
     </Switch>
   );
