@@ -143,7 +143,6 @@ function App() {
                 <Button
                   onClick={() => dispatch({ type: ACTION.ADD_TEMPLATE })}
                   className="my-btn-dark w-100 btn-sm"
-                  style={{ marginTop: "52px" }}
                 >
                   Dodaj nowy szablon
                 </Button>
