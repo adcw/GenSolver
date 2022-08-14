@@ -7,6 +7,7 @@ import { AppModal } from "./Modal";
 
 import { ACTION, AppContext } from "../../AppContextProvider";
 import { validateProject__ } from "./MyNavbar";
+import Confirm from "./Confirm";
 
 const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   const { initialState, state, dispatch } = useContext(AppContext);
@@ -72,12 +73,19 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
         {isEditing && (
           <>
             <hr className="text-light" />
-            <p
-              className="text-sm p-0 m-0 hover pointer text-danger"
-              onClick={() => handleDelete()}
+
+            <Confirm
+              onConfirm={handleDelete}
+              title={"Potwierdź akcję"}
+              content={
+                <p>Czy na pewno chcesz bezpowrotnie usunąć wybrany projekt?</p>
+              }
             >
-              Usuń projekt
-            </p>
+              <p className="text-sm p-0 m-0 hover pointer text-danger">
+                Usuń projekt
+              </p>
+            </Confirm>
+
             <p className="text-sm p-0 m-0 hover pointer text-warning">
               Wyczyść projekt
             </p>
