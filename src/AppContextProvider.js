@@ -179,6 +179,56 @@ const pr2 = {
   project_name: "Test proj",
 };
 
+export const initialProject = {
+  default_genes: [
+    {
+      id: 1,
+      name: "Przykładowy gen",
+      allels: [
+        {
+          sup: "",
+          main: "A",
+          sub: "",
+          desc: "Kolor czerwony",
+          prior: "1",
+        },
+        {
+          sup: "",
+          main: "a",
+          sub: "",
+          desc: "Kolor biały",
+          prior: "0",
+        },
+      ],
+      isActive: true,
+      triggerEdit: false,
+    },
+  ],
+  templates: [
+    {
+      id: 1,
+      name: "Przykładowy szablon",
+      gene_ids: [1],
+    },
+  ],
+  cross_data: {
+    template_id: 1,
+    genotypes: {
+      A: [[0, 1]],
+      B: [[0, 1]],
+    },
+    square: [
+      [[[0, 0]], [[0, 1]]],
+      [[[0, 1]], [[1, 1]]],
+    ],
+    count_list: {
+      "[[1,[0]]]": 3,
+      "[[1,[1]]]": 1,
+    },
+  },
+  project_name: "Test proj",
+};
+
 const initialState = {
   curr: 1,
   projects: [pr1, pr2],

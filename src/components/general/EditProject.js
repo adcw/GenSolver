@@ -5,7 +5,7 @@ import "../../App.css";
 import "../genepalette/GenItem.css";
 import { AppModal } from "./Modal";
 
-import { ACTION, AppContext } from "../../AppContextProvider";
+import { ACTION, AppContext, initialProject } from "../../AppContextProvider";
 import { validateProject__ } from "./MyNavbar";
 import Confirm from "./Confirm";
 
@@ -38,12 +38,26 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
     setIsOpen(false);
   };
 
+  useEffect(() => {
+    console.log(`IsEditing: ${isEditing}`);
+  }, [isEditing]);
+
   const handleSubmit = () => {
     if (isEditing) {
       dispatch({
         type: ACTION.SET_PROJECT,
         payload: {
           project: currentProject,
+        },
+      });
+    } else {
+      const newProj = initialProject;
+      newProj.project_name = projectName;
+
+      dispatch({
+        type: ACTION.ADD_PROJECT,
+        payload: {
+          project: newProj,
         },
       });
     }
@@ -61,9 +75,14 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   };
 
   return (
-    <AppModal title="Edycja projektu" isOpen={isOpen}>
+    <AppModal
+      title={isEditing ? "Edycja projektu" : "Dodawanie nowego projektu"}
+      isOpen={isOpen}
+    >
       <div className="vstack">
-        <p className="mb-1 text-sm">Zmiana nazwy projektu:</p>
+        <p className="mb-1 text-sm">
+          {isEditing ? "Zmiana nazwy projektu:" : "Nazwa projektu:"}
+        </p>
         <input
           value={projectName}
           onChange={(e) => setProjectName(e.target.value)}
@@ -98,7 +117,7 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
             Anuluj
           </Button>
           <Button className="btn-xs btn-info" onClick={() => handleSubmit()}>
-            Zapisz
+            {isEditing ? "Zapisz" : "Dodaj"}
           </Button>
         </div>
       </div>
