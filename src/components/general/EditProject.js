@@ -81,12 +81,12 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
                 <p>Czy na pewno chcesz bezpowrotnie usunąć wybrany projekt?</p>
               }
             >
-              <p className="text-sm p-0 m-0 hover pointer text-danger">
+              <p className="text-sm p-0 m-0 hover pointer text-danger text-underline-hover">
                 Usuń projekt
               </p>
             </Confirm>
 
-            <p className="text-sm p-0 m-0 hover pointer text-warning">
+            <p className="text-sm p-0 m-0 hover pointer text-warning text-underline-hover">
               Wyczyść projekt
             </p>
             <hr className="text-light" />
