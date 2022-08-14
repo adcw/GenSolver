@@ -285,3 +285,7 @@ ul.my-tabs li button.active {
 .text-underline-hover:hover {
   text-decoration: underline;
 }
+
+.text-gray {
+  color: gray;
+}

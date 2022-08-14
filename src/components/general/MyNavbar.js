@@ -1,23 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, {
-  useContext,
-  useState,
-  useRef,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import {
+  Button,
+  Col,
   Container,
   Nav,
   Navbar,
   Row,
-  Col,
-  Button,
   Stack,
 } from "react-bootstrap";
 import { useHistory, useLocation } from "react-router-dom";
-import { object } from "yup";
-import { AppContext, ACTION } from "../../AppContextProvider";
+import { ACTION, AppContext } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import { downloadProject } from "../../utils/ProjectManager";
 import Confirm from "./Confirm";
@@ -43,6 +36,7 @@ export const validateProject__ = (project, state, isEdited) => {
 
 const MyNavbar = () => {
   const { initialState, state, dispatch } = useContext(AppContext);
+  const [currentProj, setCurrentProj] = useState(state.projects[state.curr]);
   const [importedProject, setImportedProject] = useState(null);
   const [error, setError] = useState(null);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -58,6 +52,10 @@ const MyNavbar = () => {
   }, [importedProject, state.projects]);
 
   useEffect(() => validateProject(), [importedProject]);
+
+  useEffect(() => {
+    setCurrentProj(state.projects[state.curr]);
+  }, [state.curr, state.projects]);
 
   const updateHistory = (newPath) => {
     if (location.pathname !== newPath) history.push(newPath);
@@ -114,27 +112,28 @@ const MyNavbar = () => {
             </Col>
 
             <Col xs="9">
-              {" "}
-              <h2 className="my-0">
-                {state.projects[state.curr]?.project_name}
-              </h2>
+              <h2 className="my-0">{currentProj?.project_name}</h2>
             </Col>
 
             <Col xs="1">
-              <EditProject
-                isOpen={isEditOpen}
-                setIsOpen={setIsEditOpen}
-                isEditing={isEditing}
-              />
-              <FontAwesomeIcon
-                size="1x"
-                icon="pencil-alt"
-                className="text-light pointer"
-                onClick={() => {
-                  setIsEditing(true);
-                  setIsEditOpen(true);
-                }}
-              ></FontAwesomeIcon>
+              {currentProj && (
+                <>
+                  <EditProject
+                    isOpen={isEditOpen}
+                    setIsOpen={setIsEditOpen}
+                    isEditing={isEditing}
+                  />
+                  <FontAwesomeIcon
+                    size="1x"
+                    icon="pencil-alt"
+                    className="text-light pointer"
+                    onClick={() => {
+                      setIsEditing(true);
+                      setIsEditOpen(true);
+                    }}
+                  ></FontAwesomeIcon>
+                </>
+              )}
             </Col>
           </Row>
         </Container>
@@ -198,13 +197,15 @@ const MyNavbar = () => {
             </div>
 
             <div
-              className="hstack gap-3 pointer hover"
-              onClick={() => downloadProject(state.projects[state.curr])}
+              className={`hstack gap-3 ${
+                currentProj ? "pointer hover" : "text-gray"
+              }`}
+              onClick={() => currentProj && downloadProject(currentProj)}
             >
               <FontAwesomeIcon icon="upload" className="mb-1"></FontAwesomeIcon>
 
               <h6
-                className="pointer hover-white"
+                className={currentProj ? "pointer hover-white" : "text-gray"}
                 style={{ whiteSpace: "nowrap" }}
               >
                 Eksportuj projekt
@@ -257,31 +258,37 @@ const MyNavbar = () => {
               />
             </AppModal>
 
-            <div className="hstack pointer text-light">
-              <p style={{ whiteSpace: "nowrap" }}>
-                {state.projects[state.curr] &&
-                  state.projects[state.curr].project_name}
+            {!state.projects || state.projects.length === 0 ? (
+              <p
+                className="text-gray"
+                style={{ whiteSpace: "nowrap", fontStyle: "italic" }}
+              >
+                Brak projektów
               </p>
-            </div>
-
-            {state.projects
-              .filter((_, index) => index !== state.curr)
-              .map((proj, i) => {
-                return (
-                  <div
-                    className="hstack pointer"
-                    key={i}
-                    onClick={() => handleProjectChange(proj.project_name)}
-                  >
-                    <p
-                      className="text-gray  mb-1"
-                      style={{ whiteSpace: "nowrap" }}
-                    >
-                      {proj.project_name}
-                    </p>
-                  </div>
-                );
-              })}
+            ) : (
+              <>
+                <div className="hstack pointer text-light">
+                  <p style={{ whiteSpace: "nowrap" }}>
+                    {currentProj && currentProj.project_name}
+                  </p>
+                </div>
+                {state.projects
+                  .filter((_, index) => index !== state.curr)
+                  .map((proj, i) => {
+                    return (
+                      <div
+                        className="hstack pointer"
+                        key={i}
+                        onClick={() => handleProjectChange(proj.project_name)}
+                      >
+                        <p className=" mb-1" style={{ whiteSpace: "nowrap" }}>
+                          {proj.project_name}
+                        </p>
+                      </div>
+                    );
+                  })}
+              </>
+            )}
           </div>
         </div>
       </Navbar>
