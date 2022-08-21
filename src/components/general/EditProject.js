@@ -38,8 +38,13 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
     setIsOpen(false);
   };
 
+  useEffect(
+    () => setcurrentProject(state.projects[state.curr]),
+    [state.curr, state.projects]
+  );
+
   useEffect(() => {
-    console.log(`IsEditing: ${isEditing}`);
+    setError(null);
   }, [isEditing]);
 
   const handleSubmit = () => {

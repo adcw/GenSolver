@@ -42,7 +42,7 @@ function App() {
 
   useEffect(() => {
     setCurrState(state.projects[state.curr]);
-  }, [state]);
+  }, [state.curr, state.projects]);
 
   const controlls = (
     <>

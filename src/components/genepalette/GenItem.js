@@ -56,6 +56,8 @@ const GenItem = ({ gene, keyId, dispatch }) => {
   const nameInputRef = useRef(null);
   const [tempGeneContent, setTempGeneContent] = useState({ ...gene });
 
+  useEffect(() => setTempGeneContent(gene), [gene]);
+
   const deleteAllel = (_allelId) => {
     setTempGeneContent({
       ...tempGeneContent,
