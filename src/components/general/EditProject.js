@@ -121,7 +121,11 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
           <Button className="btn-xs btn-light ms-auto" onClick={handleHide}>
             Anuluj
           </Button>
-          <Button className="btn-xs btn-info" onClick={() => handleSubmit()}>
+          <Button
+            className="btn-xs btn-info"
+            disabled={error}
+            onClick={() => handleSubmit()}
+          >
             {isEditing ? "Zapisz" : "Dodaj"}
           </Button>
         </div>

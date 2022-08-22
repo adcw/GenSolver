@@ -21,6 +21,7 @@ import "./myNavbar.css";
 import { ProjPreview } from "./ProjPreview";
 
 export const validateProject__ = (project, state, isEdited) => {
+  if (project.project_name === "") return "Nazwa nie może być pusta";
   if (
     project &&
     state.projects
