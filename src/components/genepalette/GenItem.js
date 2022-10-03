@@ -315,7 +315,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
                           className="priority-input"
                           type="number"
                           min="0"
-                          defaultValue={tempGeneContent.allels[k].prior}
+                          value={tempGeneContent.allels[k].prior}
                           onChange={(e) => editPriority(k, e.target.value)}
                         ></input>
 

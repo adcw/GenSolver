@@ -51,6 +51,7 @@ export const FileInput = ({ children, onSubmit }) => {
           }),
           square: yup
             .array()
+            .nullable()
             .of(yup.array().of(yup.array().of(yup.array().of(yup.number())))),
           count_list: yup.object(),
         })

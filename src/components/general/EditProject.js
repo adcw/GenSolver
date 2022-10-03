@@ -23,8 +23,8 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   const [error, setError] = useState();
 
   useEffect(() => {
-    setProjectName(state.projects[state.curr]?.project_name);
-  }, [state.curr, state.projects]);
+    setProjectName(isEditing ? currentProject?.project_name : "Nowy projekt");
+  }, [isOpen, isEditing]);
 
   useEffect(() => {
     setError(validateProject__(currentProject, state, isEditing));
