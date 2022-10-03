@@ -1,6 +1,5 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import { Container, Row, Col, Table, Button, Tabs, Tab } from "react-bootstrap";
-import { useHistory, useLocation } from "react-router-dom";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Button, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import { ACTION, AppContext } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import Confirm from "../general/Confirm";
@@ -10,10 +9,9 @@ import GenotypeAssembly from "./GenotypeAssembly";
 import GenSelection from "./GenSelection";
 import ResultTable from "./ResultTable";
 import Statistics from "./Statistics";
-import { GenotypeView } from "./visualization/GenotypeView";
 
 const BoardPage = () => {
-  const { initialState, state, dispatch } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
   const [currState, setCurrState] = useState(state.projects[state.curr]);
 
   useEffect(() => {
@@ -38,9 +36,9 @@ const BoardPage = () => {
       (data) => {
         setCurrentSelectedResult(data.genotype);
 
-        data.genotype.map((alletSet) => {
-          const dominatingAllel = alletSet[0];
-        });
+        // data.genotype.map((alletSet) => {
+        //   const dominatingAllel = alletSet[0];
+        // });
 
         setCurrEventKey("selection");
       }

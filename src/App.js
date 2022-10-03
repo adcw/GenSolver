@@ -1,12 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  useHistory,
-} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
 import AppContextProvider, { ACTION, AppContext } from "./AppContextProvider";
 import BoardPage from "./components/board/BoardPage";
@@ -35,9 +30,7 @@ function AppWrapper() {
 }
 
 function App() {
-  const history = useHistory();
-
-  const { initialState, state, dispatch } = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
   const [currState, setCurrState] = useState(state.projects[state.curr]);
 
   useEffect(() => {
@@ -49,14 +42,6 @@ function App() {
       <div className="col-md-6">
         <Card>
           <h4 className="mb-3">Paleta genów</h4>
-          {/* <Tabs
-                  variant="pills"
-                  defaultActiveKey="normal"
-                  id="uncontrolled-tab-example"
-                  className="mb-3"
-                >
-                  <Tab eventKey="normal" title="Zwykłe">
-                   */}
 
           <AddNewGeneBtn
             targetGeneList={GENE_LIST.NORMAL}

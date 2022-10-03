@@ -1,21 +1,12 @@
-import AllelSymbol from "../genepalette/AllelSymbol";
-import SubSup from "../genepalette/SubSup";
-import "../genotypetemplate/templateItem.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState, useEffect, useContext, useRef } from "react";
-import {
-  Collapse,
-  FormControl,
-  OverlayTrigger,
-  Popover,
-} from "react-bootstrap";
-import AppContextProvider, {
-  AppContext,
-  ACTION,
-} from "../../AppContextProvider";
-import Confirm from "../general/Confirm";
-import { GTContent } from "./elements/GTContent";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Collapse, OverlayTrigger, Popover } from "react-bootstrap";
+import { ACTION, AppContext } from "../../AppContextProvider";
+import SubSup from "../genepalette/SubSup";
 import { ButtonDelete } from "../general/ButtonDelete";
+import Confirm from "../general/Confirm";
+import "../genotypetemplate/templateItem.css";
+import { GTContent } from "./elements/GTContent";
 
 export const TempllateIItem = ({ template, keyId }) => {
   const [collapseOpen, setCollapseOpen] = useState(false);
@@ -178,7 +169,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                   const gene = currState.default_genes.find((g) => g.id === v);
 
                   if (!gene) {
-                    console.log("gene is null");
+                    return <></>;
                   } else {
                     return (
                       <div key={k} className="d-inline feedback">
@@ -263,7 +254,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                       );
 
                       if (!gene) {
-                        console.log("Gene was removed");
+                        return <></>;
                       } else {
                         return (
                           <span key={k} className="tmp-gene-list-item d-flex">
