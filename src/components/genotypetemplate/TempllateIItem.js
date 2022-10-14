@@ -139,7 +139,7 @@ export const TempllateIItem = ({ template, keyId }) => {
               //   }
               // </span>
             }
-            return <></>;
+            return <div key={_k}></div>;
           })
         ) : (
           <p className="feedback">
@@ -169,7 +169,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                   const gene = currState.default_genes.find((g) => g.id === v);
 
                   if (!gene) {
-                    return <></>;
+                    return <div key={k}></div>;
                   } else {
                     return (
                       <div key={k} className="d-inline feedback">
@@ -254,7 +254,7 @@ export const TempllateIItem = ({ template, keyId }) => {
                       );
 
                       if (!gene) {
-                        return <></>;
+                        return <div key={k}></div>;
                       } else {
                         return (
                           <span key={k} className="tmp-gene-list-item d-flex">

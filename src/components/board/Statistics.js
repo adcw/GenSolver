@@ -15,6 +15,24 @@ import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import Confirm from "../general/Confirm";
 import { getStyle } from "./GenSelection";
 
+function gcd_two_numbers(x, y) {
+  if (typeof x !== "number" || typeof y !== "number") return false;
+  x = Math.abs(x);
+  y = Math.abs(y);
+  while (y) {
+    var t = y;
+    y = x % y;
+    x = t;
+  }
+  return x;
+}
+
+const makeFraction = (num, den) => {
+  const gcd = gcd_two_numbers(num, den);
+
+  return num / gcd + "/" + den / gcd;
+};
+
 const Statistics = () => {
   const { initialState, dispatch, state } = useContext(AppContext);
   const [currState, setCurrState] = useState(state.projects[state.curr]);
@@ -132,15 +150,16 @@ const Statistics = () => {
                       </div>
                       <div className="ms-auto">
                         <p>
-                          {currState.cross_data.count_list[k]}/
-                          {Object.values(
-                            currState.cross_data.count_list
-                          ).reduce((acc, v1) => acc + v1, 0)}{" "}
-                          (
+                          {makeFraction(
+                            currState.cross_data.count_list[k],
+                            Object.values(
+                              currState.cross_data.count_list
+                            ).reduce((acc, v1) => acc + v1, 0)
+                          )}
+                          &nbsp;
                           <strong className={getStyle(chance(k))}>
                             {chance(k)}%
                           </strong>
-                          )
                         </p>
                       </div>
                     </Stack>
