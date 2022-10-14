@@ -12,7 +12,7 @@ const AllelEditor = ({
   const supInput = useRef(null);
   const mainInput = useRef(null);
 
-  const [modifiedAllel, setModifiedAllel] = useState();
+  const [modifiedAllel, setModifiedAllel] = useState(chosenAllel);
 
   useEffect(() => {
     // console.log("Chosen allel is " + JSON.stringify(chosenAllel) + " chosenAllelIndex: " + chosenAllelIndex
@@ -29,6 +29,8 @@ const AllelEditor = ({
       sup: supInput.current.value,
       main: mainInput.current.value,
       sub: subInput.current.value,
+      desc: chosenAllel.desc,
+      prior: chosenAllel.prior,
     });
   };
 
