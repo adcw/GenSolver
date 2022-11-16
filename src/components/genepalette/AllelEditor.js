@@ -7,6 +7,7 @@ const AllelEditor = ({
   removeAllel,
   chosenAllelIndex,
   geneId,
+  onClose,
 }) => {
   const subInput = useRef(null);
   const supInput = useRef(null);
@@ -45,6 +46,7 @@ const AllelEditor = ({
           <div className="ae-panel">
             <input
               ref={supInput}
+              type="text"
               className="sup"
               maxLength="1"
               value={modifiedAllel.sup}
@@ -62,6 +64,7 @@ const AllelEditor = ({
 
             <input
               ref={subInput}
+              type="text"
               className="sub"
               maxLength="1"
               value={modifiedAllel.sub}
@@ -79,7 +82,10 @@ const AllelEditor = ({
             <button
               type="button"
               className="btn bg-second btn-xs txt-bright"
-              onClick={(e) => saveAllel()}
+              onClick={(e) => {
+                saveAllel();
+                onClose && onClose();
+              }}
             >
               OK
             </button>

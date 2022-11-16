@@ -16,9 +16,11 @@ import SubSup from "./SubSup";
 import { GTContent } from "../genotypetemplate/elements/GTContent";
 import { newAllel, ACTION } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter.js";
+import { AllelItem } from "./AllelItem";
 
 const GenItem = ({ gene, keyId, dispatch }) => {
   const [firstTime, setFirstTime] = useState(true);
+  const [editorShown, setEditorShown] = useState(false);
   const allelCount = useRef(Object.keys(gene.allels).length);
 
   /*
@@ -179,6 +181,7 @@ const GenItem = ({ gene, keyId, dispatch }) => {
           removeAllel={D_removeAllel}
           geneId={keyId}
           saveModifiedAllel={saveModifiedAllel}
+          onClose={() => false}
         />
 
         {/* </Form> */}
@@ -264,8 +267,10 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
                 <button
                   className="btn-xs btn my-btn-warning mx-1"
-                  disabled={!isSaveButtonActive}
-                  onClick={() => discardChanges()}
+                  onClick={() => {
+                    setCollapseOpen(false);
+                    discardChanges();
+                  }}
                 >
                   Anuluj
                 </button>
@@ -286,45 +291,21 @@ const GenItem = ({ gene, keyId, dispatch }) => {
                   <button onClick={() => addAllel()}>Dodaj</button>
                   {tempGeneContent.allels.map((allel, k) => {
                     return (
-                      <span key={k} className="tmp-gene-list-item d-flex">
-                        <OverlayTrigger
-                          rootClose
-                          trigger="click"
-                          placement="right"
-                          overlay={popover}
-                        >
-                          <div
-                            className="genSymbol"
-                            onClick={() => setChosenAllelIndex(k)}
-                          >
-                            <p>
-                              <SubSup allel={allel} small={true} />
-                            </p>
-                          </div>
-                        </OverlayTrigger>
-
-                        <input
-                          className="btn-xs w-100"
-                          value={tempGeneContent.allels[k].desc}
-                          onChange={(e) => editDesc(k, e.target.value)}
-                        ></input>
-
-                        <p className="text-sm m-0 pl-3 pr-2">Priorytet:</p>
-
-                        <input
-                          className="priority-input"
-                          type="number"
-                          min="0"
-                          value={tempGeneContent.allels[k].prior}
-                          onChange={(e) => editPriority(k, e.target.value)}
-                        ></input>
-
-                        <FontAwesomeIcon
-                          icon="times"
-                          className="f-right dismiss-btn mt-2 text-sm mx-2 pointer"
-                          onClick={() => deleteAllel(k)}
-                        ></FontAwesomeIcon>
-                      </span>
+                      <AllelItem
+                        key={k}
+                        allel={allel}
+                        k={k}
+                        onClick={() => setChosenAllelIndex(k)}
+                        tempGeneContent={tempGeneContent}
+                        deleteAllel={deleteAllel}
+                        editDesc={editDesc}
+                        editPriority={editPriority}
+                        setChosenAllelIndex={setChosenAllelIndex}
+                        D_removeAllel={D_removeAllel}
+                        chosenAllelIndex={chosenAllelIndex}
+                        keyId={keyId}
+                        saveModifiedAllel={saveModifiedAllel}
+                      />
                     );
                   })}
                 </div>
