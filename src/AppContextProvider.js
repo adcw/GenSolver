@@ -133,52 +133,6 @@ const pr1 = {
   project_name: "Demo Project",
 };
 
-// const pr2 = {
-//   default_genes: [
-//     {
-//       id: 1,
-//       name: "Kolor czarny, czekoladowy i cynamonowy",
-//       allels: [
-//         { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
-//         {
-//           sup: "",
-//           main: "b",
-//           sub: "",
-//           desc: "barwa czekoladowa",
-//           prior: 1,
-//         },
-//         {
-//           sup: "",
-//           main: "b1",
-//           sub: "",
-//           desc: "barwa cynamonowa",
-//           prior: 0,
-//         },
-//       ],
-//       isActive: true,
-//       triggerEdit: false,
-//     },
-//   ],
-
-//   templates: [
-//     {
-//       id: 1,
-//       name: "Dziedziczenie koloru u kota",
-//       gene_ids: [1],
-//     },
-//   ],
-
-//   cross_data: {
-//     template_id: 1,
-//     genotypes: {
-//       A: [[0, 1]],
-//       B: [[1, 1]],
-//     },
-//   },
-
-//   project_name: "Test proj",
-// };
-
 export const initialProject = {
   default_genes: [
     {
@@ -230,7 +184,7 @@ export const initialProject = {
 };
 
 const initialState = {
-  curr: 1,
+  curr: 0,
   projects: [pr1],
 };
 
