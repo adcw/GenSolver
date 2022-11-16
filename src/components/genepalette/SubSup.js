@@ -15,7 +15,7 @@ const SubSup = ({ allel, small, ...props }) => {
             display: "block",
             position: "relative",
             left: "-10px",
-            top: "5px",
+            top: small ? "10px" : "5px",
           }}
         >
           {allel.sup}
@@ -25,7 +25,7 @@ const SubSup = ({ allel, small, ...props }) => {
             display: "block",
             position: "relative",
             left: "-10px",
-            top: "18px",
+            top: small ? "22px" : "18px",
           }}
         >
           {allel.sub}
