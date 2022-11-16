@@ -164,32 +164,6 @@ const GenItem = ({ gene, keyId, dispatch }) => {
   const [chosenAllelIndex, setChosenAllelIndex] = useState(null);
   const [collapseOpen, setCollapseOpen] = useState(false);
 
-  const popover = (
-    <Popover id="popover-basic" className="shadowed genItem-popover bg-first">
-      <Popover.Header as="h6" className="bg-second">
-        <p className="mb-0 text-sm d-inline">Edytuj allel</p>
-        <FontAwesomeIcon
-          icon="times"
-          className="f-right dismiss-btn mt-1 text-sm"
-          onClick={() => document.body.click()}
-        ></FontAwesomeIcon>
-      </Popover.Header>
-
-      <Popover.Body className="bg-first txt-bright popover-body">
-        <AllelEditor
-          chosenAllel={tempGeneContent.allels[chosenAllelIndex]}
-          chosenAllelIndex={chosenAllelIndex}
-          removeAllel={D_removeAllel}
-          geneId={keyId}
-          saveModifiedAllel={saveModifiedAllel}
-          onClose={() => false}
-        />
-
-        {/* </Form> */}
-      </Popover.Body>
-    </Popover>
-  );
-
   return (
     <>
       <tr className="template-header mt-1">
@@ -302,7 +276,14 @@ const GenItem = ({ gene, keyId, dispatch }) => {
 
               <GTContent title="Allele:">
                 <div className="genelist">
-                  <button onClick={() => addAllel()}>Dodaj</button>
+                  <button
+                    disabled={tempGeneContent.allels.length >= 7}
+                    onClick={() => {
+                      if (tempGeneContent.allels.length <= 7) addAllel();
+                    }}
+                  >
+                    Dodaj
+                  </button>
                   {tempGeneContent.allels.map((allel, k) => {
                     return (
                       <AllelItem
