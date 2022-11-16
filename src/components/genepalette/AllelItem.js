@@ -21,7 +21,7 @@ export const AllelItem = ({
   const [shown, setShown] = useState(false);
 
   const popover = (
-    <Popover id="popover-basic" className="shadowed genItem-popover bg-first">
+    <Popover id="popover-basic" className="shadowed genItem-popover bg-second">
       <Popover.Header as="h6" className="bg-second">
         <p className="mb-0 text-sm d-inline">Edytuj allel</p>
         <FontAwesomeIcon
@@ -31,7 +31,7 @@ export const AllelItem = ({
         ></FontAwesomeIcon>
       </Popover.Header>
 
-      <Popover.Body className="bg-first txt-bright popover-body">
+      <Popover.Body className="txt-bright popover-body">
         <AllelEditor
           chosenAllel={tempGeneContent.allels[chosenAllelIndex]}
           chosenAllelIndex={chosenAllelIndex}
