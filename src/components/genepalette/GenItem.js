@@ -6,6 +6,7 @@ import {
   Form,
   FormLabel,
   Collapse,
+  Tooltip,
 } from "react-bootstrap";
 import AllelSymbol from "./AllelSymbol";
 import "./GenItem.css";
@@ -216,22 +217,32 @@ const GenItem = ({ gene, keyId, dispatch }) => {
             </p>
 
             {/* Edycja */}
-            {/* <OverlayTrigger rootClose trigger="click" placement="bottom" overlay={popover} > */}
-            <button
-              className="btn btn-sm btn-edit btn-edit-bright"
-              onClick={() => setCollapseOpen(!collapseOpen)}
+            <OverlayTrigger
+              overlay={<Tooltip id="edit-tooltop">Edytuj gen</Tooltip>}
             >
-              <FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon>
-            </button>
-            {/* </OverlayTrigger> */}
+              <button
+                className="btn btn-sm btn-edit btn-edit-bright"
+                onClick={() => setCollapseOpen(!collapseOpen)}
+              >
+                <FontAwesomeIcon icon="pencil-alt"></FontAwesomeIcon>
+              </button>
+            </OverlayTrigger>
 
             {/* Wyłączanie i włączanie genu */}
-            <input
-              type="checkbox"
-              className="form-check-input check-input"
-              defaultChecked={gene.isActive}
-              onChange={toggleActive}
-            />
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="toggle-visibility-tooltip">
+                  Edytuj widoczność
+                </Tooltip>
+              }
+            >
+              <input
+                type="checkbox"
+                className="form-check-input check-input"
+                defaultChecked={gene.isActive}
+                onChange={toggleActive}
+              />
+            </OverlayTrigger>
 
             {/* Usuwanie genu */}
             <Confirm
