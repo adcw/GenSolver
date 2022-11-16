@@ -102,22 +102,33 @@ const BoardPage = () => {
                       (t) => t.id === currState.cross_data.template_id
                     ).gene_ids.length !== 0 ? (
                       <>
-                        <GenotypeAssembly></GenotypeAssembly>
-                        <Confirm
-                          content={
-                            <p>
-                              Czy na pewno chcesz stworzyć krzyżówkę? Poprzednie
-                              dane zostaną utracone
-                            </p>
-                          }
-                          onConfirm={() =>
-                            EventEmitter.emit(E.onCreatePunnetSquare)
-                          }
-                        >
-                          <Button className="text-center w-100 btn-xs mt-3 bg-first btn-outline-dark txt-bright">
+                        <GenotypeAssembly />
+                        {currState.cross_data.square ? (
+                          <Confirm
+                            content={
+                              <p>
+                                Czy na pewno chcesz stworzyć krzyżówkę?
+                                Poprzednie dane zostaną utracone
+                              </p>
+                            }
+                            onConfirm={() =>
+                              EventEmitter.emit(E.onCreatePunnetSquare)
+                            }
+                          >
+                            <Button className="text-center w-100 btn-xs mt-3 bg-first btn-outline-dark txt-bright">
+                              Stwórz krzyżówkę
+                            </Button>
+                          </Confirm>
+                        ) : (
+                          <Button
+                            onClick={() =>
+                              EventEmitter.emit(E.onCreatePunnetSquare)
+                            }
+                            className="text-center w-100 btn-xs mt-3 bg-first btn-outline-dark txt-bright"
+                          >
                             Stwórz krzyżówkę
                           </Button>
-                        </Confirm>
+                        )}
                       </>
                     ) : (
                       <p>Wybrany szablon nie posiada przypisanych genów.</p>

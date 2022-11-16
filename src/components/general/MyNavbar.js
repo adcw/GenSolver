@@ -103,6 +103,7 @@ const MyNavbar = () => {
                 className="nav-link pointer"
                 onClick={() => {
                   setSidemenuOpen(true);
+                  //
                 }}
               >
                 <FontAwesomeIcon
