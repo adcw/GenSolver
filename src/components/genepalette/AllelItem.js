@@ -81,8 +81,16 @@ export const AllelItem = ({
         className="priority-input"
         type="number"
         min="0"
+        max="7"
         value={tempGeneContent.allels[k].prior}
-        onChange={(e) => editPriority(k, e.target.value)}
+        onChange={(e) => {
+          let val = e.target.value ?? 0;
+          val = val === "" ? 0 : val;
+          console.log(val);
+          val = val < 0 ? 0 : val;
+          val = val > 7 ? 7 : val;
+          editPriority(k, val);
+        }}
       ></input>
 
       <FontAwesomeIcon
