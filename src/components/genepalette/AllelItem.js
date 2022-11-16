@@ -86,7 +86,6 @@ export const AllelItem = ({
         onChange={(e) => {
           let val = e.target.value ?? 0;
           val = val === "" ? 0 : val;
-          console.log(val);
           val = val < 0 ? 0 : val;
           val = val > 7 ? 7 : val;
           editPriority(k, val);

@@ -289,7 +289,10 @@ const GenItem = ({ gene, keyId, dispatch }) => {
                 <button
                   className="btn-xs btn my-btn-success"
                   disabled={!isSaveButtonActive}
-                  onClick={saveChanges}
+                  onClick={() => {
+                    setCollapseOpen(false);
+                    saveChanges();
+                  }}
                 >
                   Zapisz
                 </button>
