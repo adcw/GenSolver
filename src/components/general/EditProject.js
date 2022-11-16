@@ -28,7 +28,7 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
 
   useEffect(() => {
     setError(validateProject__(currentProject, state, isEditing));
-  }, [currentProject]);
+  }, [currentProject, isEditing]);
 
   useEffect(() => {
     setcurrentProject({ ...currentProject, project_name: projectName });
@@ -44,6 +44,7 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   );
 
   useEffect(() => {
+    console.log("is editing = ", isEditing);
     setError(null);
   }, [isEditing]);
 
@@ -84,6 +85,7 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
       title={isEditing ? "Edycja projektu" : "Dodawanie nowego projektu"}
       isOpen={isOpen}
     >
+      {true && console.log(isEditing)}
       <div className="vstack">
         <p className="mb-1 text-sm">
           {isEditing ? "Zmiana nazwy projektu:" : "Nazwa projektu:"}

@@ -83,6 +83,7 @@ const MyNavbar = () => {
   };
 
   const handleProjectChange = (newName) => {
+    setSidemenuOpen(false);
     state.projects.forEach((proj, indx) => {
       if (proj.project_name === newName) {
         dispatch({ type: ACTION.CHANGE_PROJECT, payload: { projId: indx } });
