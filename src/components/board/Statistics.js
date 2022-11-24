@@ -87,25 +87,49 @@ const Statistics = () => {
                     onClick={() => EventEmitter.emit(E.onStatClick, { fen: k })}
                   >
                     <div>
-                      {JSON.parse(k).map((g_a, k_g_a) => {
-                        const gene = currState.default_genes.find(
-                          (g) => g.id === g_a[0]
-                        );
-                        return (
-                          <p
-                            key={k_g_a}
-                            className="my-0"
-                            style={{ fontSize: "12px" }}
-                          >
-                            {g_a[1].map((allindx, k_al) => {
+                      {[0].map(() => {
+                        const desc = new Map();
+
+                        return JSON.parse(k).map((g_a, k_g_a) => {
+                          const gene = currState.default_genes.find(
+                            (g) => g.id === g_a[0]
+                          );
+
+                          g_a[1].forEach((allelIndx) => {
+                            console.log(gene.id);
+                            if (desc.has(gene.id)) {
+                              const prev = desc.get(gene.id);
+                              desc.set(
+                                gene.id,
+                                prev + `, ${gene?.allels[allelIndx].desc}`
+                              );
+                            } else {
+                              desc.set(
+                                gene.id.toString(),
+                                `${gene.name}: ${gene?.allels[allelIndx].desc}`
+                              );
+                            }
+                          });
+
+                          console.log(Array.from(desc.values()).toString());
+
+                          return (
+                            <p
+                              key={k_g_a}
+                              className="my-0"
+                              style={{ fontSize: "12px" }}
+                            >
+                              {Array.from(desc.values())[k_g_a] ?? "-"}
+                              {/* {g_a[1].map((allindx, k_al) => {
                               return (
                                 <span
                                   key={k_al}
-                                >{`${gene?.allels[allindx].desc}, `}</span>
+                                >{`${gene?.name}: ${gene?.allels[allindx].desc}`}</span>
                               );
-                            })}
-                          </p>
-                        );
+                            })} */}
+                            </p>
+                          );
+                        });
                       })}
                     </div>
                     <div className="ms-auto">

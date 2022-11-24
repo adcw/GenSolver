@@ -43,21 +43,21 @@ const pr1 = {
   default_genes: [
     {
       id: 1,
-      name: "Kolor czarny, czekoladowy i cynamonowy",
+      name: "Kolor",
       allels: [
-        { sup: "", main: "B", sub: "", desc: "barwa czarna", prior: 2 },
+        { sup: "", main: "B", sub: "", desc: "czarny", prior: 2 },
         {
           sup: "",
           main: "b",
           sub: "",
-          desc: "barwa czekoladowa",
+          desc: "czkoladowy",
           prior: 1,
         },
         {
           sup: "",
           main: "b1",
           sub: "",
-          desc: "barwa cynamonowa",
+          desc: "cynamonowy",
           prior: 0,
         },
       ],
@@ -73,14 +73,14 @@ const pr1 = {
           sup: "",
           main: "D",
           sub: "",
-          desc: "brak rozjaśnienia",
+          desc: "brak",
           prior: 1,
         },
         {
           sup: "",
           main: "d",
           sub: "",
-          desc: "obecność rozjaśnienia",
+          desc: "obecność",
           prior: 0,
         },
       ],
@@ -90,10 +90,10 @@ const pr1 = {
 
     {
       id: 3,
-      name: "Rudy",
+      name: "Rudość",
       allels: [
-        { sup: "", main: "O", sub: "", desc: "rudość", prior: 1 },
-        { sup: "", main: "o", sub: "", desc: "brak rudości", prior: 0 },
+        { sup: "", main: "O", sub: "", desc: "obecna", prior: 1 },
+        { sup: "", main: "o", sub: "", desc: "brak", prior: 0 },
       ],
       isActive: true,
       triggerEdit: false,
@@ -137,20 +137,20 @@ export const initialProject = {
   default_genes: [
     {
       id: 1,
-      name: "Przykładowy gen",
+      name: "Kolor",
       allels: [
         {
           sup: "",
           main: "A",
           sub: "",
-          desc: "Kolor czerwony",
+          desc: "czerwony",
           prior: "1",
         },
         {
           sup: "",
           main: "a",
           sub: "",
-          desc: "Kolor biały",
+          desc: "biały",
           prior: "0",
         },
       ],

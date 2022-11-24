@@ -3,7 +3,12 @@ import { OverlayTrigger, Popover } from "react-bootstrap";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import SubSup from "../genepalette/SubSup";
 
-export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
+export const AllelSelect = ({
+  geneName,
+  set,
+  onValueChanged,
+  defaultSelIndex,
+}) => {
   const [currentSelectedAllelIndex, setCurrentSelectedAllelIndex] =
     useState(defaultSelIndex);
 
@@ -40,7 +45,7 @@ export const AllelSelect = ({ set, onValueChanged, defaultSelIndex }) => {
               }`}
               onClick={() => changeSelection(k)}
             >
-              <SubSup allel={v}></SubSup>
+              {geneName}
               :&nbsp;{v.desc}
             </div>
           );

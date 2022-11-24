@@ -46,7 +46,7 @@ const GenSelection = ({ genotype, template_id }) => {
                 }`
               : gene.allels[geneAllel].desc;
 
-          return <p className="text-sm" key={k_aS}>{`${k_aS + 1}. ${txt}`}</p>;
+          return <p className="text-sm" key={k_aS}>{`${gene.name}: ${txt}`}</p>;
         })}
       </>
     );

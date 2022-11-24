@@ -99,31 +99,33 @@ const GenotypeAssembly = () => {
           {currState.templates
             .find((elem) => elem.id === currState.cross_data.template_id)
             ?.gene_ids.map((_geneID_template, _gid_t_i) => {
-              var _gene = currState.default_genes.find(
+              let _gene = currState.default_genes.find(
                 (v) => v.id === _geneID_template
-              ).allels;
+              );
 
               return (
                 <div key={_gid_t_i} className="d-flex my-2">
                   {/* allel 1 */}
                   <AllelSelect
-                    set={_gene}
+                    set={_gene.allels}
                     defaultSelIndex={
                       currState.cross_data.genotypes.A[_gid_t_i][0]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("A", 0, _gid_t_i, val)
                     }
+                    geneName={_gene.name}
                   ></AllelSelect>
                   {/* allel 2 */}
                   <AllelSelect
-                    set={_gene}
+                    set={_gene.allels}
                     defaultSelIndex={
                       currState.cross_data.genotypes.A[_gid_t_i][1]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("A", 1, _gid_t_i, val)
                     }
+                    geneName={_gene.name}
                   ></AllelSelect>
                 </div>
               );
@@ -135,31 +137,33 @@ const GenotypeAssembly = () => {
           {currState.templates
             .find((elem) => elem.id === currState.cross_data.template_id)
             ?.gene_ids.map((_geneID_template, _gid_t_i) => {
-              var _gene = currState.default_genes.find(
+              let _gene = currState.default_genes.find(
                 (v) => v.id === _geneID_template
-              ).allels;
+              );
 
               return (
                 <div key={_gid_t_i} className="d-flex my-2">
                   {/* allel 1 */}
                   <AllelSelect
-                    set={_gene}
+                    set={_gene.allels}
                     defaultSelIndex={
                       currState.cross_data.genotypes.B[_gid_t_i][0]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("B", 0, _gid_t_i, val)
                     }
+                    geneName={_gene.name}
                   ></AllelSelect>
                   {/* allel 2 */}
                   <AllelSelect
-                    set={_gene}
+                    set={_gene.allels}
                     defaultSelIndex={
                       currState.cross_data.genotypes.B[_gid_t_i][1]
                     }
                     onValueChanged={(val) =>
                       updateGenotype("B", 1, _gid_t_i, val)
                     }
+                    geneName={_gene.name}
                   ></AllelSelect>
                 </div>
               );
