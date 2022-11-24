@@ -8,6 +8,7 @@ import { AppModal } from "./Modal";
 import { ACTION, AppContext, initialProject } from "../../AppContextProvider";
 import { validateProject__ } from "./MyNavbar";
 import Confirm from "./Confirm";
+import EventEmitter, { E } from "../../utils/events/EventEmitter";
 
 const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   const { initialState, state, dispatch } = useContext(AppContext);
@@ -31,6 +32,10 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   }, [currentProject, isEditing]);
 
   useEffect(() => {
+    console.log({
+      isEditing: isEditing,
+      projectName: projectName,
+    });
     setcurrentProject({ ...currentProject, project_name: projectName });
   }, [projectName]);
 
@@ -42,6 +47,15 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
     () => setcurrentProject(state.projects[state.curr]),
     [state.curr, state.projects]
   );
+
+  useEffect(() => {
+    const sub = EventEmitter.addListener(E.onRestoreDefault, () => {
+      setProjectName("Nowy projekt");
+    });
+    return () => {
+      sub.remove();
+    };
+  }, []);
 
   useEffect(() => {
     console.log("is editing = ", isEditing);

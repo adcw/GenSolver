@@ -14,8 +14,14 @@ import {
   sortAllelSet,
 } from "../../utils/CrossFunctions";
 import { GradientMaker } from "../../utils/Colors";
+import useDimensions from "use-element-dimensions";
 
-const ResultTable = ({ crossData, setCrossData, crossResult }) => {
+const ResultTable = ({
+  crossData,
+  setCrossData,
+  crossResult,
+  onWidthChange,
+}) => {
   const { initialState, state, dispatch } = useContext(AppContext);
   const [currState, setCurrState] = useState(state.projects[state.curr]);
 
@@ -33,6 +39,12 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
   const combinationsB = useRef(
     getCombinations(currState.cross_data.genotypes.B)
   );
+
+  const [{ width, height }, ref] = useDimensions();
+
+  useEffect(() => {
+    onWidthChange && onWidthChange({ width, height });
+  }, [width, height]);
 
   const crossResultClick = (data, pos) => {
     EventEmitter.emit(E.onCrossResultClick, { genotype: data });
@@ -167,7 +179,7 @@ const ResultTable = ({ crossData, setCrossData, crossResult }) => {
     <div>
       {crossResult.current &&
       currState.templates.find((t) => t.id === crossData.template_id) ? (
-        <Table className="punnett-square shadowed">
+        <Table ref={ref} className="punnett-square shadowed">
           <thead>
             <tr>
               <td>

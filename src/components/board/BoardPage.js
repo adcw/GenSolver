@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
+import useDimensions from "use-element-dimensions";
 import { ACTION, AppContext } from "../../AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import Confirm from "../general/Confirm";
@@ -29,6 +30,9 @@ const BoardPage = () => {
   const [currEventKey, setCurrEventKey] = useState("input");
   const [crossData, setCrossData] = useState(currState.cross_data);
   const crossResult = useRef(currState.cross_data?.square); //
+
+  const [centered, setCentered] = useState(true);
+  const [{ width, height }, ref] = useDimensions();
 
   useEffect(() => {
     const crossClickSub = EventEmitter.addListener(
@@ -163,14 +167,22 @@ const BoardPage = () => {
 
         <Col lg="9" md="8" sm="8" xs="12">
           <div
+            ref={ref}
             className="w-100 mt-3 bg-second shadowed-2 p-2 overflown-xy flex-center"
-            style={{ minHeight: "80vh", justifyContent: "center" }}
+            style={{
+              minHeight: "80vh",
+              justifyContent: centered ? "center" : undefined,
+              whiteSpace: "nowrap",
+            }}
           >
             {crossResult && (
               <ResultTable
                 crossData={crossData}
                 setCrossData={setCrossData}
                 crossResult={crossResult}
+                onWidthChange={(dims) => {
+                  setCentered(dims.width < width);
+                }}
               ></ResultTable>
             )}
           </div>
