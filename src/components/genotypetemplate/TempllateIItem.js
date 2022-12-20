@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Collapse, OverlayTrigger, Popover } from "react-bootstrap";
-import { ACTION, AppContext } from "../../AppContextProvider";
+import { ACTION, AppContext } from "../../context/AppContextProvider";
 import SubSup from "../genepalette/SubSup";
 import { ButtonDelete } from "../general/ButtonDelete";
 import Confirm from "../general/Confirm";

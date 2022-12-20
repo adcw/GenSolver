@@ -10,7 +10,7 @@ import {
   Stack,
 } from "react-bootstrap";
 import { ACTION } from "../../App";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext } from "../../context/AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import Confirm from "../general/Confirm";
 import { getStyle } from "./GenSelection";

@@ -18,7 +18,6 @@ export const FileInput = ({ children, onSubmit }) => {
             id: yup.number().required(),
             name: yup.string().required(),
             isActive: yup.boolean().required(),
-            triggerEdit: yup.boolean(),
             allels: yup.array().of(
               yup.object().shape({
                 sup: yup.string(),

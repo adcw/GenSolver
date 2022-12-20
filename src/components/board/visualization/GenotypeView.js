@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useCallback } from "react";
-import { AppContext } from "../../../AppContextProvider";
+import { AppContext } from "../../../context/AppContextProvider";
 import SubSup from "../../genepalette/SubSup";
 import SubSup2 from "../../genepalette/SubSup2";
 

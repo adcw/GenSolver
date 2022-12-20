@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, useEffect } from "react";
 import { GenotypeView } from "./visualization/GenotypeView";
 import "./genSelection.css";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext } from "../../context/AppContextProvider";
 import { gen2fen } from "../../utils/CrossFunctions";
 
 export const VALUES = {

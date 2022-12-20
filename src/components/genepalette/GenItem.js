@@ -15,7 +15,7 @@ import Confirm from "../general/Confirm";
 import AllelEditor from "./AllelEditor";
 import SubSup from "./SubSup";
 import { GTContent } from "../genotypetemplate/elements/GTContent";
-import { newAllel, ACTION } from "../../AppContextProvider";
+import { newAllel, ACTION } from "../../context/AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter.js";
 import { AllelItem } from "./AllelItem";
 

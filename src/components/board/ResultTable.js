@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useContext, useRef } from "react";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
-import { AppContext, ACTION } from "../../AppContextProvider";
+import { AppContext, ACTION } from "../../context/AppContextProvider";
 import { Table } from "react-bootstrap";
 import "./resultTable.css";
 import { GenotypeView } from "./visualization/GenotypeView";

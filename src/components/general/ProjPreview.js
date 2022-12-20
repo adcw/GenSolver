@@ -7,7 +7,7 @@ import React, {
 } from "react";
 import { Accordion, Stack } from "react-bootstrap";
 import "./ProjPreview.css";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext } from "../../context/AppContextProvider";
 
 export const ProjPreview = ({ project, error, onChange }) => {
   const { initialState, state, dispatch } = useContext(AppContext);

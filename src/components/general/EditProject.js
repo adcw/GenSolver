@@ -5,7 +5,11 @@ import "../../App.css";
 import "../genepalette/GenItem.css";
 import { AppModal } from "./Modal";
 
-import { ACTION, AppContext, initialProject } from "../../AppContextProvider";
+import {
+  ACTION,
+  AppContext,
+  initialProject,
+} from "../../context/AppContextProvider";
 import { validateProject__ } from "./MyNavbar";
 import Confirm from "./Confirm";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";

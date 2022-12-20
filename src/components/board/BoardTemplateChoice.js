@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Container, Row, Col } from "react-bootstrap";
-import { AppContext } from "../../AppContextProvider";
+import { AppContext } from "../../context/AppContextProvider";
 
 const BoardTemplateChoice = ({ keyId, template, _onChange }) => {
   const { initialState, state, dispatch } = useContext(AppContext);

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, useRef } from "react";
-import { AppContext, ACTION } from "../../AppContextProvider";
+import { AppContext, ACTION } from "../../context/AppContextProvider";
 import SubSup from "../genepalette/SubSup";
 import { TempllateIItem } from "../genotypetemplate/TempllateIItem";
 import { AllelSelect } from "./AllelSelect";

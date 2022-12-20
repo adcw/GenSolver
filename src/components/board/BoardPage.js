@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Button, Col, Container, Row, Tab, Tabs } from "react-bootstrap";
 import useDimensions from "use-element-dimensions";
-import { ACTION, AppContext } from "../../AppContextProvider";
+import { ACTION, AppContext } from "../../context/AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import Confirm from "../general/Confirm";
 

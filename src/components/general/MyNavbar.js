@@ -10,7 +10,7 @@ import {
   Stack,
 } from "react-bootstrap";
 import { useHistory, useLocation } from "react-router-dom";
-import { ACTION, AppContext } from "../../AppContextProvider";
+import { ACTION, AppContext } from "../../context/AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 import { downloadProject } from "../../utils/ProjectManager";
 import Confirm from "./Confirm";
