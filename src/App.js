@@ -3,21 +3,17 @@ import { useContext, useEffect, useState } from "react";
 import { Button, Table } from "react-bootstrap";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
-import AppContextProvider, { ACTION, AppContext } from "./AppContextProvider";
+import AppContextProvider, {
+  ACTION,
+  AppContext,
+} from "./context/AppContextProvider";
 import BoardPage from "./components/board/BoardPage";
 import GenItem from "./components/genepalette/GenItem";
-import AddNewGeneBtn from "./components/general/AddNewGeneBtn";
 import Card from "./components/general/Card";
 import MyNavbar from "./components/general/MyNavbar";
 import { TempllateIItem } from "./components/genotypetemplate/TempllateIItem";
 import "./utils/FontAwesomeIcons.js";
 import RowDivider from "./utils/RowDivider";
-
-export const GENE_LIST = {
-  NORMAL: "NORMAL",
-  GENDER: "GENDER",
-  GENDER_LINKED: "GENDER_LINKED",
-};
 
 function AppWrapper() {
   return (
@@ -43,10 +39,20 @@ function App() {
         <Card>
           <h4 className="mb-3">Paleta genów</h4>
 
-          <AddNewGeneBtn
-            targetGeneList={GENE_LIST.NORMAL}
-            dispatch={dispatch}
-          />
+          {/* <AddNewGeneBtn dispatch={dispatch} />
+           */}
+          <Button
+            className="my-btn-dark w-100 btn-sm"
+            onClick={() => {
+              dispatch({
+                type: ACTION.ADD_DEFAULT_GENE,
+                payload: null,
+              });
+            }}
+          >
+            Dodaj nowy gen
+          </Button>
+
           <div className="pt-2 overflown">
             <Table className="genItem">
               <tbody>
