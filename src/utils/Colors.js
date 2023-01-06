@@ -16,7 +16,6 @@ export class GradientMaker {
   }
 
   nextColor() {
-    console.log(this.curr_p);
     let res = this.currentColor();
     this.curr_p += this.step;
     return res;

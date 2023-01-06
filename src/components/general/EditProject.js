@@ -10,7 +10,7 @@ import {
   AppContext,
   initialProject,
 } from "../../context/AppContextProvider";
-import { validateProject__ } from "./MyNavbar";
+import { validateProjectName, validateProject__ } from "./MyNavbar";
 import Confirm from "./Confirm";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
 
@@ -18,7 +18,9 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   const { initialState, state, dispatch } = useContext(AppContext);
 
   const [currentProject, setcurrentProject] = useState(
-    state.projects[state.curr]
+    isEditing
+      ? state.projects[state.curr]
+      : { ...state.projects[state.curr], project_name: "Nowy projekt" }
   );
 
   const [projectName, setProjectName] = useState(
@@ -32,7 +34,7 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
   }, [isOpen, isEditing]);
 
   useEffect(() => {
-    setError(validateProject__(currentProject, state, isEditing));
+    setError(validateProjectName(projectName, state, isEditing));
   }, [currentProject, isEditing]);
 
   useEffect(() => {
@@ -65,6 +67,8 @@ const EditProject = ({ isOpen, setIsOpen, isEditing }) => {
     console.log("is editing = ", isEditing);
     setError(null);
   }, [isEditing]);
+
+  useEffect(() => {}, [isOpen]);
 
   const handleSubmit = () => {
     if (isEditing) {

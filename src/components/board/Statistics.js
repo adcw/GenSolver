@@ -1,18 +1,7 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
-import {
-  Container,
-  Row,
-  Col,
-  Table,
-  Button,
-  Tabs,
-  Tab,
-  Stack,
-} from "react-bootstrap";
-import { ACTION } from "../../App";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import { Stack } from "react-bootstrap";
 import { AppContext } from "../../context/AppContextProvider";
 import EventEmitter, { E } from "../../utils/events/EventEmitter";
-import Confirm from "../general/Confirm";
 import { getStyle } from "./GenSelection";
 
 function gcd_two_numbers(x, y) {
@@ -34,12 +23,16 @@ const makeFraction = (num, den) => {
 };
 
 const Statistics = () => {
-  const { initialState, dispatch, state } = useContext(AppContext);
+  const { state } = useContext(AppContext);
   const [currState, setCurrState] = useState(state.projects[state.curr]);
 
   useEffect(() => {
     setCurrState(state.projects[state.curr]);
   }, [state]);
+
+  function handleStatClick(stat) {
+    return () => EventEmitter.emit(E.onStatClick, { fen: stat });
+  }
 
   const numberFormat = new Intl.NumberFormat("en-IN", {
     maximumFractionDigits: 2,
@@ -55,6 +48,75 @@ const Statistics = () => {
         100
     );
   };
+
+  const statiscticsEntries = useMemo(() => {
+    const desc = new Map();
+
+    if (!currState.cross_data.count_list) return null;
+
+    return Object.entries(currState.cross_data.count_list)
+      .sort((a, b) => b[1] - a[1])
+      .map(([countlistEntry]) => {
+        return (
+          <Stack
+            direction="horizontal"
+            key={countlistEntry}
+            className="p-1 mb-1 bg-first pointer hoverable"
+            onClick={handleStatClick(countlistEntry)}
+          >
+            <div>
+              {JSON.parse(countlistEntry).map((entry, k_g_a) => {
+                const gene = currState.default_genes.find(
+                  (g) => g.id === entry[0]
+                );
+
+                console.log(entry);
+
+                entry[1].forEach((allelIndx) => {
+                  if (desc.has(gene.id)) {
+                    const prev = desc.get(gene.id);
+                    desc.set(
+                      gene.id,
+                      prev + `, ${gene?.allels[allelIndx].desc}`
+                    );
+                  } else {
+                    desc.set(
+                      gene.id.toString(),
+                      `${gene.name}: ${gene?.allels[allelIndx].desc}`
+                    );
+                  }
+                });
+
+                return (
+                  <p key={entry} className="my-0" style={{ fontSize: "12px" }}>
+                    {Array.from(desc.values())[k_g_a] ?? "-"}
+                  </p>
+                );
+              })}
+            </div>
+            <div className="ms-auto">
+              <div className="v-stack">
+                <p style={{ fontSize: "12px" }} className="mb-0">
+                  {makeFraction(
+                    currState.cross_data.count_list[countlistEntry],
+                    Object.values(currState.cross_data.count_list).reduce(
+                      (acc, v1) => acc + v1,
+                      0
+                    )
+                  )}
+                </p>
+                <strong
+                  className={getStyle(chance(countlistEntry))}
+                  style={{ fontSize: "12px" }}
+                >
+                  {chance(countlistEntry)}%
+                </strong>
+              </div>
+            </div>
+          </Stack>
+        );
+      });
+  }, [currState.cross_data.count_list]);
 
   return (
     <div>
@@ -76,83 +138,7 @@ const Statistics = () => {
               </div>
             </div>
 
-            {Object.entries(currState.cross_data.count_list)
-              .sort((a, b) => b[1] - a[1])
-              .map(([k, v]) => {
-                return (
-                  <Stack
-                    direction="horizontal"
-                    key={k}
-                    className="p-1 mb-1 bg-first pointer hoverable"
-                    onClick={() => EventEmitter.emit(E.onStatClick, { fen: k })}
-                  >
-                    <div>
-                      {[0].map(() => {
-                        const desc = new Map();
-
-                        return JSON.parse(k).map((g_a, k_g_a) => {
-                          const gene = currState.default_genes.find(
-                            (g) => g.id === g_a[0]
-                          );
-
-                          g_a[1].forEach((allelIndx) => {
-                            console.log(gene.id);
-                            if (desc.has(gene.id)) {
-                              const prev = desc.get(gene.id);
-                              desc.set(
-                                gene.id,
-                                prev + `, ${gene?.allels[allelIndx].desc}`
-                              );
-                            } else {
-                              desc.set(
-                                gene.id.toString(),
-                                `${gene.name}: ${gene?.allels[allelIndx].desc}`
-                              );
-                            }
-                          });
-
-                          console.log(Array.from(desc.values()).toString());
-
-                          return (
-                            <p
-                              key={k_g_a}
-                              className="my-0"
-                              style={{ fontSize: "12px" }}
-                            >
-                              {Array.from(desc.values())[k_g_a] ?? "-"}
-                              {/* {g_a[1].map((allindx, k_al) => {
-                              return (
-                                <span
-                                  key={k_al}
-                                >{`${gene?.name}: ${gene?.allels[allindx].desc}`}</span>
-                              );
-                            })} */}
-                            </p>
-                          );
-                        });
-                      })}
-                    </div>
-                    <div className="ms-auto">
-                      <div className="v-stack">
-                        <p style={{ fontSize: "12px" }} className="mb-0">
-                          {makeFraction(
-                            currState.cross_data.count_list[k],
-                            Object.values(
-                              currState.cross_data.count_list
-                            ).reduce((acc, v1) => acc + v1, 0)
-                          )}
-                        </p>
-                        <strong
-                          className={getStyle(chance(k))}
-                          style={{ fontSize: "12px" }}
-                        >
-                          {chance(k)}%
-                        </strong>
-                      </div>
-                    </div>
-                  </Stack>
-                );
-              })}
+            {statiscticsEntries}
           </div>
         </>
       )}

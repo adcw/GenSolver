@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
-import { Form } from "react-bootstrap";
+import React, { useEffect, useRef, useState } from "react";
+import { useCallback } from "react";
+import { CloseButton, Collapse, Form } from "react-bootstrap";
 import * as yup from "yup";
 import { AppModal } from "./Modal";
 
@@ -59,7 +60,16 @@ export const FileInput = ({ children, onSubmit }) => {
     })
     .nullable();
 
-  const handleChange = (file) => {
+  const handleHide = useCallback(() => {
+    setError(undefined);
+    openRef.current.value = null;
+  }, []);
+
+  useEffect(() => {
+    console.log(`error: ${error}`);
+  }, [error]);
+
+  const handleChange = useCallback((file) => {
     if (!file) return;
     const fr = new FileReader();
 
@@ -70,7 +80,7 @@ export const FileInput = ({ children, onSubmit }) => {
         const parsed = JSON.parse(raw);
         result = schema.validateSync(parsed);
       } catch (e) {
-        setError(`Nie udało się zaimportować projektu. ${e.message}`);
+        setError(` ${e.message}`);
         return undefined;
       }
       console.log(`result: ${JSON.stringify(result, null, 4)}`);
@@ -79,18 +89,12 @@ export const FileInput = ({ children, onSubmit }) => {
     };
 
     fr.readAsText(file);
-  };
+  }, []);
 
-  const errorWindow = (
-    <AppModal
-      title={"Błąd"}
-      isOpen={error}
-      closeButton
-      onHide={() => setError(undefined)}
-    >
-      <p>{error}</p>
-    </AppModal>
-  );
+  const handleFormChange = useCallback((e) => {
+    console.log("Foirm change");
+    handleChange(e.target.files[0]);
+  }, []);
 
   return (
     <>
@@ -101,14 +105,39 @@ export const FileInput = ({ children, onSubmit }) => {
         <Form style={{ display: "none" }}>
           <Form.Control
             ref={openRef}
-            onChange={(e) => handleChange(e.target.files[0])}
+            onChange={handleFormChange}
             type="file"
             accept="application/JSON"
           />
         </Form>
         {children}
       </div>
-      {errorWindow}
+      {error && <ErrorWindow error={error} handleHide={handleHide} />}
     </>
+  );
+};
+
+const ErrorWindow = ({ error, handleHide }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+
+  return (
+    <AppModal
+      title={"Błąd"}
+      isOpen={error}
+      onHide={handleHide}
+      className="text-light"
+      closeButton
+    >
+      <p>Nie udało się zaimportować projektu.</p>
+      <small className="pointer hoverable text-warning" onClick={handleOpen}>
+        <u>Wiadomość systemowa</u>
+      </small>
+      <Collapse in={open}>
+        <div>{error}</div>
+      </Collapse>
+    </AppModal>
   );
 };
