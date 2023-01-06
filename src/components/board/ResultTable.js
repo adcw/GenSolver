@@ -42,6 +42,15 @@ const ResultTable = ({
 
   const [{ width, height }, ref] = useDimensions();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    if (!mounted) {
+      onWidthChange && onWidthChange({ width, height });
+      setMounted(true);
+    }
+  }, [mounted]);
+
   useEffect(() => {
     onWidthChange && onWidthChange({ width, height });
   }, [width, height]);
@@ -69,7 +78,7 @@ const ResultTable = ({
       );
     }
 
-    const onPageSwitchToPunnetSquare = EventEmitter.addListener(
+    const sub_onPageSwitchToPunnetSquare = EventEmitter.addListener(
       E.onPageSwitchToPunnetSquare,
       () => {
         console.log("Page sqitch");
@@ -79,7 +88,7 @@ const ResultTable = ({
       }
     );
 
-    const onRestoreDefault = EventEmitter.addListener(
+    const sub_onRestoreDefault = EventEmitter.addListener(
       E.onRestoreDefault,
       () => {
         combinationsA.current = null;
@@ -88,7 +97,7 @@ const ResultTable = ({
       }
     );
 
-    const onCreatePunnetSquare = EventEmitter.addListener(
+    const sub_onCreatePunnetSquare = EventEmitter.addListener(
       E.onCreatePunnetSquare,
       () => {
         setCrossData(currState.cross_data);
@@ -167,11 +176,11 @@ const ResultTable = ({
     );
 
     return () => {
-      onCreatePunnetSquare.remove();
+      sub_onCreatePunnetSquare.remove();
       sub_onStatClick.remove();
       sub_onCrossResultClick.remove();
-      onRestoreDefault.remove();
-      onPageSwitchToPunnetSquare.remove();
+      sub_onRestoreDefault.remove();
+      sub_onPageSwitchToPunnetSquare.remove();
     };
   }, [currState, crossResult, setCrossData, crossData.template_id, dispatch]);
 
