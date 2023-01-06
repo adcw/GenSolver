@@ -159,10 +159,6 @@ const BoardPage = () => {
               </div>
             </Tab>
           </Tabs>
-
-          {/* <div>
-
-          </div> */}
         </Col>
 
         <Col lg="9" md="8" sm="8" xs="12">
